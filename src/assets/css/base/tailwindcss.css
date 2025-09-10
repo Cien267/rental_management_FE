@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Green variables with  prefix */
+  --color-green-25: #f2fbf5;
+  --color-green-50: #e6f8ec;
+  --color-green-75: #d9f4e2;
+  --color-green-100: #ccf0d8;
+  --color-green-200: #99e2b2;
+  --color-green-300: #66d38b;
+  --color-green-400: #33c565;
+  --color-green-500: #00b63e;
+  --color-green-600: #009232;
+  --color-green-700: #006d25;
+  --color-green-800: #004919;
+  --color-green-900: #00240c;
+
+  /* Orange variables with  prefix */
+  --color-orange-25: #fff9f2;
+  --color-orange-50: #fff3e5;
+  --color-orange-75: #ffedd9;
+  --color-orange-100: #ffe7cc;
+  --color-orange-200: #ffcf99;
+  --color-orange-300: #ffb866;
+  --color-orange-400: #ffa033;
+  --color-orange-500: #ff8800;
+  --color-orange-600: #cc6d00;
+  --color-orange-700: #995200;
+  --color-orange-800: #663600;
+  --color-orange-900: #331b00;
+
+  /* Red variables with  prefix */
+  --color-red-25: #fff2f2;
+  --color-red-50: #ffe6e6;
+  --color-red-75: #ffd9d9;
+  --color-red-100: #ffcccc;
+  --color-red-200: #ff9999;
+  --color-red-300: #ff6666;
+  --color-red-400: #ff3333;
+  --color-red-500: #ff0000;
+  --color-red-600: #cc0000;
+  --color-red-700: #990000;
+  --color-red-800: #660000;
+  --color-red-900: #330000;
+
+  /* Gray variables with  prefix (updated Gray 500) */
+  --color-gray-0: #ffffff;
+  --color-gray-25: #f7f8f9;
+  --color-gray-50: #f0f1f3;
+  --color-gray-75: #e8eaed;
+  --color-gray-100: #e1e3e6;
+  --color-gray-150: #d1d5da;
+  --color-gray-200: #c2c7ce;
+  --color-gray-300: #a4acb5;
+  --color-gray-400: #85909d;
+  --color-gray-500: #677484;
+  --color-gray-600: #525d6a;
+  --color-gray-700: #3e464f;
+  --color-gray-800: #292e35;
+  --color-gray-825: #24292e;
+  --color-gray-850: #1f2328;
+  --color-gray-875: #1a1d21;
+  --color-gray-900: #15171a;
+  --color-gray-1000: #000000;
+
+  /* Pink variables with  prefix (added Pink 900) */
+  --color-pink-25: #fef2fc;
+  --color-pink-50: #fde6f8;
+  --color-pink-75: #fddaf5;
+  --color-pink-100: #fccdf2;
+  --color-pink-200: #f99be4;
+  --color-pink-300: #f56ad7;
+  --color-pink-400: #f238c9;
+  --color-pink-500: #ef06bc;
+  --color-pink-600: #bf0596;
+  --color-pink-700: #8f0471;
+  --color-pink-800: #60024b;
+  --color-pink-900: #300126; /* Added */
+
+  /* Blue variables with  prefix */
+  --color-blue-25: #f2f8fe;
+  --color-blue-50: #e5f1fe;
+  --color-blue-75: #d9eafd;
+  --color-blue-100: #cce2fd;
+  --color-blue-200: #99c6fb;
+  --color-blue-300: #66a9f8;
+  --color-blue-400: #338df6;
+  --color-blue-500: #0070f4;
+  --color-blue-600: #005ac3;
+  --color-blue-700: #004392;
+  --color-blue-800: #002d62;
+  --color-blue-900: #001631;
+}
+
+/* Optional: Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-green-500: #33c565; /* Lighter green for dark mode */
+    --color-orange-500: #ffa033; /* Lighter orange for dark mode */
+    --color-red-500: #ff3333; /* Lighter red for dark mode */
+    --color-gray-500: #a4acb5; /* Lighter gray for dark mode */
+    --color-pink-500: #f238c9; /* Lighter pink for dark mode */
+    --color-blue-500: #338bf6; /* Lighter blue for dark mode */
+  }
+}
+
+@layer components {
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+  .border-only-left {
+    @apply border-solid border-l border-r-0 border-t-0 border-b-0;
+  }
+  .border-only-right {
+    @apply border-solid border-r border-l-0 border-t-0 border-b-0;
+  }
+  .border-only-bottom {
+    @apply border-solid border-b border-l-0 border-r-0 border-t-0;
+  }
+  .border-only-top {
+    @apply border-solid border-t border-l-0 border-r-0 border-b-0;
+  }
+}

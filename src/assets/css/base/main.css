@@ -1,0 +1,83 @@
+@import './tailwindcss.css';
+
+/* \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ TRANSITION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
+/* dropdown transition */
+.dropdown-slide-down-fade-enter-active {
+  transition: all 0.2s ease-in-out;
+}
+
+.dropdown-slide-down-fade-leave-active {
+  transition: all 0.2s cubic-bezier(0.1, 0.1, 0.1, 1);
+}
+
+.dropdown-slide-down-fade-enter-from,
+.dropdown-slide-down-fade-leave-to {
+  max-height: 0;
+  transform: translateY(-4px);
+  overflow: hidden;
+  opacity: 0;
+}
+
+.dropdown-slide-down-fade-enter-to,
+.dropdown-slide-down-fade-leave-from {
+  transform: translateY(0);
+  overflow: hidden;
+  opacity: 1;
+}
+/* end dropdown transition */
+
+/* modal transition */
+.modal-transition-enter-active {
+  transition: all 0.2s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.3s cubic-bezier(0.1, 0.5, 0.8, 1);
+}
+
+.modal-transition-enter-from,
+.modal-transition-leave-to {
+  transform: translateY(-20px);
+  opacity: 0;
+}
+/* end modal transition */
+
+/* slide horizontal transition */
+.slide-horizontal-enter-active {
+  transition: all 0.3s ease-in-out;
+}
+
+.slide-horizontal-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-horizontal-enter-from {
+  transform: translateX(-20px);
+  opacity: 0;
+}
+.slide-horizontal-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+/* end slide horizontal transition */
+
+/* \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ END TRANSITION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
+
+/* \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ CUSTOM TOAST \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
+.Vue-Toastification__toast {
+  padding: 12px 16px !important;
+  box-shadow: 0px 8px 20px -4px #0000000f !important;
+}
+.Vue-Toastification__toast.Vue-Toastification__toast--success.bottom-right {
+  background-color: #e6f8ec;
+}
+.Vue-Toastification__toast.Vue-Toastification__toast--error.bottom-right {
+  background-color: #ffe6e6;
+}
+.Vue-Toastification__toast.Vue-Toastification__toast--warning.bottom-right {
+  background-color: #fff3e5;
+}
+.Vue-Toastification__toast.Vue-Toastification__toast--info.bottom-right {
+  background-color: #e5f1fe;
+}
+/* \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ END CUSTOM TOAST \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
