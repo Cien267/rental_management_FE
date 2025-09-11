@@ -31,7 +31,7 @@ const customColorClass = computed(() => {
     <div :class="`text-sm text-${customColorClass}-700`" v-html="content"></div>
     <i
       @click="$emit('close-toast')"
-      :class="`ikr ik-xmark absolute cursor-pointer right-0 top-0 text-${customColorClass}-700`"
+      :class="`pi pi-times absolute cursor-pointer right-0 top-0 text-${customColorClass}-700`"
     ></i>
   </div>
 </template>

@@ -14,7 +14,7 @@ export const useCustomToast = () => {
       },
     }
     toast.success(objectToast, {
-      icon: h('i', { class: 'ikr ik-circle-check text-green-500 !mt-0.5' }),
+      icon: h('i', { class: 'pi pi-check-circle text-green-500 !mt-0.5' }),
     })
   }
 
@@ -28,7 +28,7 @@ export const useCustomToast = () => {
       },
     }
     toast.error(objectToast, {
-      icon: h('i', { class: 'ikr ik-circle-info text-red-500 !mt-0.5' }),
+      icon: h('i', { class: 'pi pi-power-off text-red-500 !mt-0.5' }),
     })
   }
 
@@ -42,7 +42,7 @@ export const useCustomToast = () => {
       },
     }
     toast.warning(objectToast, {
-      icon: h('i', { class: 'ikr ik-triangle-exclamation text-orange-500 !mt-0.5' }),
+      icon: h('i', { class: 'pi pi-exclamation-triangle text-orange-500 !mt-0.5' }),
     })
   }
 
@@ -56,7 +56,7 @@ export const useCustomToast = () => {
       },
     }
     toast.info(objectToast, {
-      icon: h('i', { class: 'ikr ik-bell text-blue-500 !mt-0.5' }),
+      icon: h('i', { class: 'pi pi-info text-blue-500 !mt-0.5' }),
     })
   }
 

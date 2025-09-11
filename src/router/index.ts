@@ -24,7 +24,7 @@ const router = createRouter({
       path: '/home',
       name: ROUTER_NAME_LIST.HOME_PAGE,
       component: RentalManagement,
-      meta: { requiresAuth: true, transition: 'slide-fade' },
+      meta: { requiresAuth: false, transition: 'slide-fade' },
     },
     { path: `/:notFound(.*)`, component: NotFoundPage },
   ],
