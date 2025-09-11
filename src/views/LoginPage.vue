@@ -10,8 +10,7 @@ import { useAuth } from '@/composables/auth/useAuth'
 import { useRouter } from 'vue-router'
 import { ROUTER_NAME_LIST } from '@/constants/routers'
 import { useCustomToast } from '@/composables/base/useCustomToast'
-import Modal from '@/components/base/molecules/Modal.vue'
-import { ADMIN_INFO } from '@/constants/main'
+import AdminInformation from '@/components/auth/AdminInformation.vue'
 
 const email = ref('')
 const password = ref('')
@@ -39,7 +38,7 @@ async function onSubmit() {
 
   submitting.value = true
   try {
-    const ok = await handleLogin({ username: email.value, password: password.value })
+    const ok = await handleLogin({ email: email.value, password: password.value })
     if (ok) {
       tSuccess('Thành công', 'Đăng nhập thành công')
       await router.push({ name: ROUTER_NAME_LIST.HOME_PAGE })
@@ -54,29 +53,30 @@ async function onSubmit() {
 }
 </script>
 <template>
-  <div class="min-h-screen bg-white flex items-center justify-center px-4" style="font-family: 'Inter', sans-serif;">
-    <div class="w-full" style="max-width: 560px;">
+  <div class="h-screen bg-white flex items-center justify-center px-4">
+    <div class="w-120">
       <div class="flex flex-col items-center text-center mb-8">
-        <div class="h-12 w-12 rounded-2xl bg-indigo-600/10 text-indigo-600 flex items-center justify-center">
-          <i class="pi pi-building text-xl"></i>
-        </div>
-        <h1 class="mt-4 text-2xl font-semibold text-gray-900">Sổ Trọ</h1>
+        <h1
+          class="mt-4 bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-600 font-extrabold text-8xl font-shadows_into_light"
+        >
+          Sổ Trọ
+        </h1>
       </div>
 
-      <div class="bg-white shadow-xl rounded-2xl border border-gray-100 mx-auto" style="max-width: 560px;">
+      <div class="bg-white shadow-2xl rounded-2xl border border-gray-100 mx-auto">
         <div class="p-6 sm:p-8">
           <div class="text-center">
-            <h2 class="text-lg font-semibold text-gray-900">Đăng nhập</h2>
+            <h2 class="text-2xl font-semibold text-gray-800">Đăng nhập</h2>
           </div>
 
           <form class="mt-6 space-y-5" @submit.prevent="onSubmit">
             <div class="space-y-2">
-              <label for="email" class="block text-sm font-medium text-gray-700">Địa chỉ Email</label>
+              <label for="email" class="block text-sm font-bold text-gray-700">Email</label>
               <InputText
                 id="email"
                 v-model="email"
                 type="email"
-                placeholder="Nhập email của bạn"
+                placeholder="Nhập email"
                 autocomplete="email"
                 :invalid="!!errors.email"
                 class="w-full"
@@ -85,14 +85,15 @@ async function onSubmit() {
             </div>
 
             <div class="space-y-2">
-              <label for="password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
+              <label for="password" class="block text-sm font-bold text-gray-700">Mật khẩu</label>
               <Password
                 id="password"
                 v-model="password"
                 toggleMask
                 :feedback="false"
-                placeholder="Nhập mật khẩu của bạn"
+                placeholder="Nhập mật khẩu"
                 autocomplete="current-password"
+                class="w-full"
               />
               <p v-if="errors.password" class="text-xs text-red-500 mt-1">{{ errors.password }}</p>
             </div>
@@ -102,14 +103,19 @@ async function onSubmit() {
                 <Checkbox v-model="remember" inputId="remember" :binary="true" />
                 <label for="remember" class="text-sm text-gray-700">Ghi nhớ đăng nhập</label>
               </div>
-              <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-700 no-underline">Quên mật khẩu?</a>
+              <a
+                href="#"
+                class="text-sm font-medium text-sky-600 hover:text-sky-700 no-underline"
+                @click.prevent="showAdminModal = true"
+                >Quên mật khẩu?</a
+              >
             </div>
 
             <Button
               type="submit"
               label="Đăng nhập"
               :loading="submitting"
-              class="w-full justify-center bg-indigo-600 hover:bg-indigo-700 border-0"
+              class="w-full justify-center !bg-sky-600 hover:!bg-sky-700 border-0"
             />
           </form>
         </div>
@@ -117,60 +123,16 @@ async function onSubmit() {
 
       <p class="text-center text-sm text-gray-500 mt-6">
         Chưa có tài khoản?
-        <a href="#" class="text-indigo-600 hover:text-indigo-700 no-underline" @click.prevent="showAdminModal = true"> Liên hệ quản trị viên</a>
+        <a
+          href="#"
+          class="!text-sky-600 hover:!text-sky-700 no-underline"
+          @click.prevent="showAdminModal = true"
+        >
+          Liên hệ quản trị viên</a
+        >
       </p>
 
-      <Modal v-model:show="showAdminModal" :enableBackdropClose="true" :enableEscapeClose="true" title="Thông tin quản trị viên">
-        <template #body>
-          <div class="p-6">
-            <div class="flex flex-col items-center text-center">
-              <div class="h-14 w-14 rounded-2xl bg-indigo-600/10 text-indigo-600 flex items-center justify-center shadow-sm">
-                <i class="pi pi-user text-2xl"></i>
-              </div>
-              <h3 class="mt-3 text-xl font-semibold text-gray-900">{{ ADMIN_INFO.name }}</h3>
-              <p class="mt-1 text-sm text-gray-500">Liên hệ khi cần hỗ trợ hệ thống quản lý cho thuê</p>
-
-              <div class="mt-6 w-full grid grid-cols-1 gap-4">
-                <div class="flex items-center gap-3 p-4 rounded-xl border border-gray-100 bg-gray-50 shadow-sm">
-                  <span class="h-9 w-9 rounded-lg flex items-center justify-center bg-white text-indigo-600 border border-gray-100">
-                    <i class="pi pi-phone"></i>
-                  </span>
-                  <div class="flex-1 text-left">
-                    <div class="text-gray-700 text-sm font-medium">Số điện thoại / Zalo</div>
-                    <a :href="`tel:${ADMIN_INFO.phone}`" class="text-indigo-600 hover:text-indigo-700 no-underline text-sm">{{ ADMIN_INFO.phone }}</a>
-                  </div>
-                  <div class="flex gap-2">
-                    <a :href="`tel:${ADMIN_INFO.phone}`" class="no-underline">
-                      <Button type="button" label="Gọi" class="px-3 py-2 !text-sm bg-indigo-600 hover:bg-indigo-700 border-0" />
-                    </a>
-                    <a :href="`https://zalo.me/${ADMIN_INFO.zalo}`" target="_blank" rel="noopener" class="no-underline">
-                      <Button type="button" label="Zalo" class="px-3 py-2 !text-sm bg-blue-500 hover:bg-blue-600 border-0" />
-                    </a>
-                  </div>
-                </div>
-
-                <div class="flex items-center gap-3 p-4 rounded-xl border border-gray-100 bg-gray-50 shadow-sm">
-                  <span class="h-9 w-9 rounded-lg flex items-center justify-center bg-white text-indigo-600 border border-gray-100">
-                    <i class="pi pi-envelope"></i>
-                  </span>
-                  <div class="flex-1 text-left">
-                    <div class="text-gray-700 text-sm font-medium">Email</div>
-                    <a :href="`mailto:${ADMIN_INFO.email}`" class="text-indigo-600 hover:text-indigo-700 no-underline text-sm">{{ ADMIN_INFO.email }}</a>
-                  </div>
-                  <a :href="`mailto:${ADMIN_INFO.email}`" class="no-underline">
-                    <Button type="button" label="Gửi mail" class="px-3 py-2 !text-sm bg-emerald-600 hover:bg-emerald-700 border-0" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </template>
-        <template #footer="{ close }">
-          <div class="flex justify-end p-4 border-only-top border-gray-75 gap-2">
-            <Button type="button" label="Đóng" class="bg-gray-100 text-gray-700 hover:bg-gray-200 border-0" @click="close" />
-          </div>
-        </template>
-      </Modal>
+      <AdminInformation v-model:show="showAdminModal" />
     </div>
   </div>
 </template>

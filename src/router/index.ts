@@ -24,13 +24,17 @@ const router = createRouter({
       path: '/home',
       name: ROUTER_NAME_LIST.HOME_PAGE,
       component: RentalManagement,
-      meta: { requiresAuth: false, transition: 'slide-fade' },
+      meta: { requiresAuth: true, transition: 'slide-fade' },
     },
     { path: `/:notFound(.*)`, component: NotFoundPage },
   ],
 })
 
 router.beforeEach((to, _from, next) => {
+  if (to.name === ROUTER_NAME_LIST.LOGIN_PAGE && token.value) {
+    next({ name: ROUTER_NAME_LIST.HOME_PAGE })
+    return
+  }
   if (to.meta.requiresAuth && !token.value) {
     next({ name: 'login' })
   } else {

@@ -1,5 +1,14 @@
 @import './tailwindcss.css';
 
+/* \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ SETUP \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
+* {
+  font-family: 'Inter', sans-serif;
+}
+.p-inputtext.p-component.p-password-input {
+  width: 100% !important;
+}
+/* \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ END SETUP \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
+
 /* \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ TRANSITION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
 /* dropdown transition */
 .dropdown-slide-down-fade-enter-active {

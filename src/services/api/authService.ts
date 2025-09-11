@@ -4,10 +4,10 @@ import { AUTH_URLS } from '@/constants/urls'
 
 export const login = async (dataLogin: DataLoginType) => {
   const response = await post(AUTH_URLS.URL_LOGIN, dataLogin)
-  return response?.data?.data
+  return response?.data
 }
 
 export const logout = async () => {
   const response = await post(AUTH_URLS.URL_LOGOUT, {})
-  return response?.data?.data
+  return response?.data
 }
