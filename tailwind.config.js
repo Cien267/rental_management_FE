@@ -212,8 +212,10 @@ export default {
         section: '0px 8px 24px 0px #0029570A',
         menu: '0px 0px 4px 0px #00000029',
         popup: '0px 8px 24px 6px #0000001A, 0px 0px 8px 0px #00000029, 0px 0px 2px 0px #00000014',
+        card: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
       },
       zIndex: {
+        1000: 1000,
         99999: 99999,
         999999: 999999,
         9999999: 9999999,

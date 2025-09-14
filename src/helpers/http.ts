@@ -3,7 +3,7 @@ import type { AxiosInstance } from 'axios'
 
 const timeout = 30000
 const baseUrl = import.meta.env.VITE_BASE_URL
-import { useMainStore } from '@/stores/main'
+import { useAuth } from '@/composables/auth/useAuth'
 /**
  * Creates an Axios instance with preconfigured settings for API requests.
  * @type {AxiosInstance}
@@ -15,10 +15,9 @@ const apiClient: AxiosInstance = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    const store = useMainStore()
-    const token = store.getToken
-    if (token && !config.headers['token']) {
-      config.headers['token'] = token
+    const { token } = useAuth()
+    if (token && token.value && !config.headers['token']) {
+      config.headers['Authorization'] = `Bearer ${token.value}`
     }
     return config
   },

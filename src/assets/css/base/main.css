@@ -4,8 +4,17 @@
 * {
   font-family: 'Inter', sans-serif;
 }
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 .p-inputtext.p-component.p-password-input {
   width: 100% !important;
+}
+* {
+  scrollbar-width: thin; /* Options: auto | thin | none */
+  scrollbar-color: #afafaf #f1f1f1; /* thumb | track */
 }
 /* \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ END SETUP \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
 

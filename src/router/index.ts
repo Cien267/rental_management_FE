@@ -3,6 +3,7 @@ import { useAuth } from '@/composables/auth/useAuth'
 import { ROUTER_NAME_LIST } from '@/constants/routers'
 import LoginPage from '@/views/LoginPage.vue'
 import RentalManagement from '@/views/RentalManagement.vue'
+import PropertyManagement from '@/views/PropertyManagement.vue'
 import NotFoundPage from '@/views/NotFoundPage.vue'
 
 const { token } = useAuth()
@@ -24,6 +25,12 @@ const router = createRouter({
       path: '/home',
       name: ROUTER_NAME_LIST.HOME_PAGE,
       component: RentalManagement,
+      meta: { requiresAuth: true, transition: 'slide-fade' },
+    },
+    {
+      path: '/property/:propertyId',
+      name: 'property-management',
+      component: PropertyManagement,
       meta: { requiresAuth: true, transition: 'slide-fade' },
     },
     { path: `/:notFound(.*)`, component: NotFoundPage },

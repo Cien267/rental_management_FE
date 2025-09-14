@@ -11,6 +11,7 @@ import { useRouter } from 'vue-router'
 import { ROUTER_NAME_LIST } from '@/constants/routers'
 import { useCustomToast } from '@/composables/base/useCustomToast'
 import AdminInformation from '@/components/auth/AdminInformation.vue'
+import AppBackground from '@/components/layout/AppBackground.vue'
 
 const email = ref('')
 const password = ref('')
@@ -53,8 +54,9 @@ async function onSubmit() {
 }
 </script>
 <template>
-  <div class="h-screen bg-white flex items-center justify-center px-4">
-    <div class="w-120">
+  <div class="h-screen relative bg-white flex items-center justify-center px-4">
+    <AppBackground />
+    <div class="w-120 z-10">
       <div class="flex flex-col items-center text-center mb-8">
         <h1
           class="mt-4 bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-600 font-extrabold text-8xl font-shadows_into_light"
@@ -111,12 +113,7 @@ async function onSubmit() {
               >
             </div>
 
-            <Button
-              type="submit"
-              label="Đăng nhập"
-              :loading="submitting"
-              class="w-full justify-center !bg-sky-600 hover:!bg-sky-700 border-0"
-            />
+            <Button type="submit" label="Đăng nhập" :loading="submitting" class="w-full" />
           </form>
         </div>
       </div>

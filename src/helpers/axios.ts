@@ -14,6 +14,10 @@ export async function put(url: string, data: any = {}, config = {}): Promise<Axi
   return Http.put(toValue(url), data, config)
 }
 
+export async function patch(url: string, data: any = {}, config = {}): Promise<AxiosResponse> {
+  return Http.patch(toValue(url), data, config)
+}
+
 export async function del(url: string, config = {}): Promise<AxiosResponse> {
   return Http.delete(toValue(url), config)
 }

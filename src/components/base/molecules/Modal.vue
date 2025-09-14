@@ -59,7 +59,7 @@ onUnmounted(() => {
 
 <template>
   <Teleport to="body">
-    <div v-if="isShow" :class="cn('fixed inset-0 z-999999', positionClass, containerClass)">
+    <div v-if="isShow" :class="cn('fixed inset-0 z-1000', positionClass, containerClass)">
       <!-- backdrop -->
       <div
         :class="cn('fixed inset-0 bg-gray-1000 opacity-40', backdropClass)"
@@ -83,7 +83,7 @@ onUnmounted(() => {
                   {{ title || 'Title' }}
                 </span>
                 <i
-                  class="ikr ik-xmark p-1.5 text-gray-700 cursor-pointer rounded-lg hover:bg-gray-50"
+                  class="pi pi-times p-1.5 text-gray-700 cursor-pointer rounded-lg hover:bg-gray-50"
                   @click="closeModal"
                 ></i>
               </div>

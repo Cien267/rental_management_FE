@@ -112,6 +112,9 @@
   .flex-center {
     @apply flex justify-center items-center;
   }
+  .flex-between {
+    @apply flex justify-between items-center;
+  }
   .border-only-left {
     @apply border-solid border-l border-r-0 border-t-0 border-b-0;
   }
