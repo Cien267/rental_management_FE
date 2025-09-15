@@ -4,7 +4,6 @@ import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import Checkbox from 'primevue/checkbox'
 import Button from 'primevue/button'
-import { z } from 'zod'
 import { DataLoginSchema } from '@/types/auth'
 import { useAuth } from '@/composables/auth/useAuth'
 import { useRouter } from 'vue-router'
@@ -59,7 +58,7 @@ async function onSubmit() {
     <div class="w-120 z-10">
       <div class="flex flex-col items-center text-center mb-8">
         <h1
-          class="mt-4 bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-600 font-extrabold text-8xl font-shadows_into_light"
+          class="mt-4 bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-600 font-extrabold text-8xl font-Alex_Brush"
         >
           Sổ Trọ
         </h1>

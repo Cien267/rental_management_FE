@@ -230,7 +230,7 @@ export default {
         bouncePulse: 'bouncePulse 1s infinite',
       },
       fontFamily: {
-        shadows_into_light: ['"Shadows Into Light"', 'cursive'],
+        Alex_Brush: ['"Alex Brush"', 'cursive'],
       },
     },
   },

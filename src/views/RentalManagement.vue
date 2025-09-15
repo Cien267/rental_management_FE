@@ -9,7 +9,12 @@ import { transformPropertyToUI } from '@/transformers/properties'
 import { getProperties, deleteProperty } from '@/services/api/propertyService'
 import { useCustomToast } from '@/composables/base/useCustomToast'
 import DeletePropertyModal from '@/components/properties/DeletePropertyModal.vue'
+import { useMainStore } from '@/stores/main'
+import { useRouter } from 'vue-router'
+import { ROUTER_NAME_LIST } from '@/constants/routers'
 
+const store = useMainStore()
+const router = useRouter()
 const properties = ref<PropertyUI[]>([])
 const propertyModal = ref<InstanceType<typeof UpSertPropertyModal> | null>(null)
 const deleteModal = ref<InstanceType<typeof DeletePropertyModal> | null>(null)
@@ -19,9 +24,8 @@ const { tError, tSuccess } = useCustomToast()
 const isEmpty = computed(() => properties.value.length === 0)
 
 function goToProperty(property: PropertyUI) {
-  // TODO: Navigate to property management page
-  console.log('Navigate to property:', property.code)
-  // router.push({ name: ROUTER_NAME_LIST.PROPERTY_MANAGEMENT, params: { code: property.code } })
+  store.setSelectedProperty(property)
+  router.push({ name: ROUTER_NAME_LIST.PROPERTY.OVERVIEW })
 }
 
 function onAddProperty() {
@@ -75,7 +79,7 @@ async function handleConfirmDelete(property: PropertyUI) {
     // Refresh the list
     loadProperties()
     deleteModal.value?.close()
-  } catch (error) {
+  } catch (error: any) {
     const msg = error?.response?.data?.message ?? 'Có lỗi xảy ra khi xóa nhà trọ'
     tError('Lỗi', msg)
     console.error('Delete property error:', error)

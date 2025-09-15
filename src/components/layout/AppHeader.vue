@@ -1,13 +1,13 @@
 <template>
-  <header class="bg-white shadow-xl border-b border-gray-200">
+  <header class="bg-white shadow-xl border-only-bottom border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Left side: Logo + App Name + Back Button -->
         <div class="flex items-center gap-4">
           <!-- Logo and App Name -->
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3 w-56">
             <h1
-              class="bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-600 font-extrabold font-shadows_into_light"
+              class="bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-600 font-extrabold font-Alex_Brush pl-16"
             >
               Sổ trọ
             </h1>
@@ -16,7 +16,7 @@
           <!-- Back Button (conditional) -->
           <Button
             v-if="showBackButton"
-            label="Quay lại danh sách"
+            label="Quay lại danh sách nhà"
             icon="pi pi-arrow-left"
             text
             severity="secondary"
@@ -54,6 +54,8 @@ import Menu from 'primevue/menu'
 import { useAuth } from '@/composables/auth/useAuth'
 import { useCustomToast } from '@/composables/base/useCustomToast'
 import UserProfileModal from '@/components/user/UserProfileModal.vue'
+import { useMainStore } from '@/stores/main'
+const store = useMainStore()
 
 interface Props {
   showBackButton?: boolean
@@ -96,6 +98,7 @@ const profileMenuItems = [
       try {
         await handleLogout()
         tSuccess('Thành công', 'Đăng xuất thành công')
+        store.setSelectedProperty(null)
         router.push({ name: 'login' })
       } catch (error) {
         tError('Lỗi', 'Có lỗi xảy ra khi đăng xuất')
@@ -110,6 +113,7 @@ function toggleProfileMenu(event: Event) {
 }
 
 function handleBackClick() {
+  store.setSelectedProperty(null)
   emit('back-to-properties')
 }
 

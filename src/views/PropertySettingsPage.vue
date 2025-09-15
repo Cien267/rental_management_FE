@@ -1,0 +1,1 @@
+<template>PropertyTenantsPage.vue</template>
