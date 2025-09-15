@@ -1,16 +1,27 @@
 <template>
-  <header class="bg-white shadow-xl border-only-bottom border-gray-100">
+  <header class="bg-white shadow-sm border-only-bottom border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Left side: Logo + App Name + Back Button -->
         <div class="flex items-center gap-4">
+          <!-- Mobile menu button -->
+          <Button
+            v-if="selectedProperty"
+            class="lg:!hidden"
+            icon="pi pi-bars"
+            severity="secondary"
+            raised
+            size="small"
+            @click="toggleMobileSidebar"
+            aria-label="Toggle sidebar"
+          />
           <!-- Logo and App Name -->
-          <div class="flex items-center gap-3 w-56">
-            <h1
-              class="bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-600 font-extrabold font-Alex_Brush pl-16"
+          <div class="flex items-center gap-3 w-32 lg:w-56">
+            <span
+              class="text-4xl bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-600 font-extrabold font-Alex_Brush lg:pl-16"
             >
               Sổ trọ
-            </h1>
+            </span>
           </div>
 
           <!-- Back Button (conditional) -->
@@ -120,6 +131,12 @@ function handleBackClick() {
 function handleProfileUpdated(updatedUser: any) {
   // The user data will be updated automatically through the auth composable
   console.log('Profile updated:', updatedUser)
+}
+
+// Sidebar controls
+const selectedProperty = computed(() => store.getSelectedProperty)
+function toggleMobileSidebar() {
+  store.toggleMobileSidebar()
 }
 </script>
 

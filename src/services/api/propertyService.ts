@@ -37,3 +37,38 @@ export const updateProperty = async (
 export const deleteProperty = async (id: number): Promise<void> => {
   await del(PROPERTY_URLS.URL_DELETE(id))
 }
+
+// Dashboard (overview) data
+export interface PropertyDashboardResponse {
+  stats: {
+    totalRooms: number
+    occupancyRate: number
+    rentedRooms: number
+  }
+  general: {
+    totalRooms: number
+    occupancyRate: number
+    propertyName: string
+    propertyCode: string
+    propertyAddress: string
+    propertyStatus: number
+  }
+  monthlyRevenue: number
+  roomStatus: {
+    totalRooms: number
+    rentedRooms: number
+    availableRooms: number
+    occupancyRate: number
+  }
+  attentionRequired: {
+    unpaidInvoices: number
+    expiringContracts: number
+  }
+}
+
+export const getPropertyDashboard = async (
+  id: number | string,
+): Promise<PropertyDashboardResponse> => {
+  const response = await get(PROPERTY_URLS.URL_DASHBOARD(id))
+  return response.data as PropertyDashboardResponse
+}

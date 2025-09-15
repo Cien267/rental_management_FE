@@ -20,6 +20,7 @@ export const PROPERTY_URLS = {
   URL_CREATE: '/v1/properties',
   URL_UPDATE: (id: number | string) => `/v1/properties/${id}`,
   URL_DELETE: (id: number | string) => `/v1/properties/${id}`,
+  URL_DASHBOARD: (id: number | string) => `/v1/properties/${id}/dashboard`,
 }
 
 // EXTRA FEES

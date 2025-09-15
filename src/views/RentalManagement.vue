@@ -24,8 +24,8 @@ const { tError, tSuccess } = useCustomToast()
 const isEmpty = computed(() => properties.value.length === 0)
 
 function goToProperty(property: PropertyUI) {
-  store.setSelectedProperty(property)
-  router.push({ name: ROUTER_NAME_LIST.PROPERTY.OVERVIEW })
+  store.setSelectedProperty(null)
+  router.push({ name: ROUTER_NAME_LIST.PROPERTY.OVERVIEW, params: { id: String(property.id) } })
 }
 
 function onAddProperty() {

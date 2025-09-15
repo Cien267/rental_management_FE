@@ -16,7 +16,7 @@ import NotFoundPage from '@/views/NotFoundPage.vue'
 import PropertySettingsPage from '@/views/PropertySettingsPage.vue'
 
 const { token } = useAuth()
-const PREFIX_PROPERTY = '/property'
+const PREFIX_PROPERTY = '/property/:id'
 
 const router = createRouter({
   history: createWebHistory(),
