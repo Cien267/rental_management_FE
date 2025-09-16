@@ -1,31 +1,7 @@
 <template>
   <DefaultLayout :selected-property="selectedProperty">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- Property Header -->
-      <div class="mb-8">
-        <div class="flex items-center gap-4 mb-4">
-          <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center">
-            <i class="pi pi-building text-blue-600 text-2xl"></i>
-          </div>
-          <div>
-            <h1 class="text-3xl font-bold text-gray-900">
-              {{ general.propertyName || selectedProperty?.name }}
-            </h1>
-            <p class="text-gray-500">{{ general.propertyAddress || selectedProperty?.address }}</p>
-            <div class="flex items-center gap-4 mt-2">
-              <Tag
-                :value="selectedProperty?.statusLabel"
-                :severity="selectedProperty?.statusSeverity"
-                rounded
-              />
-              <span class="text-sm text-gray-500"
-                >Mã: {{ general.propertyCode || selectedProperty?.code }}</span
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <PageLoading v-if="loading" />
+    <div v-else class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Stats Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <div class="bg-white rounded-xl p-6 shadow-card border border-gray-200">
@@ -45,7 +21,7 @@
         </div>
 
         <div class="bg-white rounded-xl p-6 shadow-card border border-gray-200">
-          <div class="flex items-center justify-between">
+          <div class="flex items-start justify-between">
             <div>
               <p class="text-lg font-semibold text-gray-600">Đã thuê</p>
               <p class="text-3xl font-bold text-gray-900">
@@ -61,7 +37,7 @@
         </div>
 
         <div class="bg-white rounded-xl p-6 shadow-card border border-gray-200">
-          <div class="flex items-center justify-between">
+          <div class="flex items-start justify-between">
             <div>
               <p class="text-lg font-semibold text-gray-600">Tỷ lệ lấp đầy</p>
               <p class="text-3xl font-bold text-gray-900">
@@ -87,37 +63,35 @@
           </div>
 
           <div class="p-6">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="grid grid-cols-1 gap-8">
               <!-- Property Details -->
-              <div>
-                <div class="space-y-3">
-                  <div class="flex justify-between">
-                    <span class="text-gray-500">Tên:</span>
-                    <span class="font-medium">{{
-                      general.propertyName || selectedProperty?.name || '---'
-                    }}</span>
-                  </div>
-                  <div class="flex justify-between">
-                    <span class="text-gray-500">Địa chỉ:</span>
-                    <span class="font-medium">{{
-                      general.propertyAddress || selectedProperty?.address || '---'
-                    }}</span>
-                  </div>
-                  <div class="flex justify-between">
-                    <span class="text-gray-500">Mã:</span>
-                    <span class="font-medium">{{
-                      general.propertyCode || selectedProperty?.code || '---'
-                    }}</span>
-                  </div>
-                  <div class="flex justify-between">
-                    <span class="text-gray-500">Trạng thái:</span>
-                    <Tag
-                      v-if="selectedProperty?.statusLabel"
-                      :value="selectedProperty?.statusLabel"
-                      :severity="selectedProperty?.statusSeverity"
-                      size="small"
-                    />
-                  </div>
+              <div class="space-y-3 w-full">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Tên:</span>
+                  <span class="font-medium">{{
+                    general.propertyName || selectedProperty?.name || '---'
+                  }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Địa chỉ:</span>
+                  <span class="font-medium">{{
+                    general.propertyAddress || selectedProperty?.address || '---'
+                  }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Mã:</span>
+                  <span class="font-medium">{{
+                    general.propertyCode || selectedProperty?.code || '---'
+                  }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Trạng thái:</span>
+                  <Tag
+                    v-if="selectedProperty?.statusLabel"
+                    :value="selectedProperty?.statusLabel"
+                    :severity="selectedProperty?.statusSeverity"
+                    size="small"
+                  />
                 </div>
               </div>
             </div>
@@ -142,8 +116,13 @@
             </div>
             <p class="text-sm text-gray-300 mt-4">Bao gồm tiền thuê, điện nước và các khoản phí</p>
 
-            <div class="text-green-500 text-sm mt-2">
-              <i class="pi pi-chart-line"></i> <span>+12% so với tháng trước</span>
+            <div
+              :class="monthlyRevenueChangePercent > 0 ? 'text-green-500' : 'text-red-500'"
+              class="text-sm mt-2"
+              v-if="monthlyRevenueChangePercent"
+            >
+              <i class="pi pi-chart-line"></i>
+              <span>{{ monthlyRevenueChangePercent }}% so với tháng trước</span>
             </div>
           </div>
         </div>
@@ -176,27 +155,77 @@
             <div class="text-gray-300 text-sm mt-1">Các mục cần xử lý sớm</div>
           </div>
           <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div
-              class="flex items-center justify-between p-4 rounded-lg bg-red-50 border border-red-200"
-            >
-              <div class="flex items-center gap-3">
-                <i class="pi pi-exclamation-circle text-red-600 text-xl"></i>
-                <span class="text-gray-700">Hóa đơn chưa thanh toán</span>
+            <!-- Unpaid Invoices List -->
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <i class="pi pi-exclamation-circle text-red-600"></i>
+                <span class="text-gray-700 font-medium">Hóa đơn chưa thanh toán</span>
+                <span class="text-xs text-gray-400"
+                  >({{ attentionRequired.unpaidInvoices?.length ?? 0 }})</span
+                >
               </div>
-              <span class="text-lg font-semibold text-red-700">{{
-                attentionRequired.unpaidInvoices ?? 0
-              }}</span>
+              <div v-if="attentionRequired.unpaidInvoices?.length" class="space-y-3">
+                <div
+                  v-for="inv in attentionRequired.unpaidInvoices"
+                  :key="inv.id"
+                  class="p-3 rounded-lg border border-red-200 bg-red-50"
+                >
+                  <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">
+                      Mã HĐ: <span class="font-medium">#{{ inv.id }}</span>
+                    </div>
+                    <div class="text-sm text-red-600 font-semibold">
+                      {{
+                        Number(inv.totalAmount || 0).toLocaleString('vi-VN', {
+                          style: 'currency',
+                          currency: 'VND',
+                        })
+                      }}
+                    </div>
+                  </div>
+                  <div class="mt-1 text-xs text-gray-500">
+                    Kỳ: {{ inv.periodStart }} - {{ inv.periodEnd }}
+                  </div>
+                  <div class="mt-1 text-xs text-gray-400">
+                    Ngày xuất: {{ inv.invoiceDate }} | HĐ thuê: #{{ inv.contractId }}
+                  </div>
+                </div>
+              </div>
+              <div v-else class="text-sm text-gray-400">Không có hóa đơn nào.</div>
             </div>
-            <div
-              class="flex items-center justify-between p-4 rounded-lg bg-amber-50 border border-amber-200"
-            >
-              <div class="flex items-center gap-3">
-                <i class="pi pi-calendar-times text-amber-600 text-xl"></i>
-                <span class="text-gray-700">Hợp đồng sắp hết hạn</span>
+
+            <!-- Expiring Contracts List -->
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <i class="pi pi-calendar-times text-amber-600"></i>
+                <span class="text-gray-700 font-medium">Hợp đồng sắp hết hạn</span>
+                <span class="text-xs text-gray-400"
+                  >({{ attentionRequired.expiringContracts?.length ?? 0 }})</span
+                >
               </div>
-              <span class="text-lg font-semibold text-amber-700">{{
-                attentionRequired.expiringContracts ?? 0
-              }}</span>
+              <div v-if="attentionRequired.expiringContracts?.length" class="space-y-3">
+                <div
+                  v-for="ct in attentionRequired.expiringContracts"
+                  :key="ct.id"
+                  class="p-3 rounded-lg border border-amber-200 bg-amber-50"
+                >
+                  <div class="flex items-center justify-between">
+                    <div class="text-sm text-gray-600">
+                      HĐ thuê: <span class="font-medium">#{{ ct.id }}</span>
+                    </div>
+                    <div class="text-xs px-2 py-0.5 rounded bg-amber-100 text-amber-700">
+                      Sắp hết hạn
+                    </div>
+                  </div>
+                  <div class="mt-1 text-xs text-gray-500">
+                    Thời hạn: {{ ct.startDate }} → {{ ct.endDate }}
+                  </div>
+                  <div class="mt-1 text-xs text-gray-400">
+                    Phòng: #{{ ct.roomId }} | Khách: #{{ ct.tenantId }}
+                  </div>
+                </div>
+              </div>
+              <div v-else class="text-sm text-gray-400">Không có hợp đồng nào.</div>
             </div>
           </div>
         </div>
@@ -210,17 +239,14 @@ import { ref, onMounted, watch } from 'vue'
 import MeterGroup from 'primevue/metergroup'
 import Tag from 'primevue/tag'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
-import type { Property, PropertyUI } from '@/types/property'
+import type { Property, PropertyUI, PropertyDashboardResponse } from '@/types/property'
 import { useRoute } from 'vue-router'
-import {
-  getProperty,
-  getPropertyDashboard,
-  type PropertyDashboardResponse,
-} from '@/services/api/propertyService'
+import { getProperty, getPropertyDashboard } from '@/services/api/propertyService'
 import { transformPropertyToUI } from '@/transformers/properties'
 import { useMainStore } from '@/stores/main'
 const store = useMainStore()
 
+const loading = ref(false)
 const route = useRoute()
 const selectedProperty = ref<PropertyUI | null>(null)
 const stats = ref<PropertyDashboardResponse['stats']>({
@@ -237,6 +263,7 @@ const general = ref<PropertyDashboardResponse['general']>({
   propertyStatus: 0,
 })
 const monthlyRevenue = ref<number>(0)
+const monthlyRevenueChangePercent = ref<number>(0)
 
 type RoomStatusKey = Exclude<
   keyof PropertyDashboardResponse['roomStatus'],
@@ -262,8 +289,8 @@ const roomStatusMeterGroupData = ref<RoomStatusItem[]>([
   },
 ])
 const attentionRequired = ref<PropertyDashboardResponse['attentionRequired']>({
-  unpaidInvoices: 0,
-  expiringContracts: 0,
+  unpaidInvoices: [],
+  expiringContracts: [],
 })
 
 async function loadPropertyByRoute() {
@@ -274,6 +301,7 @@ async function loadPropertyByRoute() {
     return
   }
   const id = Number(idParam)
+  loading.value = true
   try {
     const prop: Property = await getProperty(id)
     // Optionally compute room stats here or fetch separately; use zeros for now
@@ -284,6 +312,7 @@ async function loadPropertyByRoute() {
     stats.value = dashboard.stats
     general.value = dashboard.general
     monthlyRevenue.value = dashboard.monthlyRevenue
+    monthlyRevenueChangePercent.value = dashboard.monthlyRevenueChangePercent
     roomStatusMeterGroupData.value = roomStatusMeterGroupData.value.map((item) => ({
       ...item,
       value: dashboard.roomStatus.totalRooms
@@ -291,7 +320,9 @@ async function loadPropertyByRoute() {
         : 0,
     }))
     attentionRequired.value = dashboard.attentionRequired
-  } catch (e) {
+    loading.value = false
+  } catch {
+    loading.value = false
     selectedProperty.value = null
     store.setSelectedProperty(null)
   }
@@ -299,6 +330,9 @@ async function loadPropertyByRoute() {
 
 onMounted(loadPropertyByRoute)
 watch(() => route.params.id, loadPropertyByRoute)
+
+// Ensure initial load is awaited by Suspense boundary
+loadPropertyByRoute()
 </script>
 
 <style scoped></style>

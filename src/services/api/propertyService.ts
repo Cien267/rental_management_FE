@@ -6,7 +6,12 @@ import {
   transformCreatePropertyToApi,
   transformUpdatePropertyToApi,
 } from '@/transformers/properties'
-import type { Property, CreatePropertyInput, UpdatePropertyInput } from '@/types/property'
+import type {
+  Property,
+  CreatePropertyInput,
+  UpdatePropertyInput,
+  PropertyDashboardResponse,
+} from '@/types/property'
 
 export const getProperties = async (): Promise<Property[]> => {
   const response = await get(PROPERTY_URLS.URL_LIST)
@@ -36,35 +41,6 @@ export const updateProperty = async (
 
 export const deleteProperty = async (id: number): Promise<void> => {
   await del(PROPERTY_URLS.URL_DELETE(id))
-}
-
-// Dashboard (overview) data
-export interface PropertyDashboardResponse {
-  stats: {
-    totalRooms: number
-    occupancyRate: number
-    rentedRooms: number
-  }
-  general: {
-    totalRooms: number
-    occupancyRate: number
-    propertyName: string
-    propertyCode: string
-    propertyAddress: string
-    propertyStatus: number
-  }
-  monthlyRevenue: number
-  roomStatus: {
-    totalRooms: number
-    rentedRooms: number
-    availableRooms: number
-    maintenanceRooms: number
-    occupancyRate: number
-  }
-  attentionRequired: {
-    unpaidInvoices: number
-    expiringContracts: number
-  }
 }
 
 export const getPropertyDashboard = async (

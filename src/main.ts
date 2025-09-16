@@ -11,6 +11,7 @@ import Toast, { POSITION } from 'vue-toastification'
 import clickOutsideDirective from '@/directives/click-outside'
 import { definePreset } from '@primeuix/themes'
 import ConfirmationService from 'primevue/confirmationservice'
+import PageLoading from '@/components/base/atoms/PageLoading.vue'
 
 const app = createApp(App)
 
@@ -48,5 +49,5 @@ const options = {
 }
 app.use(Toast, options)
 app.use(ConfirmationService)
-
+app.component('PageLoading', PageLoading)
 app.mount('#root')

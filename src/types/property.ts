@@ -74,3 +74,52 @@ export interface PropertyUI extends Property {
   statusSeverity?: 'success' | 'warn' | 'danger' | 'secondary'
   occupancyBgColor?: string
 }
+
+// Dashboard (overview) data types
+export interface PropertyDashboardUnpaidInvoiceItem {
+  id: number
+  contractId: number
+  invoiceDate: string
+  periodStart: string
+  periodEnd: string
+  totalAmount: number
+  status: string
+}
+
+export interface PropertyDashboardExpiringContractItem {
+  id: number
+  roomId: number
+  tenantId: number
+  startDate: string
+  endDate: string
+  status: string
+}
+
+export interface PropertyDashboardResponse {
+  stats: {
+    totalRooms: number
+    occupancyRate: number
+    rentedRooms: number
+  }
+  general: {
+    totalRooms: number
+    occupancyRate: number
+    propertyName: string
+    propertyCode: string
+    propertyAddress: string
+    propertyStatus: number
+  }
+  monthlyRevenue: number
+  monthlyRevenueChangePercent: number
+  roomStatus: {
+    totalRooms: number
+    rentedRooms: number
+    availableRooms: number
+    maintenanceRooms: number
+    occupancyRate: number
+  }
+  attentionRequired: {
+    unpaidInvoices: PropertyDashboardUnpaidInvoiceItem[]
+    expiringContracts: PropertyDashboardExpiringContractItem[]
+  }
+}

@@ -22,6 +22,7 @@ const editingProperty = ref<Property | null>(null)
 const deletingProperty = ref<PropertyUI | null>(null)
 const { tError, tSuccess } = useCustomToast()
 const isEmpty = computed(() => properties.value.length === 0)
+const loading = ref(false)
 
 function goToProperty(property: PropertyUI) {
   store.setSelectedProperty(null)
@@ -94,6 +95,7 @@ function handleCancelDelete() {
 }
 
 async function loadProperties() {
+  loading.value = true
   try {
     const apiProperties = await getProperties()
 
@@ -111,7 +113,9 @@ async function loadProperties() {
         roomCounts[property.id as keyof typeof roomCounts]?.occupied || 0,
       ),
     )
+    loading.value = false
   } catch (error) {
+    loading.value = false
     tError('Lỗi', 'Không thể tải danh sách nhà trọ')
     console.error('Load properties error:', error)
 
@@ -120,7 +124,7 @@ async function loadProperties() {
   }
 }
 
-// Async setup - this will be awaited by Suspense
+// Async setup - awaited by Suspense boundary in DefaultLayout
 loadProperties()
 </script>
 
@@ -141,7 +145,10 @@ loadProperties()
         />
       </div>
 
-      <div>
+      <div v-if="loading">
+        <PageLoading />
+      </div>
+      <div v-else>
         <!-- Empty state -->
         <div
           v-if="isEmpty"

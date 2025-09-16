@@ -25,14 +25,7 @@
       <!-- Main Content -->
       <main class="h-full flex-1 flex flex-col flex-grow relative">
         <div class="flex-1 z-10">
-          <Suspense>
-            <template #default>
-              <slot />
-            </template>
-            <template #fallback>
-              <PageLoading />
-            </template>
-          </Suspense>
+          <slot />
         </div>
       </main>
     </div>
@@ -49,7 +42,6 @@ import AppHeader from '@/components/layout/AppHeader.vue'
 import AppSidebar from '@/components/layout/AppSidebar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import type { PropertyUI } from '@/types/property'
-import PageLoading from '@/components/base/atoms/PageLoading.vue'
 import { useMainStore } from '@/stores/main'
 
 // Props for layout configuration

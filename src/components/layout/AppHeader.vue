@@ -33,7 +33,7 @@
             severity="secondary"
             size="small"
             @click="handleBackClick"
-            class="ml-4 lg:!hidden"
+            class="ml-4 !hidden lg:!block"
           />
         </div>
 
