@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen bg-gray-50 flex flex-col">
+  <div class="min-h-screen h-auto bg-gray-50 flex flex-col">
     <!-- Header -->
     <AppHeader
       :show-back-button="!!selectedProperty"
@@ -19,7 +19,7 @@
       <AppSidebar v-if="selectedProperty" :property="selectedProperty" />
 
       <!-- Main Content -->
-      <main class="h-full flex-1 flex flex-col relative">
+      <main class="h-full flex-1 flex flex-col flex-grow relative">
         <div class="flex-1 z-10">
           <Suspense>
             <template #default>

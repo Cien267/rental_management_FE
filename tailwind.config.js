@@ -60,6 +60,7 @@ const SPACING = {
   189: '756px',
   200: '800px',
   full: '100%',
+  screen: '100vh',
 }
 
 export default {
