@@ -41,8 +41,18 @@
         >
         </Button>
         <div class="flex-1 flex flex-col gap-2 min-w-0" v-if="!isCollapsed">
-          <div class="text-lg font-bold text-gray-900 truncate">
-            {{ property?.name || 'Nhà trọ' }}
+          <div class="flex items-center justify-between">
+            <div class="text-lg font-bold text-gray-900 truncate">
+              {{ property?.name || 'Nhà trọ' }}
+            </div>
+            <Button
+              v-if="isSidebarOpenMobile"
+              label="Quay lại danh sách nhà"
+              icon="pi pi-arrow-left"
+              text
+              severity="secondary"
+              size="small"
+            />
           </div>
           <div class="text-xs text-gray-500 truncate">{{ property?.code || 'NT' }}</div>
         </div>
