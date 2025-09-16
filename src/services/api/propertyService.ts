@@ -58,6 +58,7 @@ export interface PropertyDashboardResponse {
     totalRooms: number
     rentedRooms: number
     availableRooms: number
+    maintenanceRooms: number
     occupancyRate: number
   }
   attentionRequired: {

@@ -9,7 +9,7 @@
       // Mobile drawer positioning
       isSidebarOpenMobile ? 'fixed inset-y-0 left-0 w-full' : 'fixed -left-80 inset-y-0',
       // Desktop static positioning
-      'lg:relative lg:left-0',
+      'lg:relative lg:left-0 transition-all duration-200 ease-in-out',
     ]"
   >
     <!-- Property Info Header -->
@@ -52,6 +52,7 @@
               text
               severity="secondary"
               size="small"
+              @click="emit('back-to-properties')"
             />
           </div>
           <div class="text-xs text-gray-500 truncate">{{ property?.code || 'NT' }}</div>
@@ -90,6 +91,10 @@ import { useRouter } from 'vue-router'
 const store = useMainStore()
 const router = useRouter()
 const property = store.getSelectedProperty
+
+const emit = defineEmits<{
+  'back-to-properties': []
+}>()
 
 const navigateTo = (routeName: string) => {
   const id = property?.id as unknown as number

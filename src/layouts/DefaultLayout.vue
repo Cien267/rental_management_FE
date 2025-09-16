@@ -16,7 +16,11 @@
       ></div>
 
       <!-- Left Sidebar (conditional) -->
-      <AppSidebar v-if="selectedProperty" :property="selectedProperty" />
+      <AppSidebar
+        v-if="selectedProperty"
+        :property="selectedProperty"
+        @back-to-properties="handleBackToProperties"
+      />
 
       <!-- Main Content -->
       <main class="h-full flex-1 flex flex-col flex-grow relative">
