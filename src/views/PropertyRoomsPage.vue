@@ -3,7 +3,10 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <!-- Header -->
       <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-semibold text-gray-900">Phòng</h1>
+        <div>
+          <div class="text-2xl font-semibold text-gray-900">Phòng</div>
+          <div class="text-base text-gray-300">Quản lý phòng và trạng thái</div>
+        </div>
         <Button
           label="Thêm phòng"
           icon="pi pi-plus"
@@ -16,128 +19,131 @@
 
       <div v-else class="space-y-6">
         <!-- Stat cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div class="bg-white rounded-xl p-6 shadow-card border border-gray-200">
             <div class="flex items-start justify-between">
               <div>
-                <p class="text-lg font-semibold text-gray-600">Còn trống</p>
-                <p class="text-3xl font-bold text-gray-900">{{ stats.available }}</p>
+                <Tag severity="secondary" value="Tất cả"></Tag>
+                <p class="text-4xl font-bold text-gray-600">{{ stats.total }}</p>
               </div>
-              <span class="px-3 py-1 text-sm rounded bg-green-100 text-green-700">Available</span>
             </div>
           </div>
-
           <div class="bg-white rounded-xl p-6 shadow-card border border-gray-200">
             <div class="flex items-start justify-between">
               <div>
-                <p class="text-lg font-semibold text-gray-600">Đã thuê</p>
-                <p class="text-3xl font-bold text-gray-900">{{ stats.occupied }}</p>
+                <Tag severity="success" value="Đã thuê"></Tag>
+                <p class="text-4xl font-bold text-green-600">{{ stats.occupied }}</p>
               </div>
-              <span class="px-3 py-1 text-sm rounded bg-sky-100 text-sky-700">Occupied</span>
             </div>
           </div>
-
           <div class="bg-white rounded-xl p-6 shadow-card border border-gray-200">
             <div class="flex items-start justify-between">
               <div>
-                <p class="text-lg font-semibold text-gray-600">Bảo trì</p>
-                <p class="text-3xl font-bold text-gray-900">{{ stats.maintenance }}</p>
+                <Tag severity="info" value="Còn trống"></Tag>
+                <p class="text-4xl font-bold text-blue-600">{{ stats.available }}</p>
               </div>
-              <span class="px-3 py-1 text-sm rounded bg-amber-100 text-amber-700">Maintenance</span>
+            </div>
+          </div>
+          <div class="bg-white rounded-xl p-6 shadow-card border border-gray-200">
+            <div class="flex items-start justify-between">
+              <div>
+                <Tag severity="warn" value="Bảo trì"></Tag>
+                <p class="text-4xl font-bold text-orange-600">{{ stats.maintenance }}</p>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Table -->
         <div class="bg-white rounded-2xl border border-gray-200">
-          <div class="p-4 flex items-center justify-between border-b border-gray-200">
-            <div class="text-base font-semibold text-gray-800">Danh sách phòng</div>
-            <div class="relative">
-              <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-              <input
-                v-model="keyword"
-                type="text"
-                class="pl-10 pr-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
-                placeholder="Tìm kiếm phòng..."
-              />
-            </div>
-          </div>
           <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-50">
-                <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Tên phòng
-                  </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Tầng
-                  </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Diện tích
-                  </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Giá
-                  </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Trạng thái
-                  </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                    Số người
-                  </th>
-                  <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">
-                    Hành động
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="bg-white divide-y divide-gray-200">
-                <tr
-                  v-for="room in filteredRooms"
-                  :key="room.id"
-                  class="hover:bg-gray-50 cursor-pointer"
-                  @click="openDrawer(room)"
-                >
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ room.name }}</td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {{ room.floor ?? '-' }}
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {{ room.area ? room.area + ' m²' : '-' }}
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {{ formatCurrency(room.price) }}
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <Tag
-                      :value="statusLabel(room.status)"
-                      :severity="statusSeverity(room.status)"
-                    />
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                    {{ room.currentOccupants }}/{{ room.maxOccupants }}
-                  </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-                    <Button
-                      label="Sửa"
-                      size="small"
-                      severity="secondary"
-                      class="mr-2"
-                      @click.stop="onEditRoom(room)"
-                    />
-                    <Button
-                      label="Xóa"
-                      size="small"
-                      severity="danger"
-                      @click.stop="onDeleteRoom(room)"
-                    />
-                  </td>
-                </tr>
-                <tr v-if="filteredRooms.length === 0">
-                  <td colspan="7" class="px-6 py-8 text-center text-sm text-gray-400">
-                    Không có phòng nào
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <DataTable
+              ref="dt"
+              stripedRows
+              paginator
+              removableSort
+              dataKey="id"
+              filterDisplay="row"
+              :rows="15"
+              :rowsPerPageOptions="[5, 10, 15, 20, 50]"
+              :value="filteredRooms"
+              :globalFilterFields="['name', 'status']"
+              :loading="loading"
+              tableStyle="min-width: 50rem"
+              selectionMode="single"
+              :metaKeySelection="false"
+              v-model:filters="filters"
+              v-model:selection="selectedRooms"
+              exportFilename="Phòng trọ"
+              @rowSelect="openDrawer"
+            >
+              <template #empty> Chưa có phòng nào </template>
+              <template #loading> Đang tải dữ liệu </template>
+              <template #header>
+                <div class="text-end pb-4">
+                  <Button icon="pi pi-external-link" label="Export" @click="exportCSV" />
+                </div>
+              </template>
+              <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
+              <Column field="name" header="Tên" sortable>
+                <template #body="{ data }">
+                  {{ data.name }}
+                </template>
+                <template #filter="{ filterModel, filterCallback }">
+                  <InputText
+                    v-model="filterModel.value"
+                    type="text"
+                    @input="filterCallback()"
+                    placeholder="Tìm theo tên"
+                  />
+                </template>
+              </Column>
+              <Column field="floor" header="Tầng" sortable></Column>
+              <Column field="price" header="Giá" sortable></Column>
+              <Column field="status" header="Trạng thái">
+                <template #body="slotProps">
+                  <Tag
+                    :value="getRoomStatusValue(slotProps.data.status)"
+                    :severity="getRoomStatusSeverity(slotProps.data.status)"
+                  />
+                </template>
+                <template #filter="{ filterModel, filterCallback }">
+                  <Select
+                    v-model="filterModel.value"
+                    @change="filterCallback()"
+                    :options="statusOptions"
+                    placeholder="Chon trạng thái"
+                    style="min-width: 12rem"
+                    :showClear="true"
+                  >
+                    <template #option="slotProps">
+                      <Tag
+                        :value="getRoomStatusValue(slotProps.option)"
+                        :severity="getRoomStatusSeverity(slotProps.option)"
+                      />
+                    </template>
+                  </Select>
+                </template>
+              </Column>
+              <Column field="maxOccupants" header="Số người thuê tối đa"></Column>
+              <Column field="" header="Hành động">
+                <template #body="slotProps">
+                  <Button
+                    label="Sửa"
+                    size="small"
+                    severity="secondary"
+                    class="mr-2"
+                    @click.stop="onEditRoom(slotProps.data)"
+                  />
+                  <Button
+                    label="Xóa"
+                    size="small"
+                    severity="danger"
+                    @click.stop="onDeleteRoom(slotProps.data)"
+                  />
+                </template>
+              </Column>
+            </DataTable>
           </div>
         </div>
       </div>
@@ -214,7 +220,9 @@
 import { ref, computed, onMounted } from 'vue'
 import Button from 'primevue/button'
 import Tag from 'primevue/tag'
+import Select from 'primevue/select'
 import Drawer from 'primevue/drawer'
+import InputText from 'primevue/inputtext'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import PageLoading from '@/components/base/atoms/PageLoading.vue'
 import UpSertRoomModal from '@/components/rooms/UpSertRoomModal.vue'
@@ -226,12 +234,16 @@ import { getRooms, deleteRoom } from '@/services/api/roomService'
 import { transformPropertyToUI } from '@/transformers/properties'
 import { useRoute } from 'vue-router'
 import { useMainStore } from '@/stores/main'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import { FilterMatchMode } from '@primevue/core/api'
 
 const route = useRoute()
 const store = useMainStore()
 
 const loading = ref<boolean>(false)
 const rooms = ref<Room[]>([])
+const selectedRooms = ref<Room[]>([])
 const keyword = ref<string>('')
 const selectedRoom = ref<Room | null>(null)
 const isDrawerOpen = ref<boolean>(false)
@@ -242,8 +254,14 @@ const roomModal = ref<InstanceType<typeof UpSertRoomModal> | null>(null)
 const deleteModal = ref<InstanceType<typeof DeleteRoomModal> | null>(null)
 const editingRoom = ref<Room | null>(null)
 const deletingRoom = ref<Room | null>(null)
+const dt = ref()
+
+const exportCSV = () => {
+  dt.value.exportCSV()
+}
 
 const stats = computed(() => ({
+  total: rooms.value.length,
   available: rooms.value.filter((r) => r.status === 'available').length,
   occupied: rooms.value.filter((r) => r.status === 'occupied').length,
   maintenance: rooms.value.filter((r) => r.status === 'maintenance').length,
@@ -270,6 +288,26 @@ function statusSeverity(status: Room['status']): 'success' | 'info' | 'warn' {
 function formatCurrency(v: number): string {
   return Number(v || 0).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
 }
+
+const statusOptions = ref(['available', 'occupied', 'maintenance'])
+
+const getRoomStatusValue = (status: string) => {
+  if (status === 'available') return 'Còn trống'
+  if (status === 'occupied') return 'Đã thuê'
+  return 'Bảo trì'
+}
+
+const getRoomStatusSeverity = (status: string) => {
+  if (status === 'available') return 'info'
+  if (status === 'occupied') return 'success'
+  return 'warn'
+}
+
+const filters = ref({
+  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  status: { value: null, matchMode: FilterMatchMode.EQUALS },
+})
 
 function onAddRoom() {
   editingRoom.value = null
@@ -325,7 +363,53 @@ async function loadRooms() {
     rooms.value = data
   } catch (e) {
     console.error('Load rooms error:', e)
-    rooms.value = []
+    rooms.value = [
+      {
+        id: 1,
+        propertyId: 1,
+        name: 'Phòng 101',
+        floor: 1,
+        area: 20,
+        price: 5000000,
+        status: 'available',
+        amenities: ['Điều hòa', 'Tủ lạnh'],
+        maxOccupants: 3,
+        currentOccupants: 3,
+        note: 'Phòng có ban công',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: 2,
+        propertyId: 1,
+        name: 'Phòng 102',
+        floor: 1,
+        area: 25,
+        price: 4000000,
+        status: 'occupied',
+        amenities: ['Điều hòa', 'Tủ lạnh'],
+        maxOccupants: 3,
+        currentOccupants: 3,
+        note: 'Phòng có ban công',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: 3,
+        propertyId: 1,
+        name: 'Phòng 203',
+        floor: 2,
+        area: 25,
+        price: 3500000,
+        status: 'occupied',
+        amenities: ['Điều hòa', 'Tủ lạnh'],
+        maxOccupants: 3,
+        currentOccupants: 3,
+        note: 'Phòng có ban công',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]
   } finally {
     loading.value = false
   }
