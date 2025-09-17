@@ -27,13 +27,11 @@ const ApiRoomSchema = z.object({
   amenities: z
     .union([z.string(), z.array(z.string())])
     .transform((v) => {
-      if (Array.isArray(v)) return v
-      if (!v) return null
+      if (Array.isArray(v)) return v.join(', ')
       try {
-        const parsed = JSON.parse(v)
-        return Array.isArray(parsed) ? parsed : null
+        return typeof v === 'string' ? JSON.parse(v) : null
       } catch {
-        return null
+        return v
       }
     })
     .nullable()
@@ -68,7 +66,7 @@ export function transformCreateRoomToApi(payload: CreateRoomInput) {
     area: payload.area ?? null,
     price: payload.price,
     status: payload.status ?? 'available',
-    amenities: payload.amenities ? JSON.stringify(payload.amenities) : null,
+    amenities: payload.amenities ?? null,
     maxOccupants: payload.maxOccupants ?? 1,
     note: payload.note ?? null,
   }
@@ -82,7 +80,7 @@ export function transformUpdateRoomToApi(payload: UpdateRoomInput) {
     area: payload.area,
     price: payload.price,
     status: payload.status,
-    amenities: payload.amenities ? JSON.stringify(payload.amenities) : undefined,
+    amenities: payload.amenities,
     maxOccupants: payload.maxOccupants,
     currentOccupants: payload.currentOccupants,
     note: payload.note,

@@ -17,8 +17,8 @@ export const getUtilityMeters = async (propertyId?: number): Promise<UtilityMete
   return transformApiUtilityMetersToUtilityMeters(response.data.data)
 }
 
-export const getUtilityMeter = async (id: number): Promise<UtilityMeter> => {
-  const response = await get(UTILITY_METER_URLS.URL_DETAIL(id))
+export const getUtilityMeter = async (id: number, propertyId?: number): Promise<UtilityMeter> => {
+  const response = await get(UTILITY_METER_URLS.URL_DETAIL(id, propertyId))
   return transformApiUtilityMeterToUtilityMeter(response.data.data)
 }
 
@@ -36,14 +36,15 @@ export const createUtilityMeter = async (
 export const updateUtilityMeter = async (
   id: number,
   utilityMeterData: UpdateUtilityMeterInput,
+  propertyId?: number,
 ): Promise<UtilityMeter> => {
   const response = await patch(
-    UTILITY_METER_URLS.URL_UPDATE(id),
+    UTILITY_METER_URLS.URL_UPDATE(id, propertyId),
     transformUpdateUtilityMeterToApi({ ...utilityMeterData, id }),
   )
   return transformApiUtilityMeterToUtilityMeter(response.data.data)
 }
 
-export const deleteUtilityMeter = async (id: number): Promise<void> => {
-  await del(UTILITY_METER_URLS.URL_DELETE(id))
+export const deleteUtilityMeter = async (id: number, propertyId?: number): Promise<void> => {
+  await del(UTILITY_METER_URLS.URL_DELETE(id, propertyId))
 }

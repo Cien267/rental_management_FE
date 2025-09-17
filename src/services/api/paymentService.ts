@@ -8,22 +8,27 @@ import {
 } from '@/transformers/payments'
 import type { Payment, CreatePaymentInput, UpdatePaymentInput } from '@/types/payment'
 
-export const getPayments = async (invoiceId?: number): Promise<Payment[]> => {
-  const response = await get(PAYMENT_URLS.URL_LIST(invoiceId))
+export const getPayments = async (invoiceId?: number, propertyId?: number): Promise<Payment[]> => {
+  const response = await get(PAYMENT_URLS.URL_LIST(invoiceId, propertyId))
   return transformApiPaymentsToPayments(response.data.data)
 }
 
-export const getPayment = async (id: number): Promise<Payment> => {
-  const response = await get(PAYMENT_URLS.URL_DETAIL(id))
+export const getPayment = async (
+  id: number,
+  invoiceId?: number,
+  propertyId?: number,
+): Promise<Payment> => {
+  const response = await get(PAYMENT_URLS.URL_DETAIL(id, invoiceId, propertyId))
   return transformApiPaymentToPayment(response.data.data)
 }
 
 export const createPayment = async (
   paymentData: CreatePaymentInput,
   invoiceId?: number,
+  propertyId?: number,
 ): Promise<Payment> => {
   const response = await post(
-    PAYMENT_URLS.URL_CREATE(invoiceId),
+    PAYMENT_URLS.URL_CREATE(invoiceId, propertyId),
     transformCreatePaymentToApi(paymentData),
   )
   return transformApiPaymentToPayment(response.data.data)
@@ -32,14 +37,20 @@ export const createPayment = async (
 export const updatePayment = async (
   id: number,
   paymentData: UpdatePaymentInput,
+  invoiceId?: number,
+  propertyId?: number,
 ): Promise<Payment> => {
   const response = await patch(
-    PAYMENT_URLS.URL_UPDATE(id),
+    PAYMENT_URLS.URL_UPDATE(id, invoiceId, propertyId),
     transformUpdatePaymentToApi({ ...paymentData, id }),
   )
   return transformApiPaymentToPayment(response.data.data)
 }
 
-export const deletePayment = async (id: number): Promise<void> => {
-  await del(PAYMENT_URLS.URL_DELETE(id))
+export const deletePayment = async (
+  id: number,
+  invoiceId?: number,
+  propertyId?: number,
+): Promise<void> => {
+  await del(PAYMENT_URLS.URL_DELETE(id, invoiceId, propertyId))
 }

@@ -8,32 +8,39 @@ import {
 } from '@/transformers/invoices'
 import type { Invoice, CreateInvoiceInput, UpdateInvoiceInput } from '@/types/invoice'
 
-export const getInvoices = async (): Promise<Invoice[]> => {
-  const response = await get(INVOICE_URLS.URL_LIST)
+export const getInvoices = async (propertyId?: number): Promise<Invoice[]> => {
+  const response = await get(INVOICE_URLS.URL_LIST(propertyId))
   return transformApiInvoicesToInvoices(response.data.data)
 }
 
-export const getInvoice = async (id: number): Promise<Invoice> => {
-  const response = await get(INVOICE_URLS.URL_DETAIL(id))
+export const getInvoice = async (id: number, propertyId?: number): Promise<Invoice> => {
+  const response = await get(INVOICE_URLS.URL_DETAIL(id, propertyId))
   return transformApiInvoiceToInvoice(response.data.data)
 }
 
-export const createInvoice = async (invoiceData: CreateInvoiceInput): Promise<Invoice> => {
-  const response = await post(INVOICE_URLS.URL_CREATE, transformCreateInvoiceToApi(invoiceData))
+export const createInvoice = async (
+  invoiceData: CreateInvoiceInput,
+  propertyId?: number,
+): Promise<Invoice> => {
+  const response = await post(
+    INVOICE_URLS.URL_CREATE(propertyId),
+    transformCreateInvoiceToApi(invoiceData),
+  )
   return transformApiInvoiceToInvoice(response.data.data)
 }
 
 export const updateInvoice = async (
   id: number,
   invoiceData: UpdateInvoiceInput,
+  propertyId?: number,
 ): Promise<Invoice> => {
   const response = await patch(
-    INVOICE_URLS.URL_UPDATE(id),
+    INVOICE_URLS.URL_UPDATE(id, propertyId),
     transformUpdateInvoiceToApi({ ...invoiceData, id }),
   )
   return transformApiInvoiceToInvoice(response.data.data)
 }
 
-export const deleteInvoice = async (id: number): Promise<void> => {
-  await del(INVOICE_URLS.URL_DELETE(id))
+export const deleteInvoice = async (id: number, propertyId?: number): Promise<void> => {
+  await del(INVOICE_URLS.URL_DELETE(id, propertyId))
 }

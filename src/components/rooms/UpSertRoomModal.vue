@@ -58,12 +58,12 @@
         </div>
 
         <div class="space-y-2">
-          <label class="text-sm font-medium text-gray-700">Tiện nghi (nhập, nhấn Enter)</label>
-          <InputTag
-            v-model="amenities"
-            separator=","
-            placeholder="VD: Điều hòa, Nóng lạnh"
+          <label class="text-sm font-medium text-gray-700">Tiện nghi</label>
+          <Textarea
+            v-model="formData.amenities"
+            rows="3"
             class="w-full"
+            placeholder="Mô tả tiện nghi phòng"
           />
         </div>
 
@@ -90,11 +90,12 @@ import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
 import Textarea from 'primevue/textarea'
 import Select from 'primevue/select'
-import InputTag from '@/components/base/atoms/InputTag.vue'
 import type { Room, CreateRoomInput, UpdateRoomInput } from '@/types/room'
 import { RoomStatusEnum } from '@/types/room'
 import { createRoom, updateRoom } from '@/services/api/roomService'
 import { useCustomToast } from '@/composables/base/useCustomToast'
+
+const { tSuccess, tError } = useCustomToast()
 
 interface Props {
   propertyId: number
@@ -112,8 +113,6 @@ const loading = ref(false)
 const errors = ref<Record<string, string>>({})
 const isEdit = computed(() => !!props.room)
 
-const amenities = ref<string[]>([])
-
 const statusOptions = [
   { label: 'Còn trống', value: 'available' },
   { label: 'Đã thuê', value: 'occupied' },
@@ -127,7 +126,7 @@ const formData = ref<CreateRoomInput | UpdateRoomInput>({
   status: RoomStatusEnum.Enum.available,
   floor: undefined,
   area: undefined,
-  amenities: [],
+  amenities: '',
   maxOccupants: 1,
   note: '',
 })
@@ -136,10 +135,8 @@ watch(
   () => props.room,
   (room) => {
     if (room) {
-      amenities.value = room.amenities || []
       formData.value = { ...room, id: room.id }
     } else {
-      amenities.value = []
       formData.value = {
         propertyId: props.propertyId,
         name: '',
@@ -147,7 +144,7 @@ watch(
         status: RoomStatusEnum.Enum.available,
         floor: undefined,
         area: undefined,
-        amenities: [],
+        amenities: '',
         maxOccupants: 1,
         note: '',
       }
@@ -169,18 +166,19 @@ async function handleSubmit() {
   if (!validateForm()) return
   loading.value = true
   try {
-    let saved: Room
-    const payload: any = { ...formData.value, amenities: amenities.value }
+    const payload: any = { ...formData.value }
     if (isEdit.value) {
-      saved = await updateRoom((formData.value as UpdateRoomInput).id!, payload)
+      await updateRoom((formData.value as UpdateRoomInput).id!, payload, props.propertyId)
       emit('room-updated')
     } else {
-      saved = await createRoom(payload as CreateRoomInput, props.propertyId)
+      await createRoom(payload as CreateRoomInput, props.propertyId)
       emit('room-saved')
     }
     isShow.value = false
   } catch (e) {
     console.error('Save room error:', e)
+    const eMsg = e?.response?.data?.message ?? 'Lỗi khi lưu phòng'
+    tError('Lỗi', eMsg)
   } finally {
     loading.value = false
   }

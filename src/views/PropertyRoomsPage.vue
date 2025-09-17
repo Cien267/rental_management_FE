@@ -73,7 +73,6 @@
               selectionMode="single"
               :metaKeySelection="false"
               v-model:filters="filters"
-              v-model:selection="selectedRooms"
               exportFilename="Phòng trọ"
               @rowSelect="openDrawer"
             >
@@ -84,7 +83,6 @@
                   <Button icon="pi pi-external-link" label="Export" @click="exportCSV" />
                 </div>
               </template>
-              <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
               <Column field="name" header="Tên" sortable>
                 <template #body="{ data }">
                   {{ data.name }}
@@ -152,49 +150,100 @@
     <!-- Drawer: room details -->
     <Drawer
       v-model:visible="isDrawerOpen"
-      header="Chi tiết phòng"
+      header="Chi tiết"
       position="right"
-      class="!w-full md:!w-96"
+      class="!w-full md:!w-1/2"
     >
-      <div v-if="selectedRoom" class="p-4 space-y-3 text-sm">
-        <div class="flex justify-between">
-          <span class="text-gray-500">Tên phòng</span
-          ><span class="font-medium">{{ selectedRoom.name }}</span>
+      <div v-if="selectedRoom" class="p-4 space-y-6">
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="text-2xl font-semibold text-gray-900">{{ selectedRoom.name }}</div>
+          </div>
         </div>
-        <div class="flex justify-between">
-          <span class="text-gray-500">Tầng</span
-          ><span class="font-medium">{{ selectedRoom.floor ?? '-' }}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-gray-500">Diện tích</span
-          ><span class="font-medium">{{
-            selectedRoom.area ? selectedRoom.area + ' m²' : '-'
-          }}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-gray-500">Giá</span
-          ><span class="font-medium">{{ formatCurrency(selectedRoom.price) }}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="text-gray-500">Trạng thái</span
-          ><Tag
-            :value="statusLabel(selectedRoom.status)"
-            :severity="statusSeverity(selectedRoom.status)"
-          />
-        </div>
-        <div class="flex justify-between">
-          <span class="text-gray-500">Số người</span
-          ><span class="font-medium"
-            >{{ selectedRoom.currentOccupants }}/{{ selectedRoom.maxOccupants }}</span
-          >
-        </div>
-        <div>
-          <div class="text-gray-500">Tiện nghi</div>
-          <div class="mt-1 text-gray-700">{{ selectedRoom.amenities?.join(', ') || '-' }}</div>
-        </div>
-        <div>
-          <div class="text-gray-500">Ghi chú</div>
-          <div class="mt-1 text-gray-700">{{ selectedRoom.note || '-' }}</div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+            <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">
+              Thông tin chung
+            </div>
+            <div class="space-y-3 text-sm">
+              <div class="flex justify-between">
+                <span class="text-gray-500">Tên phòng</span>
+                <span class="font-medium text-gray-800">{{ selectedRoom.name }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Tầng</span>
+                <span class="font-medium text-gray-800">{{ selectedRoom.floor ?? '-' }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Diện tích</span>
+                <span class="font-medium text-gray-800">{{
+                  selectedRoom.area ? selectedRoom.area + ' m²' : '-'
+                }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Giá</span>
+                <span class="font-semibold text-gray-900">{{
+                  formatCurrency(selectedRoom.price)
+                }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+            <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">
+              Tình trạng
+            </div>
+            <div class="space-y-3 text-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-gray-500">Trạng thái</span>
+                <Tag
+                  :value="getRoomStatusValue(selectedRoom.status)"
+                  :severity="getRoomStatusSeverity(selectedRoom.status)"
+                />
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-gray-500">Số người hiện tại</span>
+                <span class="font-medium text-gray-800">{{ selectedRoom.currentOccupants }}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-gray-500">Số người tối đa</span>
+                <span class="font-medium text-gray-800">{{ selectedRoom.maxOccupants }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 md:col-span-2">
+            <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">
+              Tiện nghi
+            </div>
+            <div class="text-sm text-gray-700 whitespace-pre-line">
+              {{ selectedRoom.amenities || '-' }}
+            </div>
+          </div>
+
+          <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 md:col-span-2">
+            <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">Ghi chú</div>
+            <div class="text-sm text-gray-700">{{ selectedRoom.note || '-' }}</div>
+          </div>
+
+          <div class="bg-white rounded-xl p-4 border border-gray-200 md:col-span-2">
+            <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">Lịch sử</div>
+            <div class="grid grid-cols-1 gap-3 text-sm w-1/2">
+              <div class="flex items-center justify-between">
+                <span class="text-gray-500">Tạo lúc</span>
+                <span class="font-medium text-gray-800">{{
+                  formatDate(selectedRoom.createdAt)
+                }}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-gray-500">Cập nhật lúc</span>
+                <span class="font-medium text-gray-800">{{
+                  formatDate(selectedRoom.updatedAt)
+                }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </Drawer>
@@ -237,13 +286,14 @@ import { useMainStore } from '@/stores/main'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import { FilterMatchMode } from '@primevue/core/api'
+import { useCustomToast } from '@/composables/base/useCustomToast'
 
 const route = useRoute()
 const store = useMainStore()
+const { tSuccess, tError } = useCustomToast()
 
 const loading = ref<boolean>(false)
 const rooms = ref<Room[]>([])
-const selectedRooms = ref<Room[]>([])
 const keyword = ref<string>('')
 const selectedRoom = ref<Room | null>(null)
 const isDrawerOpen = ref<boolean>(false)
@@ -273,20 +323,25 @@ const filteredRooms = computed(() => {
   return rooms.value.filter((r) => r.name.toLowerCase().includes(q))
 })
 
-function statusLabel(status: Room['status']): string {
-  if (status === 'available') return 'Còn trống'
-  if (status === 'occupied') return 'Đã thuê'
-  return 'Bảo trì'
-}
-
-function statusSeverity(status: Room['status']): 'success' | 'info' | 'warn' {
-  if (status === 'available') return 'success'
-  if (status === 'occupied') return 'info'
-  return 'warn'
-}
-
 function formatCurrency(v: number): string {
   return Number(v || 0).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
+}
+
+function formatDate(value: Date | string | number | null | undefined): string {
+  if (!value) return '-'
+  try {
+    const d = value instanceof Date ? value : new Date(value)
+    if (Number.isNaN(d.getTime())) return '-'
+    return d.toLocaleString('vi-VN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+  } catch {
+    return '-'
+  }
 }
 
 const statusOptions = ref(['available', 'occupied', 'maintenance'])
@@ -325,20 +380,22 @@ function onDeleteRoom(room: Room) {
 }
 
 function openDrawer(room: Room) {
-  selectedRoom.value = room
+  selectedRoom.value = room.data
   isDrawerOpen.value = true
 }
 
 async function handleConfirmDelete(room: Room) {
   try {
     deleteModal.value?.setLoading(true)
-    await deleteRoom(room.id)
+    await deleteRoom(room.id, propertyId.value)
     await loadRooms()
-    deleteModal.value?.close()
+    tSuccess('Thành công', 'Xóa phòng thành công')
   } catch (error) {
-    console.error('Delete room error:', error)
+    const eMsg = error?.response?.data?.message ?? 'Xóa phòng thất bại'
+    tError('Lỗi', eMsg)
   } finally {
     deleteModal.value?.setLoading(false)
+    deleteModal.value?.close()
   }
 }
 
@@ -349,10 +406,12 @@ function handleCancelDelete() {
 
 function handleRoomSaved() {
   loadRooms()
+  tSuccess('Thành công', 'Thêm phòng thành công')
 }
 
 function handleRoomUpdated() {
   loadRooms()
+  tSuccess('Thành công', 'Cập nhật phòng thành công')
 }
 
 async function loadRooms() {
@@ -362,7 +421,8 @@ async function loadRooms() {
     const data = await getRooms(propertyId.value)
     rooms.value = data
   } catch (e) {
-    console.error('Load rooms error:', e)
+    const eMsg = e?.response?.data?.message ?? 'Không thể tải danh sách phòng'
+    tError('Lỗi', eMsg)
     rooms.value = [
       {
         id: 1,
@@ -372,7 +432,7 @@ async function loadRooms() {
         area: 20,
         price: 5000000,
         status: 'available',
-        amenities: ['Điều hòa', 'Tủ lạnh'],
+        amenities: 'Điều hòa, Tủ lạnh',
         maxOccupants: 3,
         currentOccupants: 3,
         note: 'Phòng có ban công',
@@ -387,7 +447,7 @@ async function loadRooms() {
         area: 25,
         price: 4000000,
         status: 'occupied',
-        amenities: ['Điều hòa', 'Tủ lạnh'],
+        amenities: 'Điều hòa, Tủ lạnh',
         maxOccupants: 3,
         currentOccupants: 3,
         note: 'Phòng có ban công',
@@ -402,7 +462,7 @@ async function loadRooms() {
         area: 25,
         price: 3500000,
         status: 'occupied',
-        amenities: ['Điều hòa', 'Tủ lạnh'],
+        amenities: 'Điều hòa, Tủ lạnh',
         maxOccupants: 3,
         currentOccupants: 3,
         note: 'Phòng có ban công',
