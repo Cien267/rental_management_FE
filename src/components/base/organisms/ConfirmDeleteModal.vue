@@ -1,16 +1,16 @@
 <template>
   <Modal
     v-model:show="isShow"
-    title="Xác nhận xóa phòng"
+    title="Xác nhận xóa"
     :enable-backdrop-close="true"
     :enable-escape-close="true"
+    modalClass="w-110"
   >
     <template #body>
-      <div class="p-6">
-        <p class="text-sm text-gray-700">
-          Bạn có chắc chắn muốn xóa phòng <span class="font-semibold">{{ room?.name }}</span
-          >?
-        </p>
+      <div class="p-6 text-gray-700">
+        Bạn có chắc chắn muốn xóa
+        <span class="font-semibold">{{ props.data?.[props.nameKey] }}</span
+        >?
       </div>
     </template>
     <template #footer>
@@ -26,27 +26,26 @@
 import { ref, watch } from 'vue'
 import Modal from '@/components/base/molecules/Modal.vue'
 import Button from 'primevue/button'
-import type { Room } from '@/types/room'
 
 interface Props {
-  room?: Room | null
+  data?: any | null
+  nameKey?: string
 }
-const props = withDefaults(defineProps<Props>(), { room: null })
-
-const emit = defineEmits<{ 'confirm-delete': [room: Room]; 'cancel-delete': [] }>()
+const props = withDefaults(defineProps<Props>(), { data: null, nameKey: 'name' })
+const emit = defineEmits<{ 'confirm-delete': any; 'cancel-delete': [] }>()
 
 const isShow = ref(false)
 const loading = ref(false)
 
 watch(
-  () => props.room,
+  () => props.data,
   (val) => {
     if (val) isShow.value = true
   },
 )
 
 function confirm() {
-  if (props.room) emit('confirm-delete', props.room)
+  if (props.data) emit('confirm-delete', props.data)
 }
 function close() {
   isShow.value = false

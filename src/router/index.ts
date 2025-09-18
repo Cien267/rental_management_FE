@@ -47,7 +47,7 @@ const router = createRouter({
       path: `${PREFIX_PROPERTY}/rooms`,
       name: ROUTER_NAME_LIST.PROPERTY.ROOMS,
       component: PropertyRoomsPage,
-      meta: { requiresAuth: true, transition: 'slide-fade' },
+      meta: { requiresAuth: false, transition: 'slide-fade' },
     },
     {
       path: `${PREFIX_PROPERTY}/tenants`,

@@ -6,11 +6,7 @@ import Button from 'primevue/button'
 import type { PropertyUI } from '@/types/property'
 
 const props = defineProps<{ property: PropertyUI }>()
-const emit = defineEmits<{
-  (e: 'manage', property: PropertyUI): void
-  (e: 'edit', property: PropertyUI): void
-  (e: 'delete', property: PropertyUI): void
-}>()
+const emit = defineEmits(['manage', 'edit', 'delete'])
 
 function onCardClick() {
   emit('manage', props.property)

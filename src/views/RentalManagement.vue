@@ -59,11 +59,11 @@ function onEditProperty(property: PropertyUI) {
   propertyModal.value?.open()
 }
 
-function handlePropertySaved(property: Property) {
+function handlePropertySaved() {
   loadProperties()
 }
 
-function handlePropertyUpdated(property: Property) {
+function handlePropertyUpdated() {
   loadProperties()
 }
 

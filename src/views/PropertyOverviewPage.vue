@@ -107,12 +107,7 @@
           </div>
           <div class="p-6">
             <div class="text-4xl font-bold text-gray-900">
-              {{
-                (monthlyRevenue ?? 0).toLocaleString('vi-VN', {
-                  style: 'currency',
-                  currency: 'VND',
-                })
-              }}
+              {{ formatCurrency(monthlyRevenue ?? 0) }}
             </div>
             <p class="text-sm text-gray-300 mt-4">Bao gồm tiền thuê, điện nước và các khoản phí</p>
 
@@ -243,6 +238,7 @@ import type { Property, PropertyUI, PropertyDashboardResponse } from '@/types/pr
 import { useRoute } from 'vue-router'
 import { getProperty, getPropertyDashboard } from '@/services/api/propertyService'
 import { transformPropertyToUI } from '@/transformers/properties'
+import { formatCurrency } from '@/helpers/utils'
 import { useMainStore } from '@/stores/main'
 const store = useMainStore()
 

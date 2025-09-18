@@ -1,5 +1,8 @@
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import dayjs from 'dayjs'
+import 'dayjs/locale/vi'
+dayjs.locale('vi')
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs))
 
@@ -30,4 +33,36 @@ export const preventInputNotNumber = (event: any) => {
   if (!/[0-9]/.test(char)) {
     event.preventDefault()
   }
+}
+
+export const formatDate = (
+  value: Date | string | number | null | undefined,
+  format = 'DD/MM/YYYY HH:mm',
+) => {
+  if (!value) return '---'
+  try {
+    const d = dayjs(value)
+    if (!d.isValid()) return '---'
+    return d.format(format)
+  } catch (error: any) {
+    console.error('Date format error utils:', error)
+    return '---'
+  }
+}
+
+export const formatCurrency = (
+  value: number | string | null | undefined,
+  locale: string = 'vi-VN',
+  currency: string = 'VND',
+): string => {
+  if (value == null || value === '') return '-'
+  const number = typeof value === 'string' ? Number(value) : value
+  if (isNaN(number)) return '-'
+
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(number)
 }

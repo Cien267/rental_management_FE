@@ -16,7 +16,7 @@ const handleLogin = async (credentials: DataLoginType) => {
     const expires = response?.tokens?.access?.expires
     token.value = tokenUser
     user.value = response?.user
-    Cookies.set(COOKIES_TOKEN_NAME, tokenUser, { expires: new Date(expires) ?? 1 })
+    Cookies.set(COOKIES_TOKEN_NAME, tokenUser, { expires: expires ? new Date(expires) : 1 })
     localStorage.setItem(LOCALSTORAGE_USER, JSON.stringify(response?.user))
     return true
   } catch (error) {

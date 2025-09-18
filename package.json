@@ -21,6 +21,7 @@
     "@primeuix/themes": "^1.2.3",
     "axios": "^1.8.3",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.18",
     "highlight.js": "^11.11.1",
     "husky": "^9.1.7",
     "js-cookie": "^3.0.5",

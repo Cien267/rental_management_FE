@@ -264,8 +264,8 @@ const formData = ref<CreatePropertyInput | UpdatePropertyInput>({
 })
 
 // Options for selects (using constants)
-const propertyTypes = PROPERTY_TYPES
-const statusOptions = PROPERTY_STATUS_OPTIONS
+const propertyTypes = ref([...PROPERTY_TYPES])
+const statusOptions = ref([...PROPERTY_STATUS_OPTIONS])
 
 // Watch for property changes to populate form
 watch(
@@ -347,7 +347,7 @@ async function handleSubmit() {
     }
 
     isShow.value = false
-  } catch (error) {
+  } catch (error: any) {
     const msg = error?.response?.data?.message ?? 'Có lỗi xảy ra khi lưu nhà trọ'
     tError('Lỗi', msg)
     console.error('Property save error:', error)

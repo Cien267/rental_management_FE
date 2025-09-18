@@ -94,8 +94,9 @@ import type { Room, CreateRoomInput, UpdateRoomInput } from '@/types/room'
 import { RoomStatusEnum } from '@/types/room'
 import { createRoom, updateRoom } from '@/services/api/roomService'
 import { useCustomToast } from '@/composables/base/useCustomToast'
+import { ROOM_STATUSES } from '@/constants/rooms'
 
-const { tSuccess, tError } = useCustomToast()
+const { tError } = useCustomToast()
 
 interface Props {
   propertyId: number
@@ -113,11 +114,7 @@ const loading = ref(false)
 const errors = ref<Record<string, string>>({})
 const isEdit = computed(() => !!props.room)
 
-const statusOptions = [
-  { label: 'Còn trống', value: 'available' },
-  { label: 'Đã thuê', value: 'occupied' },
-  { label: 'Bảo trì', value: 'maintenance' },
-]
+const statusOptions = Object.entries(ROOM_STATUSES).map(([value, label]) => ({ label, value }))
 
 const formData = ref<CreateRoomInput | UpdateRoomInput>({
   propertyId: props.propertyId,
@@ -175,7 +172,7 @@ async function handleSubmit() {
       emit('room-saved')
     }
     isShow.value = false
-  } catch (e) {
+  } catch (e: any) {
     console.error('Save room error:', e)
     const eMsg = e?.response?.data?.message ?? 'Lỗi khi lưu phòng'
     tError('Lỗi', eMsg)

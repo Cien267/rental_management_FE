@@ -5,6 +5,8 @@ import {
   type CreateRoomInput,
   type UpdateRoomInput,
 } from '@/types/room'
+import { RoomStatusEnum } from '@/types/room'
+import { ROOM_STATUSES, ROOM_STATUS_SEVERITIES } from '@/constants/rooms'
 
 const ApiRoomSchema = z.object({
   id: z.number(),
@@ -21,7 +23,7 @@ const ApiRoomSchema = z.object({
     .nullable()
     .optional(),
   price: z.union([z.number(), z.string()]).transform((v) => Number(v)),
-  status: z.enum(['available', 'occupied', 'maintenance']).default('available'),
+  status: RoomStatusEnum.default('available'),
   createdAt: z.union([z.string(), z.date()]).transform((v) => new Date(v as any)),
   updatedAt: z.union([z.string(), z.date()]).transform((v) => new Date(v as any)),
   amenities: z
@@ -85,4 +87,12 @@ export function transformUpdateRoomToApi(payload: UpdateRoomInput) {
     currentOccupants: payload.currentOccupants,
     note: payload.note,
   }
+}
+
+export const getRoomStatusValue = (status: string) => {
+  return ROOM_STATUSES[status as keyof typeof ROOM_STATUSES] || '---'
+}
+
+export const getRoomStatusSeverity = (status: string) => {
+  return ROOM_STATUS_SEVERITIES[status as keyof typeof ROOM_STATUS_SEVERITIES] || 'info'
 }

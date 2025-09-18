@@ -18,9 +18,10 @@ export const useTenant = () => {
     error.value = null
     try {
       tenants.value = await tenantService.getTenants()
-    } catch (err) {
-      error.value = 'Failed to fetch tenants'
-      tError('Error', 'Failed to fetch tenants')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch tenants'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -31,9 +32,10 @@ export const useTenant = () => {
     error.value = null
     try {
       currentTenant.value = await tenantService.getTenant(id)
-    } catch (err) {
-      error.value = 'Failed to fetch tenant'
-      tError('Error', 'Failed to fetch tenant')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch tenant'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -47,9 +49,10 @@ export const useTenant = () => {
       tenants.value.push(newTenant)
       tSuccess('Success', 'Tenant created successfully')
       return newTenant
-    } catch (err) {
-      error.value = 'Failed to create tenant'
-      tError('Error', 'Failed to create tenant')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to create tenant'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -70,9 +73,10 @@ export const useTenant = () => {
       }
       tSuccess('Success', 'Tenant updated successfully')
       return updatedTenant
-    } catch (err) {
-      error.value = 'Failed to update tenant'
-      tError('Error', 'Failed to update tenant')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to update tenant'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -89,9 +93,10 @@ export const useTenant = () => {
         currentTenant.value = null
       }
       tSuccess('Success', 'Tenant deleted successfully')
-    } catch (err) {
-      error.value = 'Failed to delete tenant'
-      tError('Error', 'Failed to delete tenant')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to delete tenant'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false

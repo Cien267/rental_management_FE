@@ -45,8 +45,9 @@ async function onSubmit() {
     } else {
       tError('Lỗi', 'Đăng nhập thất bại. Vui lòng kiểm tra thông tin.')
     }
-  } catch (e) {
-    tError('Lỗi', 'Không thể đăng nhập. Vui lòng thử lại sau.')
+  } catch (error: any) {
+    const eMsg = error?.response?.data?.message ?? 'Không thể đăng nhập. Vui lòng thử lại sau.'
+    tError('Lỗi', eMsg)
   } finally {
     submitting.value = false
   }

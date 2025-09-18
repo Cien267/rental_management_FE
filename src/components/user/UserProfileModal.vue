@@ -295,7 +295,7 @@ async function handleSubmit() {
 
       isShow.value = false
     }
-  } catch (error) {
+  } catch (error: any) {
     const msg = error?.response?.data?.message ?? 'Có lỗi xảy ra khi cập nhật hồ sơ'
     tError('Lỗi', msg)
     console.error('Profile update error:', error)

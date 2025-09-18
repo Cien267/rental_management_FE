@@ -18,9 +18,10 @@ export const useRoom = () => {
     error.value = null
     try {
       rooms.value = await roomService.getRooms(propertyId)
-    } catch (err) {
-      error.value = 'Failed to fetch rooms'
-      tError('Error', 'Failed to fetch rooms')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch rooms'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -31,9 +32,10 @@ export const useRoom = () => {
     error.value = null
     try {
       currentRoom.value = await roomService.getRoom(id)
-    } catch (err) {
-      error.value = 'Failed to fetch room'
-      tError('Error', 'Failed to fetch room')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch room'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -47,9 +49,10 @@ export const useRoom = () => {
       rooms.value.push(newRoom)
       tSuccess('Success', 'Room created successfully')
       return newRoom
-    } catch (err) {
-      error.value = 'Failed to create room'
-      tError('Error', 'Failed to create room')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to create room'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -70,9 +73,10 @@ export const useRoom = () => {
       }
       tSuccess('Success', 'Room updated successfully')
       return updatedRoom
-    } catch (err) {
-      error.value = 'Failed to update room'
-      tError('Error', 'Failed to update room')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to update room'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -89,9 +93,10 @@ export const useRoom = () => {
         currentRoom.value = null
       }
       tSuccess('Success', 'Room deleted successfully')
-    } catch (err) {
-      error.value = 'Failed to delete room'
-      tError('Error', 'Failed to delete room')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to delete room'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false

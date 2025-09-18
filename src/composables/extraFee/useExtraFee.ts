@@ -18,9 +18,10 @@ export const useExtraFee = () => {
     error.value = null
     try {
       extraFees.value = await extraFeeService.getExtraFees(propertyId)
-    } catch (err) {
-      error.value = 'Failed to fetch extra fees'
-      tError('Error', 'Failed to fetch extra fees')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch extra fees'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -31,9 +32,10 @@ export const useExtraFee = () => {
     error.value = null
     try {
       currentExtraFee.value = await extraFeeService.getExtraFee(id)
-    } catch (err) {
-      error.value = 'Failed to fetch extra fee'
-      tError('Error', 'Failed to fetch extra fee')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch extra fee'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -47,9 +49,10 @@ export const useExtraFee = () => {
       extraFees.value.push(newExtraFee)
       tSuccess('Success', 'Extra fee created successfully')
       return newExtraFee
-    } catch (err) {
-      error.value = 'Failed to create extra fee'
-      tError('Error', 'Failed to create extra fee')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to create extra fee'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -70,9 +73,10 @@ export const useExtraFee = () => {
       }
       tSuccess('Success', 'Extra fee updated successfully')
       return updatedExtraFee
-    } catch (err) {
-      error.value = 'Failed to update extra fee'
-      tError('Error', 'Failed to update extra fee')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to update extra fee'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -89,9 +93,10 @@ export const useExtraFee = () => {
         currentExtraFee.value = null
       }
       tSuccess('Success', 'Extra fee deleted successfully')
-    } catch (err) {
-      error.value = 'Failed to delete extra fee'
-      tError('Error', 'Failed to delete extra fee')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to delete extra fee'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false

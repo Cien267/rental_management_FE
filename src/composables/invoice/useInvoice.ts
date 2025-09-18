@@ -18,9 +18,10 @@ export const useInvoice = () => {
     error.value = null
     try {
       invoices.value = await invoiceService.getInvoices()
-    } catch (err) {
-      error.value = 'Failed to fetch invoices'
-      tError('Error', 'Failed to fetch invoices')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch invoices'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -31,9 +32,10 @@ export const useInvoice = () => {
     error.value = null
     try {
       currentInvoice.value = await invoiceService.getInvoice(id)
-    } catch (err) {
-      error.value = 'Failed to fetch invoice'
-      tError('Error', 'Failed to fetch invoice')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch invoice'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -47,9 +49,10 @@ export const useInvoice = () => {
       invoices.value.push(newInvoice)
       tSuccess('Success', 'Invoice created successfully')
       return newInvoice
-    } catch (err) {
-      error.value = 'Failed to create invoice'
-      tError('Error', 'Failed to create invoice')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to create invoice'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -70,9 +73,10 @@ export const useInvoice = () => {
       }
       tSuccess('Success', 'Invoice updated successfully')
       return updatedInvoice
-    } catch (err) {
-      error.value = 'Failed to update invoice'
-      tError('Error', 'Failed to update invoice')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to update invoice'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -89,9 +93,10 @@ export const useInvoice = () => {
         currentInvoice.value = null
       }
       tSuccess('Success', 'Invoice deleted successfully')
-    } catch (err) {
-      error.value = 'Failed to delete invoice'
-      tError('Error', 'Failed to delete invoice')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to delete invoice'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false

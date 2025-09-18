@@ -18,9 +18,10 @@ export const useContract = () => {
     error.value = null
     try {
       contracts.value = await contractService.getContracts()
-    } catch (err) {
-      error.value = 'Failed to fetch contracts'
-      tError('Error', 'Failed to fetch contracts')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch contracts'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -31,9 +32,10 @@ export const useContract = () => {
     error.value = null
     try {
       currentContract.value = await contractService.getContract(id)
-    } catch (err) {
-      error.value = 'Failed to fetch contract'
-      tError('Error', 'Failed to fetch contract')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch contract'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -47,9 +49,10 @@ export const useContract = () => {
       contracts.value.push(newContract)
       tSuccess('Success', 'Contract created successfully')
       return newContract
-    } catch (err) {
-      error.value = 'Failed to create contract'
-      tError('Error', 'Failed to create contract')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to create contract'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -70,9 +73,10 @@ export const useContract = () => {
       }
       tSuccess('Success', 'Contract updated successfully')
       return updatedContract
-    } catch (err) {
-      error.value = 'Failed to update contract'
-      tError('Error', 'Failed to update contract')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to update contract'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -89,9 +93,10 @@ export const useContract = () => {
         currentContract.value = null
       }
       tSuccess('Success', 'Contract deleted successfully')
-    } catch (err) {
-      error.value = 'Failed to delete contract'
-      tError('Error', 'Failed to delete contract')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to delete contract'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false

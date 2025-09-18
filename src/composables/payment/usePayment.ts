@@ -18,9 +18,10 @@ export const usePayment = () => {
     error.value = null
     try {
       payments.value = await paymentService.getPayments(invoiceId)
-    } catch (err) {
-      error.value = 'Failed to fetch payments'
-      tError('Error', 'Failed to fetch payments')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch payments'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -31,9 +32,10 @@ export const usePayment = () => {
     error.value = null
     try {
       currentPayment.value = await paymentService.getPayment(id)
-    } catch (err) {
-      error.value = 'Failed to fetch payment'
-      tError('Error', 'Failed to fetch payment')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch payment'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -47,9 +49,10 @@ export const usePayment = () => {
       payments.value.push(newPayment)
       tSuccess('Success', 'Payment created successfully')
       return newPayment
-    } catch (err) {
-      error.value = 'Failed to create payment'
-      tError('Error', 'Failed to create payment')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to create payment'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -70,9 +73,10 @@ export const usePayment = () => {
       }
       tSuccess('Success', 'Payment updated successfully')
       return updatedPayment
-    } catch (err) {
-      error.value = 'Failed to update payment'
-      tError('Error', 'Failed to update payment')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to update payment'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -89,9 +93,10 @@ export const usePayment = () => {
         currentPayment.value = null
       }
       tSuccess('Success', 'Payment deleted successfully')
-    } catch (err) {
-      error.value = 'Failed to delete payment'
-      tError('Error', 'Failed to delete payment')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to delete payment'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false

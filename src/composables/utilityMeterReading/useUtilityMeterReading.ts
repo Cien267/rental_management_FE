@@ -23,9 +23,10 @@ export const useUtilityMeterReading = () => {
     try {
       utilityMeterReadings.value =
         await utilityMeterReadingService.getUtilityMeterReadings(utilityMeterId)
-    } catch (err) {
-      error.value = 'Failed to fetch utility meter readings'
-      tError('Error', 'Failed to fetch utility meter readings')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch utility meter readings'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -36,9 +37,10 @@ export const useUtilityMeterReading = () => {
     error.value = null
     try {
       currentUtilityMeterReading.value = await utilityMeterReadingService.getUtilityMeterReading(id)
-    } catch (err) {
-      error.value = 'Failed to fetch utility meter reading'
-      tError('Error', 'Failed to fetch utility meter reading')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch utility meter reading'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -58,9 +60,10 @@ export const useUtilityMeterReading = () => {
       utilityMeterReadings.value.push(newReading)
       tSuccess('Success', 'Utility meter reading created successfully')
       return newReading
-    } catch (err) {
-      error.value = 'Failed to create utility meter reading'
-      tError('Error', 'Failed to create utility meter reading')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to create utility meter reading'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -87,9 +90,10 @@ export const useUtilityMeterReading = () => {
       }
       tSuccess('Success', 'Utility meter reading updated successfully')
       return updatedReading
-    } catch (err) {
-      error.value = 'Failed to update utility meter reading'
-      tError('Error', 'Failed to update utility meter reading')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to update utility meter reading'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -106,9 +110,10 @@ export const useUtilityMeterReading = () => {
         currentUtilityMeterReading.value = null
       }
       tSuccess('Success', 'Utility meter reading deleted successfully')
-    } catch (err) {
-      error.value = 'Failed to delete utility meter reading'
-      tError('Error', 'Failed to delete utility meter reading')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to delete utility meter reading'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false

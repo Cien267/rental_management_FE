@@ -7,16 +7,16 @@ export const RoomRecordSchema = z.object({
   id: z.number().int().nonnegative(),
   propertyId: z.number().int().nonnegative(),
   name: z.string().min(1),
-  floor: z.number().int().nullable().optional(),
-  area: z.number().nullable().optional(),
+  floor: z.number().int().optional(),
+  area: z.number().optional(),
   price: z.number(),
   status: RoomStatusEnum.default('available'),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-  amenities: z.string().nullable().optional(),
+  amenities: z.string().optional(),
   maxOccupants: z.number().int().default(1),
   currentOccupants: z.number().int().default(0),
-  note: z.string().nullable().optional(),
+  note: z.string().optional(),
 })
 
 export type Room = z.infer<typeof RoomRecordSchema>

@@ -18,9 +18,10 @@ export const useUser = () => {
     error.value = null
     try {
       users.value = await userService.getUsers()
-    } catch (err) {
-      error.value = 'Failed to fetch users'
-      tError('Error', 'Failed to fetch users')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch users'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -31,9 +32,10 @@ export const useUser = () => {
     error.value = null
     try {
       currentUser.value = await userService.getUser(id)
-    } catch (err) {
-      error.value = 'Failed to fetch user'
-      tError('Error', 'Failed to fetch user')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch user'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -47,9 +49,10 @@ export const useUser = () => {
       users.value.push(newUser)
       tSuccess('Success', 'User created successfully')
       return newUser
-    } catch (err) {
-      error.value = 'Failed to create user'
-      tError('Error', 'Failed to create user')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to create user'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -70,9 +73,10 @@ export const useUser = () => {
       }
       tSuccess('Success', 'User updated successfully')
       return updatedUser
-    } catch (err) {
-      error.value = 'Failed to update user'
-      tError('Error', 'Failed to update user')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to update user'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -89,9 +93,10 @@ export const useUser = () => {
         currentUser.value = null
       }
       tSuccess('Success', 'User deleted successfully')
-    } catch (err) {
-      error.value = 'Failed to delete user'
-      tError('Error', 'Failed to delete user')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to delete user'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false

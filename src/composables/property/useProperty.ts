@@ -18,9 +18,10 @@ export const useProperty = () => {
     error.value = null
     try {
       properties.value = await propertyService.getProperties()
-    } catch (err) {
-      error.value = 'Failed to fetch properties'
-      tError('Error', 'Failed to fetch properties')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch properties'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -31,9 +32,10 @@ export const useProperty = () => {
     error.value = null
     try {
       currentProperty.value = await propertyService.getProperty(id)
-    } catch (err) {
-      error.value = 'Failed to fetch property'
-      tError('Error', 'Failed to fetch property')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to fetch property'
+      error.value = eMsg
+      tError('Error', eMsg)
     } finally {
       loading.value = false
     }
@@ -47,9 +49,10 @@ export const useProperty = () => {
       properties.value.push(newProperty)
       tSuccess('Success', 'Property created successfully')
       return newProperty
-    } catch (err) {
-      error.value = 'Failed to create property'
-      tError('Error', 'Failed to create property')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to create property'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -70,9 +73,10 @@ export const useProperty = () => {
       }
       tSuccess('Success', 'Property updated successfully')
       return updatedProperty
-    } catch (err) {
-      error.value = 'Failed to update property'
-      tError('Error', 'Failed to update property')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to update property'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
@@ -89,9 +93,10 @@ export const useProperty = () => {
         currentProperty.value = null
       }
       tSuccess('Success', 'Property deleted successfully')
-    } catch (err) {
-      error.value = 'Failed to delete property'
-      tError('Error', 'Failed to delete property')
+    } catch (err: any) {
+      const eMsg = err?.response?.data?.message ?? 'Failed to delete property'
+      error.value = eMsg
+      tError('Error', eMsg)
       throw err
     } finally {
       loading.value = false
