@@ -58,7 +58,7 @@ describe('Modal', () => {
     const wrapper = mount(Modal, {
       props: { show: true },
     })
-    const closeButton = document.querySelector('.ik-xmark') as any
+    const closeButton = document.querySelector('.pi-times') as any
     await closeButton.dispatchEvent(new Event('click'))
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.isShow).toBe(false)
@@ -151,7 +151,7 @@ describe('Modal', () => {
     const wrapper = mount(Modal, {
       props: { show: true, 'onUpdate:show': (val) => wrapper.setProps({ show: val }) },
     })
-    const closeButton = document.querySelector('.ik-xmark') as any
+    const closeButton = document.querySelector('.pi-times') as any
     await closeButton.dispatchEvent(new Event('click'))
     await wrapper.vm.$nextTick()
     expect(wrapper.props('show')).toBe(false)

@@ -109,7 +109,7 @@ describe('MultiSelect', () => {
     const wrapper = mount(MultiSelect, {
       props: { value: [{ value: '1', label: 'Option 1' }] },
     })
-    const removeIcon = wrapper.find('.ik-xmark')
+    const removeIcon = wrapper.find('.pi-times')
     await removeIcon.trigger('click')
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.selectedOptions).toEqual([])

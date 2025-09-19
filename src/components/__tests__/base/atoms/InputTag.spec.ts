@@ -31,7 +31,7 @@ describe('InputTag', () => {
     const wrapper = mount(InputTag, {
       props: { value: ['Tag1'], 'onUpdate:value': (e) => wrapper.setProps({ value: e }) },
     })
-    const xmark = wrapper.find('.ik-xmark')
+    const xmark = wrapper.find('.pi-times')
     await xmark.trigger('click')
     expect(wrapper.props('value')).toEqual([])
     expect(wrapper.findAll('.bg-blue-500').length).toBe(0)

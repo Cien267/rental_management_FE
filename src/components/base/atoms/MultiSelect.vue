@@ -25,7 +25,7 @@
           <div :class="cn(tagClass, 'flex bg-blue-500 px-1.5 py-0.5 items-center rounded ')">
             <span class="text-white font-medium leading-5">{{ selected.label }}</span>
             <i
-              class="ikr ik-xmark text-blue-300 ml-1.5 cursor-pointer"
+              class="ikr pi-times text-blue-300 ml-1.5 cursor-pointer"
               @click="onOptionRemove(index)"
             />
           </div>

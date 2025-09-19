@@ -26,7 +26,7 @@
               {{ tag }}
             </span>
             <i
-              class="ikr ik-xmark text-blue-300 ml-1.5 cursor-pointer flex-none"
+              class="ikr pi-times text-blue-300 ml-1.5 cursor-pointer flex-none"
               @click="removeTag(index)"
             />
           </div>
