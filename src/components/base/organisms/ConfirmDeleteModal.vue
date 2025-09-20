@@ -1,14 +1,14 @@
 <template>
   <Modal
     v-model:show="isShow"
-    title="Xác nhận xóa"
+    :title="`Xác nhận xóa ${props.prefix}`"
     :enable-backdrop-close="true"
     :enable-escape-close="true"
     modalClass="w-110"
   >
     <template #body>
       <div class="p-6 text-gray-700">
-        Bạn có chắc chắn muốn xóa
+        Bạn có chắc chắn muốn xóa {{ props.prefix }}
         <span class="font-semibold">{{ props.data?.[props.nameKey] }}</span
         >?
       </div>
@@ -30,8 +30,9 @@ import Button from 'primevue/button'
 interface Props {
   data?: any | null
   nameKey?: string
+  prefix?: string
 }
-const props = withDefaults(defineProps<Props>(), { data: null, nameKey: 'name' })
+const props = withDefaults(defineProps<Props>(), { data: null, nameKey: 'name', prefix: '' })
 const emit = defineEmits<{ 'confirm-delete': any; 'cancel-delete': [] }>()
 
 const isShow = ref(false)

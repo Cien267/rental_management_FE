@@ -8,9 +8,24 @@ import {
 } from '@/transformers/rooms'
 import type { Room, CreateRoomInput, UpdateRoomInput } from '@/types/room'
 
-export const getRooms = async (propertyId?: number): Promise<Room[]> => {
-  const response = await get(ROOM_URLS.URL_LIST(propertyId))
-  return transformApiRoomsToRooms(response.data.results)
+export const getRooms = async (
+  propertyId?: number,
+  params?: { limit?: number; page?: number; name?: string; status?: string },
+): Promise<{
+  results: Room[]
+  page: number
+  limit: number
+  totalPages: number
+  totalResults: number
+}> => {
+  const response = await get(ROOM_URLS.URL_LIST(propertyId), { params })
+  return {
+    results: transformApiRoomsToRooms(response.data.results),
+    page: response.data.page,
+    limit: response.data.limit,
+    totalPages: response.data.totalPages,
+    totalResults: response.data.totalResults,
+  }
 }
 
 export const getRoom = async (id: number, propertyId?: number): Promise<Room> => {

@@ -2,6 +2,8 @@
   <Modal
     v-model:show="isShow"
     :title="isEdit ? 'Chỉnh sửa phòng' : 'Thêm phòng mới'"
+    :enable-backdrop-close="true"
+    :enable-escape-close="true"
     @submit="handleSubmit"
     @close="handleClose"
   >
@@ -128,23 +130,27 @@ const formData = ref<CreateRoomInput | UpdateRoomInput>({
   note: '',
 })
 
+const resetFormData = () => {
+  formData.value = {
+    propertyId: props.propertyId,
+    name: '',
+    price: 0,
+    status: RoomStatusEnum.Enum.available,
+    floor: undefined,
+    area: undefined,
+    amenities: '',
+    maxOccupants: 1,
+    note: '',
+  }
+}
+
 watch(
   () => props.room,
   (room) => {
     if (room) {
       formData.value = { ...room, id: room.id }
     } else {
-      formData.value = {
-        propertyId: props.propertyId,
-        name: '',
-        price: 0,
-        status: RoomStatusEnum.Enum.available,
-        floor: undefined,
-        area: undefined,
-        amenities: '',
-        maxOccupants: 1,
-        note: '',
-      }
+      resetFormData()
     }
     errors.value = {}
   },
@@ -172,6 +178,7 @@ async function handleSubmit() {
       emit('room-saved')
     }
     isShow.value = false
+    resetFormData()
   } catch (e: any) {
     console.error('Save room error:', e)
     const eMsg = e?.response?.data?.message ?? 'Lỗi khi lưu phòng'

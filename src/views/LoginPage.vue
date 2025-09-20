@@ -27,10 +27,10 @@ const { tError, tSuccess } = useCustomToast()
 
 async function onSubmit() {
   errors.value = {}
-  const result = schema.safeParse({ username: email.value, password: password.value })
+  const result = schema.safeParse({ email: email.value, password: password.value })
   if (!result.success) {
     for (const issue of result.error.issues) {
-      if (issue.path[0] === 'username') errors.value.email = String(issue.message)
+      if (issue.path[0] === 'email') errors.value.email = String(issue.message)
       if (issue.path[0] === 'password') errors.value.password = String(issue.message)
     }
     return

@@ -20,7 +20,6 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {},
-    outDir: '/dist/sotro_v1',
     emptyOutDir: true,
     chunkSizeWarningLimit: 500,
     cssCodeSplit: true,

@@ -8,8 +8,11 @@ import {
 } from '@/transformers/contracts'
 import type { Contract, CreateContractInput, UpdateContractInput } from '@/types/contract'
 
-export const getContracts = async (propertyId?: number): Promise<Contract[]> => {
-  const response = await get(CONTRACT_URLS.URL_LIST(propertyId))
+export const getContracts = async (
+  propertyId?: number,
+  params?: { roomId?: number; tenantId?: number; status?: string },
+): Promise<Contract[]> => {
+  const response = await get(CONTRACT_URLS.URL_LIST(propertyId), { params })
   return transformApiContractsToContracts(response.data.data)
 }
 

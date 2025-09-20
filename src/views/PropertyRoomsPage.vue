@@ -58,9 +58,15 @@
         <ListRoomTable
           :rooms="rooms"
           :loading="loading"
+          :total-records="totalRecords"
+          :first="first"
+          :rows="rows"
+          v-model:filters="filters"
           @open-drawer="openDrawer"
           @edit-room="onEditRoom"
           @delete-room="onDeleteRoom"
+          @load-rooms="loadRooms"
+          @filter="handleFilter"
         />
       </div>
     </div>
@@ -104,6 +110,7 @@ import { useCustomToast } from '@/composables/base/useCustomToast'
 import DetailRoomDrawer from '@/components/rooms/DetailRoomDrawer.vue'
 import ListRoomTable from '@/components/rooms/ListRoomTable.vue'
 import ConfirmDeleteModal from '@/components/base/organisms/ConfirmDeleteModal.vue'
+import { FilterMatchMode } from '@primevue/core/api'
 
 const route = useRoute()
 const store = useMainStore()
@@ -111,11 +118,19 @@ const { tSuccess, tError } = useCustomToast()
 
 const loading = ref<boolean>(false)
 const rooms = ref<Room[]>([])
+const totalRecords = ref<number>(0)
+const first = ref(0)
+const rows = ref(10)
 const selectedRoom = ref<Room | null>(null)
 const isDrawerOpen = ref<boolean>(false)
 const propertyId = computed(() => Number(route.params.id))
 const selectedProperty = ref<PropertyUI | null>(null)
-
+const filters = ref({
+  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  status: { value: null, matchMode: FilterMatchMode.EQUALS },
+})
+const filterParams = ref<{ name?: string; status?: string }>({})
 const roomModal = ref<InstanceType<typeof UpSertRoomModal> | null>(null)
 const deleteModal = ref<InstanceType<typeof ConfirmDeleteModal> | null>(null)
 const editingRoom = ref<Room | null>(null)
@@ -169,74 +184,49 @@ const handleCancelDelete = () => {
 }
 
 const handleRoomSaved = () => {
+  filterParams.value = {}
+  first.value = 0
   loadRooms()
   tSuccess('Thành công', 'Thêm phòng thành công')
 }
 
 const handleRoomUpdated = () => {
+  filterParams.value = {}
+  first.value = 0
   loadRooms()
   tSuccess('Thành công', 'Cập nhật phòng thành công')
 }
 
-const loadRooms = async () => {
+const loadRooms = async (params: any = null) => {
+  const paramQuery = {
+    limit: 10,
+    page: 1,
+    ...filterParams.value,
+  }
+  if (params) {
+    paramQuery.limit = params.rows
+    paramQuery.page = params.page + 1
+    first.value = params.first
+    rows.value = params.rows
+  }
   if (!propertyId.value) return
   loading.value = true
   try {
-    const data = await getRooms(propertyId.value)
-    rooms.value = data
+    const data = await getRooms(propertyId.value, paramQuery)
+    rooms.value = data.results
+    totalRecords.value = data.totalResults
   } catch (e: any) {
     const eMsg = e?.response?.data?.message ?? 'Không thể tải danh sách phòng'
     tError('Lỗi', eMsg)
-    rooms.value = [
-      {
-        id: 1,
-        propertyId: 1,
-        name: 'Phòng 101',
-        floor: 1,
-        area: 20,
-        price: 5000000,
-        status: 'available',
-        amenities: 'Điều hòa, Tủ lạnh',
-        maxOccupants: 3,
-        currentOccupants: 3,
-        note: 'Phòng có ban công',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        id: 2,
-        propertyId: 1,
-        name: 'Phòng 102',
-        floor: 1,
-        area: 25,
-        price: 4000000,
-        status: 'occupied',
-        amenities: 'Điều hòa, Tủ lạnh',
-        maxOccupants: 3,
-        currentOccupants: 3,
-        note: 'Phòng có ban công',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        id: 3,
-        propertyId: 1,
-        name: 'Phòng 203',
-        floor: 2,
-        area: 25,
-        price: 3500000,
-        status: 'occupied',
-        amenities: 'Điều hòa, Tủ lạnh',
-        maxOccupants: 3,
-        currentOccupants: 3,
-        note: 'Phòng có ban công',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-    ]
+    rooms.value = []
   } finally {
     loading.value = false
   }
+}
+
+const handleFilter = (filters: { name?: string; status?: string }) => {
+  filterParams.value = filters
+  loadRooms()
 }
 
 const loadProperty = async () => {

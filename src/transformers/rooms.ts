@@ -7,6 +7,7 @@ import {
 } from '@/types/room'
 import { RoomStatusEnum } from '@/types/room'
 import { ROOM_STATUSES, ROOM_STATUS_SEVERITIES } from '@/constants/rooms'
+import { transformApiTenantsToTenants } from '@/transformers/tenants'
 
 const ApiRoomSchema = z.object({
   id: z.number(),
@@ -47,13 +48,16 @@ const ApiRoomSchema = z.object({
     .transform((v) => Number(v))
     .default(0),
   note: z.string().nullable().optional(),
+  tenants: z.array(z.any()).optional().default([]),
 })
 
 export type ApiRoom = z.infer<typeof ApiRoomSchema>
 
 export function transformApiRoomToRoom(record: unknown): Room {
   const parsed = ApiRoomSchema.parse(record)
-  return RoomRecordSchema.parse(parsed)
+  const tenants = transformApiTenantsToTenants(parsed.tenants || [])
+  const room = RoomRecordSchema.parse({ ...parsed, tenants })
+  return room
 }
 
 export function transformApiRoomsToRooms(records: unknown[]): Room[] {

@@ -4,9 +4,17 @@ import Tag from 'primevue/tag'
 import { formatCurrency, formatDate } from '@/helpers/utils'
 import type { Room } from '@/types/room'
 import { getRoomStatusValue, getRoomStatusSeverity } from '@/transformers/rooms'
+import { useRouter } from 'vue-router'
+import { ROUTER_NAME_LIST } from '@/constants/routers'
 
 const { selectedRoom } = defineProps<{ selectedRoom: Room | null }>()
 const isDrawerOpen = defineModel('visible', { type: Boolean, default: false })
+const router = useRouter()
+
+function goToRoomsList() {
+  if (!selectedRoom) return
+  router.push({ name: ROUTER_NAME_LIST.PROPERTY.TENANTS, params: { id: selectedRoom.propertyId } })
+}
 </script>
 
 <template>
@@ -86,7 +94,7 @@ const isDrawerOpen = defineModel('visible', { type: Boolean, default: false })
           <div class="space-y-3 text-sm">
             <div class="flex items-center justify-between">
               <span class="text-gray-500">Số người hiện tại</span>
-              <span class="font-medium text-gray-800">{{ selectedRoom.currentOccupants }}</span>
+              <span class="font-medium text-gray-800">{{ selectedRoom.tenants?.length ?? 0 }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-gray-500">Số người tối đa</span>
@@ -123,6 +131,32 @@ const isDrawerOpen = defineModel('visible', { type: Boolean, default: false })
               }}</span>
             </div>
           </div>
+        </div>
+
+        <div class="bg-white rounded-xl p-4 border border-gray-200 md:col-span-2">
+          <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-3">Người thuê</div>
+          <div
+            v-if="selectedRoom.tenants && selectedRoom.tenants.length"
+            class="grid grid-cols-1 gap-6"
+          >
+            <div
+              v-for="tenant in selectedRoom.tenants"
+              :key="tenant.id"
+              class="p-4 rounded-xl border border-gray-200 hover:border-sky-300 shadow hover:shadow-md hover:shadow-sky-300 cursor-pointer transition"
+              @click="goToRoomsList"
+            >
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-sky-100 flex-center">
+                  <i class="pi pi-user text-sky-600"></i>
+                </div>
+                <div>
+                  <div class="font-semibold text-gray-800">{{ tenant.fullName }}</div>
+                  <div class="text-sm text-gray-500">{{ tenant.phone || '-' }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-else class="text-sm text-gray-500">Chưa có người thuê</div>
         </div>
       </div>
     </div>

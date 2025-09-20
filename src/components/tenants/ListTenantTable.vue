@@ -2,37 +2,40 @@
 import { ref } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
-import { formatCurrency } from '@/helpers/utils'
-import { getRoomStatusValue, getRoomStatusSeverity } from '@/transformers/rooms'
-import { ROOM_STATUSES } from '@/constants/rooms'
+import { formatDate } from '@/helpers/utils'
+import { getTenantGenderValue, getTenantGenderSeverity } from '@/transformers/tenants'
+import { TENANT_GENDERS } from '@/constants/tenants'
+import type { Tenant } from '@/types/tenant'
 import type { Room } from '@/types/room'
 import Select from 'primevue/select'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Tag from 'primevue/tag'
 
-const { rooms, totalRecords, loading, first, rows } = defineProps<{
+const { tenants, totalRecords, loading, first, rows } = defineProps<{
+  tenants: Tenant[]
   rooms: Room[]
   totalRecords: number
   loading: boolean
   first: number
   rows: number
 }>()
-const emit = defineEmits(['edit-room', 'delete-room', 'open-drawer', 'load-rooms', 'filter'])
+const emit = defineEmits(['edit-tenant', 'delete-tenant', 'open-drawer', 'load-tenants', 'filter'])
 const filters = defineModel<any>('filters', { default: false })
 const onPage = (event: any) => {
-  emit('load-rooms', event)
+  emit('load-tenants', event)
 }
 
 const onFilter = (event: any) => {
   const filterParams = {
-    name: event.filters.name?.value || undefined,
-    status: event.filters.status?.value || undefined,
+    fullName: event.filters.fullName?.value || undefined,
+    phone: event.filters.phone?.value || undefined,
+    gender: event.filters.gender?.value || undefined,
   }
   emit('filter', filterParams)
 }
 
-const statusOptions = Object.entries(ROOM_STATUSES).map(([value, label]) => ({ label, value }))
+const genderOptions = Object.entries(TENANT_GENDERS).map(([value, label]) => ({ label, value }))
 
 const dt = ref()
 
@@ -51,14 +54,14 @@ const exportCSV = () => {
     filterDisplay="row"
     :rows="rows"
     :rowsPerPageOptions="[5, 10, 15, 20, 50]"
-    :value="rooms"
-    :globalFilterFields="['name', 'status']"
+    :value="tenants"
+    :globalFilterFields="['fullName', 'phone', 'gender']"
     :loading="loading"
     selectionMode="single"
     :metaKeySelection="false"
     v-model:filters="filters"
     :filterDelay="500"
-    exportFilename="Phòng trọ"
+    exportFilename="Người thuê nhà"
     :lazy="true"
     :first="first"
     :totalRecords="totalRecords"
@@ -68,16 +71,16 @@ const exportCSV = () => {
     @page="onPage"
     @filter="onFilter"
   >
-    <template #empty> Chưa có phòng nào </template>
+    <template #empty> Chưa có người thuê nhà nào </template>
     <template #loading> Đang tải dữ liệu </template>
     <template #header>
       <div class="text-end pb-4">
         <Button icon="pi pi-external-link" label="Export" @click="exportCSV" />
       </div>
     </template>
-    <Column field="name" header="Tên" sortable>
+    <Column field="fullName" header="Tên" sortable>
       <template #body="{ data }">
-        {{ data.name }}
+        {{ data.fullName }}
       </template>
       <template #filter="{ filterModel, filterCallback }">
         <InputText
@@ -88,40 +91,56 @@ const exportCSV = () => {
         />
       </template>
     </Column>
-    <Column field="floor" header="Tầng" sortable></Column>
-    <Column field="price" header="Giá" sortable>
-      <template #body="{ data }">
-        {{ formatCurrency(data.price) }}
-      </template>
-    </Column>
-    <Column field="status" header="Trạng thái">
+    <Column field="gender" header="Giới tính">
       <template #body="slotProps">
         <Tag
-          :value="getRoomStatusValue(slotProps.data.status)"
-          :severity="getRoomStatusSeverity(slotProps.data.status)"
+          :value="getTenantGenderValue(slotProps.data.gender)"
+          :severity="getTenantGenderSeverity(slotProps.data.gender)"
         />
       </template>
       <template #filter="{ filterModel, filterCallback }">
         <Select
           v-model="filterModel.value"
           @change="filterCallback()"
-          :options="statusOptions"
+          :options="genderOptions"
           optionLabel="label"
           optionValue="value"
-          placeholder="Chon trạng thái"
+          placeholder="Chon giới tinh"
           style="min-width: 12rem"
           :showClear="true"
         >
           <template #option="slotProps">
             <Tag
-              :value="getRoomStatusValue(slotProps.option.value)"
-              :severity="getRoomStatusSeverity(slotProps.option.value)"
+              :value="getTenantGenderValue(slotProps.option.value)"
+              :severity="getTenantGenderSeverity(slotProps.option.value)"
             />
           </template>
         </Select>
       </template>
     </Column>
-    <Column field="maxOccupants" header="Số người thuê tối đa"></Column>
+    <Column field="phone" header="SĐT">
+      <template #body="{ data }">
+        {{ data.phone }}
+      </template>
+      <template #filter="{ filterModel, filterCallback }">
+        <InputText
+          v-model="filterModel.value"
+          type="text"
+          @keypress.enter="filterCallback()"
+          placeholder="Tìm theo sdt"
+        /> </template
+    ></Column>
+    <Column field="dateOfBirth" header="Ngày sinh">
+      <template #body="slotProps">
+        {{ formatDate(slotProps.data.dateOfBirth ?? '', 'DD/MM/YYYY') }}
+      </template>
+    </Column>
+    <Column field="" header="Phòng">
+      <template #body="{ data }">
+        {{ data.room?.name || '---' }}
+      </template>
+    </Column>
+
     <Column field="" header="Hành động">
       <template #body="slotProps">
         <Button
@@ -129,13 +148,13 @@ const exportCSV = () => {
           size="small"
           severity="secondary"
           class="mr-2"
-          @click.stop="emit('edit-room', slotProps.data)"
+          @click.stop="emit('edit-tenant', slotProps.data)"
         />
         <Button
           label="Xóa"
           size="small"
           severity="danger"
-          @click.stop="emit('delete-room', slotProps.data)"
+          @click.stop="emit('delete-tenant', slotProps.data)"
         />
       </template>
     </Column>

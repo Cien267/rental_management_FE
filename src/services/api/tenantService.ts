@@ -8,9 +8,32 @@ import {
 } from '@/transformers/tenants'
 import type { Tenant, CreateTenantInput, UpdateTenantInput } from '@/types/tenant'
 
-export const getTenants = async (propertyId?: number): Promise<Tenant[]> => {
-  const response = await get(TENANT_URLS.URL_LIST(propertyId))
-  return transformApiTenantsToTenants(response.data.data)
+export const getTenants = async (
+  propertyId?: number,
+  params?: {
+    fullName?: string
+    phone?: string
+    email?: string
+    roomId?: number
+    gender?: string
+    limit?: number
+    page?: number
+  },
+): Promise<{
+  results: Tenant[]
+  page: number
+  limit: number
+  totalPages: number
+  totalResults: number
+}> => {
+  const response = await get(TENANT_URLS.URL_LIST(propertyId), { params })
+  return {
+    results: transformApiTenantsToTenants(response.data.results),
+    page: response.data.page,
+    limit: response.data.limit,
+    totalPages: response.data.totalPages,
+    totalResults: response.data.totalResults,
+  }
 }
 
 export const getTenant = async (id: number, propertyId?: number): Promise<Tenant> => {
@@ -26,7 +49,7 @@ export const createTenant = async (
     TENANT_URLS.URL_CREATE(propertyId),
     transformCreateTenantToApi(tenantData),
   )
-  return transformApiTenantToTenant(response.data.data)
+  return transformApiTenantToTenant(response.data)
 }
 
 export const updateTenant = async (
@@ -38,7 +61,7 @@ export const updateTenant = async (
     TENANT_URLS.URL_UPDATE(id, propertyId),
     transformUpdateTenantToApi({ ...tenantData, id }),
   )
-  return transformApiTenantToTenant(response.data.data)
+  return transformApiTenantToTenant(response.data)
 }
 
 export const deleteTenant = async (id: number, propertyId?: number): Promise<void> => {
