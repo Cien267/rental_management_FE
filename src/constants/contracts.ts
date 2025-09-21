@@ -1,13 +1,20 @@
 import type { ContractStatus, PaymentCycle } from '@/types/contract'
 
-export const CONTRACT_STATUS_LABEL: Record<ContractStatus, string> = {
-  active: 'Active',
-  ended: 'Ended',
-  cancelled: 'Cancelled',
+export const CONTRACT_STATUSES: Record<ContractStatus, string> = {
+  active: 'Còn hiệu lực',
+  ended: 'Đã kết thúc',
+  cancelled: 'Đã hủy',
 }
 
-export const PAYMENT_CYCLE_LABEL: Record<PaymentCycle, string> = {
-  monthly: 'Monthly',
-  quarterly: 'Quarterly',
-  yearly: 'Yearly',
+export const CONTRACT_PAYMENT_CYCLES: Record<PaymentCycle, string> = {
+  monthly: 'Theo tháng',
+  quarterly: 'Theo quý',
+  yearly: 'Theo năm',
 }
+
+export const CONTRACT_STATUS_SEVERITIES: Record<ContractStatus, 'secondary' | 'success' | 'warn'> =
+  {
+    active: 'success',
+    ended: 'secondary',
+    cancelled: 'warn',
+  }

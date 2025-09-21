@@ -11,14 +11,26 @@ import type { Contract, CreateContractInput, UpdateContractInput } from '@/types
 export const getContracts = async (
   propertyId?: number,
   params?: { roomId?: number; tenantId?: number; status?: string },
-): Promise<Contract[]> => {
+): Promise<{
+  results: Contract[]
+  page: number
+  limit: number
+  totalPages: number
+  totalResults: number
+}> => {
   const response = await get(CONTRACT_URLS.URL_LIST(propertyId), { params })
-  return transformApiContractsToContracts(response.data.data)
+  return {
+    results: transformApiContractsToContracts(response.data.results),
+    page: response.data.page,
+    limit: response.data.limit,
+    totalPages: response.data.totalPages,
+    totalResults: response.data.totalResults,
+  }
 }
 
 export const getContract = async (id: number, propertyId?: number): Promise<Contract> => {
   const response = await get(CONTRACT_URLS.URL_DETAIL(id, propertyId))
-  return transformApiContractToContract(response.data.data)
+  return transformApiContractToContract(response.data)
 }
 
 export const createContract = async (
@@ -29,7 +41,7 @@ export const createContract = async (
     CONTRACT_URLS.URL_CREATE(propertyId),
     transformCreateContractToApi(contractData),
   )
-  return transformApiContractToContract(response.data.data)
+  return transformApiContractToContract(response.data)
 }
 
 export const updateContract = async (
@@ -41,7 +53,7 @@ export const updateContract = async (
     CONTRACT_URLS.URL_UPDATE(id, propertyId),
     transformUpdateContractToApi({ ...contractData, id }),
   )
-  return transformApiContractToContract(response.data.data)
+  return transformApiContractToContract(response.data)
 }
 
 export const deleteContract = async (id: number, propertyId?: number): Promise<void> => {

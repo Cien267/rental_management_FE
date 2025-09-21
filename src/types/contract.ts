@@ -9,6 +9,8 @@ export type PaymentCycle = z.infer<typeof PaymentCycleEnum>
 export const ContractRecordSchema = z.object({
   id: z.number().int().nonnegative(),
   roomId: z.number().int().nonnegative(),
+  room: z.any().optional(),
+  tenant: z.any().optional(),
   tenantId: z.number().int().nonnegative(),
   startDate: z.union([z.string(), z.date()]).transform((v) => new Date(v as any)),
   endDate: z

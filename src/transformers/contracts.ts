@@ -5,11 +5,14 @@ import {
   type CreateContractInput,
   type UpdateContractInput,
 } from '@/types/contract'
+import { CONTRACT_STATUSES, CONTRACT_STATUS_SEVERITIES } from '@/constants/contracts'
 
 const ApiContractSchema = z.object({
   id: z.number(),
   roomId: z.number(),
   tenantId: z.number(),
+  room: z.any().optional(),
+  tenant: z.any().optional(),
   startDate: z.union([z.string(), z.date()]).transform((v) => new Date(v as any)),
   endDate: z
     .union([z.string(), z.date()])
@@ -59,4 +62,12 @@ export function transformUpdateContractToApi(payload: UpdateContractInput) {
     status: payload.status,
     paymentCycle: payload.paymentCycle,
   }
+}
+
+export const getContractStatusValue = (status: string) => {
+  return CONTRACT_STATUSES[status as keyof typeof CONTRACT_STATUSES] || '---'
+}
+
+export const getContractStatusSeverity = (status: string) => {
+  return CONTRACT_STATUS_SEVERITIES[status as keyof typeof CONTRACT_STATUS_SEVERITIES] || 'info'
 }
