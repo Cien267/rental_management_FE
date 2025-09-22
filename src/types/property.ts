@@ -1,4 +1,7 @@
 import { z } from 'zod'
+import type { Room } from './room'
+import type { Tenant } from './tenant'
+import type { Contract } from './contract'
 
 export const PropertyStatusEnum = z.enum(['inactive', 'active', 'maintenance'])
 export type PropertyStatus = z.infer<typeof PropertyStatusEnum>
@@ -84,6 +87,7 @@ export interface PropertyDashboardUnpaidInvoiceItem {
   periodEnd: string
   totalAmount: number
   status: string
+  contract?: Contract
 }
 
 export interface PropertyDashboardExpiringContractItem {
@@ -93,6 +97,8 @@ export interface PropertyDashboardExpiringContractItem {
   startDate: string
   endDate: string
   status: string
+  room?: Room
+  tenant?: Tenant
 }
 
 export interface PropertyDashboardResponse {

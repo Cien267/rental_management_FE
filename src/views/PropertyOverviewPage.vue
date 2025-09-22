@@ -167,15 +167,10 @@
                 >
                   <div class="flex items-center justify-between">
                     <div class="text-sm text-gray-600">
-                      Mã HĐ: <span class="font-medium">#{{ inv.id }}</span>
+                      Mã hóa đơn: <span class="font-medium">#{{ inv.id }}</span>
                     </div>
                     <div class="text-sm text-red-600 font-semibold">
-                      {{
-                        Number(inv.totalAmount || 0).toLocaleString('vi-VN', {
-                          style: 'currency',
-                          currency: 'VND',
-                        })
-                      }}
+                      {{ formatCurrency(inv.totalAmount) }}
                     </div>
                   </div>
                   <div class="mt-1 text-xs text-gray-500">
@@ -216,7 +211,8 @@
                     Thời hạn: {{ ct.startDate }} → {{ ct.endDate }}
                   </div>
                   <div class="mt-1 text-xs text-gray-400">
-                    Phòng: #{{ ct.roomId }} | Khách: #{{ ct.tenantId }}
+                    Phòng: <span class="font-semibold">{{ ct.room?.name ?? '---' }}</span> | Khách:
+                    <span class="font-semibold">{{ ct.tenant?.fullName ?? '---' }}</span>
                   </div>
                 </div>
               </div>

@@ -55,3 +55,11 @@ export function transformUpdateExtraFeeToApi(payload: UpdateExtraFeeInput) {
     isActive: payload.isActive,
   }
 }
+
+export const getExtraFeeStatusValue = (status: boolean) => {
+  return status ? 'Hoạt động' : 'Không hoạt động'
+}
+
+export const getExtraFeeStatusSeverity = (status: boolean) => {
+  return status ? 'info' : 'secondary'
+}

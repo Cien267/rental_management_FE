@@ -20,7 +20,7 @@ export type ExtraFee = z.infer<typeof ExtraFeeRecordSchema>
 export const CreateExtraFeeSchema = z.object({
   propertyId: z.number().int(),
   name: z.string().min(1, 'Tên không được để trống'),
-  description: z.string().optional(),
+  description: z.string().nullable().optional(),
   amount: z.number().nonnegative(),
   chargeType: ChargeTypeEnum.optional().default('monthly'),
   isActive: z.boolean().optional().default(true),
@@ -32,7 +32,7 @@ export const UpdateExtraFeeSchema = z.object({
   id: z.number().int(),
   propertyId: z.number().int().optional(),
   name: z.string().min(1).optional(),
-  description: z.string().optional(),
+  description: z.string().nullable().optional(),
   amount: z.number().nonnegative().optional(),
   chargeType: ChargeTypeEnum.optional(),
   isActive: z.boolean().optional(),
