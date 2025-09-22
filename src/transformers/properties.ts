@@ -6,6 +6,7 @@ import {
   type UpdatePropertyInput,
   type PropertyUI,
 } from '@/types/property'
+import type { Room } from '@/types/room'
 
 // Map status from numeric DB value to app enum
 function mapStatusToEnum(status: unknown): 'inactive' | 'active' | 'maintenance' {
@@ -73,6 +74,8 @@ const ApiPropertySchema = z.object({
     .transform((v) => (v === null || v === undefined || v === '' ? null : Number(v)))
     .nullable()
     .optional(),
+  rooms: z.any().nullable(),
+  tenants: z.any().nullable(),
 })
 
 export type ApiProperty = z.infer<typeof ApiPropertySchema>
@@ -173,13 +176,10 @@ function getOccupancyBgColor(percent: number): string {
 }
 
 // Transform Property to PropertyUI with computed fields
-export function transformPropertyToUI(
-  property: Property,
-  totalRooms: number = 0,
-  occupiedRooms: number = 0,
-): PropertyUI {
+export function transformPropertyToUI(property: Property): PropertyUI {
+  const totalRooms = property.rooms?.length || 0
+  const occupiedRooms = property.rooms?.filter((room: Room) => room.status === 'occupied').length
   const occupancyPercent = totalRooms > 0 ? Math.round((occupiedRooms / totalRooms) * 100) : 0
-
   return {
     ...property,
     totalRooms,
@@ -192,12 +192,8 @@ export function transformPropertyToUI(
 }
 
 // Transform multiple properties to UI format
-export function transformPropertiesToUI(
-  properties: Property[],
-  roomCounts: Record<number, { total: number; occupied: number }> = {},
-): PropertyUI[] {
+export function transformPropertiesToUI(properties: Property[]): PropertyUI[] {
   return properties.map((property) => {
-    const counts = roomCounts[property.id] || { total: 0, occupied: 0 }
-    return transformPropertyToUI(property, counts.total, counts.occupied)
+    return transformPropertyToUI(property)
   })
 }

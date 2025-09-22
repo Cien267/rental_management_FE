@@ -54,6 +54,8 @@ function onEditProperty(property: PropertyUI) {
     waterPricePerM3: property.waterPricePerM3 || undefined,
     createdAt: property.createdAt,
     updatedAt: property.updatedAt,
+    rooms: property.rooms || [],
+    tenants: property.tenants || [],
   }
   editingProperty.value = baseProperty
   propertyModal.value?.open()
@@ -98,21 +100,7 @@ async function loadProperties() {
   loading.value = true
   try {
     const apiProperties = await getProperties()
-
-    // Transform properties with room counts (TODO: Get actual room counts from API)
-    const roomCounts = {
-      1: { total: 24, occupied: 18 },
-      2: { total: 16, occupied: 2 },
-      3: { total: 8, occupied: 7 },
-    }
-
-    properties.value = apiProperties.map((property) =>
-      transformPropertyToUI(
-        property,
-        roomCounts[property.id as keyof typeof roomCounts]?.total || 0,
-        roomCounts[property.id as keyof typeof roomCounts]?.occupied || 0,
-      ),
-    )
+    properties.value = apiProperties.map((property) => transformPropertyToUI(property))
     loading.value = false
   } catch (error) {
     loading.value = false

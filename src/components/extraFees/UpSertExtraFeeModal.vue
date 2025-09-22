@@ -47,7 +47,9 @@
           </div>
           <div class="space-y-2">
             <label class="text-sm font-medium text-gray-700">Trạng thái</label>
-            <ToggleSwitch v-model="formData.isActive" />
+            <div>
+              <ToggleSwitch v-model="formData.isActive" />
+            </div>
           </div>
         </div>
         <div class="space-y-2">
@@ -91,7 +93,7 @@ const props = withDefaults(defineProps<Props>(), {
   extraFee: null,
 })
 
-const emit = defineEmits<{ 'extraFee-saved': []; 'extraFee-updated': [] }>()
+const emit = defineEmits<{ 'extra-fee-saved': []; 'extra-fee-updated': [] }>()
 
 const isShow = ref(false)
 const loading = ref(false)
@@ -147,10 +149,10 @@ async function handleSubmit() {
     const payload: any = { ...formData.value }
     if (isEdit.value) {
       await updateExtraFee((formData.value as UpdateExtraFeeInput).id!, payload, props.propertyId)
-      emit('extraFee-updated')
+      emit('extra-fee-updated')
     } else {
       await createExtraFee(payload as CreateExtraFeeInput, props.propertyId)
-      emit('extraFee-saved')
+      emit('extra-fee-saved')
     }
     isShow.value = false
     resetFormData()

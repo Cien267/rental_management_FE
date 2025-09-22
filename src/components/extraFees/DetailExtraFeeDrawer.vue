@@ -51,9 +51,9 @@ const isDrawerOpen = defineModel('visible', { type: Boolean, default: false })
           </div>
         </div>
 
-        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 md:col-span-2">
+        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
           <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">Ghi chú</div>
-          <div class="text-sm text-gray-700">{{ selectedExtraFee.description || '-' }}</div>
+          <div class="text-sm text-gray-700">{{ selectedExtraFee.description || '---' }}</div>
         </div>
 
         <div class="bg-white rounded-xl p-4 border border-gray-200 md:col-span-2">

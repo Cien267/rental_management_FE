@@ -30,7 +30,7 @@ export const getExtraFees = async (
 
 export const getExtraFee = async (id: number, propertyId?: number): Promise<ExtraFee> => {
   const response = await get(EXTRA_FEE_URLS.URL_DETAIL(id, propertyId))
-  return transformApiExtraFeeToExtraFee(response.data.data)
+  return transformApiExtraFeeToExtraFee(response.data)
 }
 
 export const createExtraFee = async (
@@ -41,7 +41,7 @@ export const createExtraFee = async (
     EXTRA_FEE_URLS.URL_CREATE(propertyId),
     transformCreateExtraFeeToApi(extraFeeData),
   )
-  return transformApiExtraFeeToExtraFee(response.data.data)
+  return transformApiExtraFeeToExtraFee(response.data)
 }
 
 export const updateExtraFee = async (
@@ -53,7 +53,7 @@ export const updateExtraFee = async (
     EXTRA_FEE_URLS.URL_UPDATE(id, propertyId),
     transformUpdateExtraFeeToApi({ ...extraFeeData, id }),
   )
-  return transformApiExtraFeeToExtraFee(response.data.data)
+  return transformApiExtraFeeToExtraFee(response.data)
 }
 
 export const deleteExtraFee = async (id: number, propertyId?: number): Promise<void> => {

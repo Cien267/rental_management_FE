@@ -202,12 +202,12 @@ const handleRoomUpdated = () => {
 }
 
 const loadRooms = async (params: any = null) => {
-  const paramQuery = {
+  const paramQuery: any = {
     limit: 10,
     page: 1,
-    sortBy: sortBy.value,
     ...filterParams.value,
   }
+  if (sortBy.value) paramQuery.sortBy = sortBy.value
   if (params) {
     paramQuery.limit = params.rows
     paramQuery.page = params.page + 1
@@ -243,7 +243,7 @@ const handleSort = (sort: string) => {
 const loadProperty = async () => {
   try {
     const prop: Property = await getProperty(propertyId.value)
-    const ui = transformPropertyToUI(prop, 0, 0)
+    const ui = transformPropertyToUI(prop)
     selectedProperty.value = ui
     store.setSelectedProperty(prop)
   } catch {

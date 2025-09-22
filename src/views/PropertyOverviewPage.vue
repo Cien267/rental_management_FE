@@ -297,7 +297,7 @@ async function loadPropertyByRoute() {
   try {
     const prop: Property = await getProperty(id)
     // Optionally compute room stats here or fetch separately; use zeros for now
-    const ui = transformPropertyToUI(prop, 0, 0)
+    const ui = transformPropertyToUI(prop)
     selectedProperty.value = ui
     store.setSelectedProperty(prop)
     const dashboard = await getPropertyDashboard(id)

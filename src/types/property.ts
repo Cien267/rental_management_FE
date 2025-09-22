@@ -25,6 +25,8 @@ export const PropertyRecordSchema = z.object({
   contactMail: z.string().email().optional(),
   electricityPricePerKwh: z.number().optional(),
   waterPricePerM3: z.number().optional(),
+  rooms: z.any().nullable(),
+  tenants: z.any().nullable(),
 })
 
 export type Property = z.infer<typeof PropertyRecordSchema>
