@@ -18,7 +18,14 @@ const { rooms, totalRecords, loading, first, rows } = defineProps<{
   first: number
   rows: number
 }>()
-const emit = defineEmits(['edit-room', 'delete-room', 'open-drawer', 'load-rooms', 'filter'])
+const emit = defineEmits([
+  'edit-room',
+  'delete-room',
+  'open-drawer',
+  'load-rooms',
+  'filter',
+  'sort',
+])
 const filters = defineModel<any>('filters', { default: false })
 const onPage = (event: any) => {
   emit('load-rooms', event)
@@ -30,6 +37,14 @@ const onFilter = (event: any) => {
     status: event.filters.status?.value || undefined,
   }
   emit('filter', filterParams)
+}
+
+const onSort = (event: any) => {
+  let sortBy = ''
+  if (event.sortField && event.sortOrder) {
+    sortBy = `${event.sortField}:${event.sortOrder === 1 ? 'asc' : 'desc'}`
+  }
+  emit('sort', sortBy)
 }
 
 const statusOptions = Object.entries(ROOM_STATUSES).map(([value, label]) => ({ label, value }))
@@ -67,6 +82,7 @@ const exportCSV = () => {
     @rowSelect="emit('open-drawer', $event.data)"
     @page="onPage"
     @filter="onFilter"
+    @sort="onSort"
   >
     <template #empty> Chưa có phòng nào </template>
     <template #loading> Đang tải dữ liệu </template>

@@ -63,21 +63,48 @@
 
     <!-- Navigation Menu -->
     <nav class="flex-1 p-4 flex flex-col justify-start items-start">
-      <span
-        v-for="item in SIDE_BAR_MENU"
-        :key="item.key"
-        @click="navigateTo(item.route)"
-        class="flex items-center gap-3 px-3 py-2 my-2 text-sm font-medium rounded-lg transition-colors cursor-pointer w-full"
-        :class="[
-          $route.name === item.route
-            ? 'bg-sky-50 text-sky-700 border-r-2 border-sky-700 font-semibold'
-            : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900',
-          isCollapsed ? 'justify-center' : 'justify-start',
-        ]"
-      >
-        <i :class="item.icon" class="text-base"></i>
-        <span v-if="!isCollapsed">{{ item.label }}</span>
-      </span>
+      <template v-for="item in sideBarMenu" :key="item.key">
+        <span
+          @click="handleClickMenuItem(item)"
+          class="flex justify-between items-center gap-3 px-3 py-2 my-2 text-sm font-medium rounded-lg transition-colors cursor-pointer w-full"
+          :class="[
+            $route.name === item.route
+              ? 'bg-sky-50 text-sky-700 border-r-2 border-sky-700 font-semibold'
+              : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900',
+            isCollapsed ? 'justify-center' : 'justify-start',
+          ]"
+        >
+          <span class="flex items-center gap-3"
+            ><i :class="item.icon" class="text-base"></i>
+            <span v-if="!isCollapsed">{{ item.label }}</span></span
+          >
+          <i
+            v-if="(item?.children?.length ?? 0) > 0"
+            class="pi text-base"
+            :class="{
+              'pi-angle-down': item.expanded,
+              'pi-angle-up': !item.expanded,
+            }"
+          ></i>
+        </span>
+        <template v-if="item.children && item.children.length > 0 && item.expanded">
+          <span
+            v-for="child in item.children"
+            :key="child.key"
+            @click="handleClickMenuItem(child)"
+            class="flex items-center gap-3 px-3 py-2 my-2 pl-6 text-sm font-medium rounded-lg cursor-pointer w-full transition-all"
+            :class="[
+              $route.name === child.route
+                ? 'bg-sky-50 text-sky-700 border-r-2 border-sky-700 font-semibold'
+                : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900',
+              isCollapsed ? 'justify-center' : 'justify-start',
+            ]"
+          >
+            <i :class="child.icon" class="text-base"></i
+            ><span v-if="!isCollapsed">{{ child.label }}</span></span
+          >
+        </template>
+      </template>
     </nav>
   </aside>
 </template>
@@ -88,6 +115,7 @@ import Button from 'primevue/button'
 import { SIDE_BAR_MENU } from '@/constants/menu'
 import { useMainStore } from '@/stores/main'
 import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 const store = useMainStore()
 const router = useRouter()
 const property = store.getSelectedProperty
@@ -96,12 +124,20 @@ const emit = defineEmits<{
   'back-to-properties': []
 }>()
 
-const navigateTo = (routeName: string) => {
-  const id = property?.id as unknown as number
-  router.push({ name: routeName, params: { id: String(id) } })
-  // Close on mobile after navigation
-  if (store.isSidebarOpenMobile) {
-    store.closeMobileSidebar()
+const sideBarMenu = ref<any>(SIDE_BAR_MENU)
+
+const handleClickMenuItem = (item: any) => {
+  // handle open submenu
+  if (item.children && item.children.length > 0) {
+    item.expanded = !item.expanded
+  } else {
+    const routeName = item.route as string
+    const id = property?.id as unknown as number
+    router.push({ name: routeName, params: { id: String(id) } })
+    // Close on mobile after navigation
+    if (store.isSidebarOpenMobile) {
+      store.closeMobileSidebar()
+    }
   }
 }
 

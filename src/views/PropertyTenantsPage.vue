@@ -68,6 +68,7 @@
           @delete-tenant="onDeleteTenant"
           @load-tenants="loadTenants"
           @filter="handleFilter"
+          @sort="handleSort"
         />
       </div>
     </div>
@@ -115,6 +116,8 @@ import ListTenantTable from '@/components/tenants/ListTenantTable.vue'
 import ConfirmDeleteModal from '@/components/base/organisms/ConfirmDeleteModal.vue'
 import { getRooms } from '@/services/api/roomService'
 import { FilterMatchMode } from '@primevue/core/api'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const route = useRoute()
 const store = useMainStore()
@@ -141,6 +144,7 @@ const deleteModal = ref<InstanceType<typeof ConfirmDeleteModal> | null>(null)
 const editingTenant = ref<Tenant | null>(null)
 const deletingTenant = ref<Tenant | null>(null)
 const filterParams = ref<{ fullName?: string; phone?: string; gender?: string }>({})
+const sortBy = ref<string>('')
 
 const stats = computed(() => ({
   total: tenants.value.length,
@@ -204,10 +208,16 @@ const handleFilter = (filters: { fullName?: string; phone?: string; gender?: str
   loadTenants()
 }
 
+const handleSort = (sort: string) => {
+  sortBy.value = sort
+  loadRooms()
+}
+
 const loadTenants = async (params: any = null) => {
   const paramQuery = {
     limit: 10,
     page: 1,
+    sortBy: sortBy.value,
     ...filterParams.value,
   }
   if (params) {
@@ -223,6 +233,7 @@ const loadTenants = async (params: any = null) => {
     tenants.value = data.results
     totalRecords.value = data.totalResults
   } catch (e: any) {
+    console.error(e)
     const eMsg = e?.response?.data?.message ?? 'Không thể tải danh sách người thuê'
     tError('Lỗi', eMsg)
     tenants.value = []
@@ -264,6 +275,15 @@ const loadRooms = async () => {
 
 onMounted(async () => {
   await Promise.all([loadProperty(), loadTenants(), loadRooms()])
+
+  // open detail drawer if navigating from an other page's selection
+  setTimeout(() => {
+    const tenantId = router.options.history.state.tenantId
+    if (tenantId) {
+      const targetTenant = tenants.value.find((te) => te.id === tenantId)
+      if (targetTenant) openDrawer(targetTenant)
+    }
+  }, 100)
 })
 </script>
 

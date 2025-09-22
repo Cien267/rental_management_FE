@@ -67,6 +67,7 @@
           @delete-room="onDeleteRoom"
           @load-rooms="loadRooms"
           @filter="handleFilter"
+          @sort="handleSort"
         />
       </div>
     </div>
@@ -111,6 +112,8 @@ import DetailRoomDrawer from '@/components/rooms/DetailRoomDrawer.vue'
 import ListRoomTable from '@/components/rooms/ListRoomTable.vue'
 import ConfirmDeleteModal from '@/components/base/organisms/ConfirmDeleteModal.vue'
 import { FilterMatchMode } from '@primevue/core/api'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const route = useRoute()
 const store = useMainStore()
@@ -131,6 +134,7 @@ const filters = ref({
   status: { value: null, matchMode: FilterMatchMode.EQUALS },
 })
 const filterParams = ref<{ name?: string; status?: string }>({})
+const sortBy = ref<string>('')
 const roomModal = ref<InstanceType<typeof UpSertRoomModal> | null>(null)
 const deleteModal = ref<InstanceType<typeof ConfirmDeleteModal> | null>(null)
 const editingRoom = ref<Room | null>(null)
@@ -201,6 +205,7 @@ const loadRooms = async (params: any = null) => {
   const paramQuery = {
     limit: 10,
     page: 1,
+    sortBy: sortBy.value,
     ...filterParams.value,
   }
   if (params) {
@@ -216,6 +221,7 @@ const loadRooms = async (params: any = null) => {
     rooms.value = data.results
     totalRecords.value = data.totalResults
   } catch (e: any) {
+    console.error(e)
     const eMsg = e?.response?.data?.message ?? 'Không thể tải danh sách phòng'
     tError('Lỗi', eMsg)
     rooms.value = []
@@ -226,6 +232,11 @@ const loadRooms = async (params: any = null) => {
 
 const handleFilter = (filters: { name?: string; status?: string }) => {
   filterParams.value = filters
+  loadRooms()
+}
+
+const handleSort = (sort: string) => {
+  sortBy.value = sort
   loadRooms()
 }
 
@@ -243,6 +254,15 @@ const loadProperty = async () => {
 
 onMounted(async () => {
   await Promise.all([loadProperty(), loadRooms()])
+
+  // open detail drawer if navigating from an other page's selection
+  setTimeout(() => {
+    const roomId = router.options.history.state.roomId
+    if (roomId) {
+      const targetRoom = rooms.value.find((te) => te.id === roomId)
+      if (targetRoom) openDrawer(targetRoom)
+    }
+  }, 100)
 })
 </script>
 

@@ -67,6 +67,7 @@
           @delete-contract="onDeleteContract"
           @load-contracts="loadContracts"
           @filter="handleFilter"
+          @sort="handleSort"
         />
       </div>
     </div>
@@ -135,6 +136,7 @@ const filters = ref({
   status: { value: null, matchMode: FilterMatchMode.EQUALS },
 })
 const filterParams = ref<{ name?: string; status?: string }>({})
+const sortBy = ref<string>('')
 const contractModal = ref<InstanceType<typeof UpSertContractModal> | null>(null)
 const deleteModal = ref<InstanceType<typeof ConfirmDeleteModal> | null>(null)
 const editingContract = ref<Contract | null>(null)
@@ -205,6 +207,7 @@ const loadContracts = async (params: any = null) => {
   const paramQuery = {
     limit: 10,
     page: 1,
+    sortBy: sortBy.value,
     ...filterParams.value,
   }
   if (params) {
@@ -220,6 +223,7 @@ const loadContracts = async (params: any = null) => {
     contracts.value = data.results
     totalRecords.value = data.totalResults
   } catch (e: any) {
+    console.error(e)
     const eMsg = e?.response?.data?.message ?? 'Không thể tải danh sách hợp đồng'
     tError('Lỗi', eMsg)
     contracts.value = []
@@ -231,6 +235,11 @@ const loadContracts = async (params: any = null) => {
 const handleFilter = (filters: { name?: string; status?: string }) => {
   filterParams.value = filters
   loadContracts()
+}
+
+const handleSort = (sort: string) => {
+  sortBy.value = sort
+  loadRooms()
 }
 
 const loadProperty = async () => {

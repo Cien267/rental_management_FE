@@ -18,6 +18,7 @@ export const getTenants = async (
     gender?: string
     limit?: number
     page?: number
+    sortBy?: string
   },
 ): Promise<{
   results: Tenant[]

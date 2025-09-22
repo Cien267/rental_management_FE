@@ -11,9 +11,13 @@ const { selectedRoom } = defineProps<{ selectedRoom: Room | null }>()
 const isDrawerOpen = defineModel('visible', { type: Boolean, default: false })
 const router = useRouter()
 
-function goToRoomsList() {
+function goToRoomsList(tenantId: number) {
   if (!selectedRoom) return
-  router.push({ name: ROUTER_NAME_LIST.PROPERTY.TENANTS, params: { id: selectedRoom.propertyId } })
+  router.push({
+    name: ROUTER_NAME_LIST.PROPERTY.TENANTS,
+    params: { id: selectedRoom.propertyId },
+    state: { tenantId },
+  })
 }
 </script>
 
@@ -143,7 +147,7 @@ function goToRoomsList() {
               v-for="tenant in selectedRoom.tenants"
               :key="tenant.id"
               class="p-4 rounded-xl border border-gray-200 hover:border-sky-300 shadow hover:shadow-md hover:shadow-sky-300 cursor-pointer transition"
-              @click="goToRoomsList"
+              @click="goToRoomsList(tenant.id)"
             >
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full bg-sky-100 flex-center">

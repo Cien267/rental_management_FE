@@ -12,18 +12,20 @@ const { selectedContract } = defineProps<{ selectedContract: Contract | null }>(
 const isDrawerOpen = defineModel('visible', { type: Boolean, default: false })
 const router = useRouter()
 
-const goToRoomsList = () => {
+const goToRoomsList = (roomId: number) => {
   if (!selectedContract) return
   router.push({
     name: ROUTER_NAME_LIST.PROPERTY.ROOMS,
     params: { id: selectedContract.room.propertyId },
+    state: { roomId },
   })
 }
-const goToTenantsList = () => {
+const goToTenantsList = (tenantId: number) => {
   if (!selectedContract) return
   router.push({
     name: ROUTER_NAME_LIST.PROPERTY.TENANTS,
     params: { id: selectedContract.room.propertyId },
+    state: { tenantId },
   })
 }
 </script>
@@ -93,7 +95,7 @@ const goToTenantsList = () => {
               <span class="text-gray-500">Phòng</span>
               <span
                 v-if="selectedContract.room"
-                @click="goToRoomsList"
+                @click="goToRoomsList(selectedContract.room.id)"
                 class="font-medium text-blue-600 cursor-pointer hover:underline"
                 >{{ selectedContract.room?.name || '---' }}</span
               >
@@ -102,7 +104,7 @@ const goToTenantsList = () => {
               <span class="text-gray-500">Người kí hợp đồng</span>
               <span
                 v-if="selectedContract.tenant"
-                @click="goToTenantsList"
+                @click="goToTenantsList(selectedContract.tenant.id)"
                 class="font-medium text-blue-600 cursor-pointer hover:underline"
                 >{{ selectedContract.tenant?.fullName || '---' }}</span
               >

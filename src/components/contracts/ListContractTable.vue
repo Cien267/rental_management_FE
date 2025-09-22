@@ -23,6 +23,7 @@ const emit = defineEmits([
   'open-drawer',
   'load-contracts',
   'filter',
+  'sort',
 ])
 const filters = defineModel<any>('filters', { default: false })
 const onPage = (event: any) => {
@@ -31,10 +32,17 @@ const onPage = (event: any) => {
 
 const onFilter = (event: any) => {
   const filterParams = {
-    name: event.filters.name?.value || undefined,
     status: event.filters.status?.value || undefined,
   }
   emit('filter', filterParams)
+}
+
+const onSort = (event: any) => {
+  let sortBy = ''
+  if (event.sortField && event.sortOrder) {
+    sortBy = `${event.sortField}:${event.sortOrder === 1 ? 'asc' : 'desc'}`
+  }
+  emit('sort', sortBy)
 }
 
 const statusOptions = Object.entries(CONTRACT_STATUSES).map(([value, label]) => ({ label, value }))
@@ -72,6 +80,7 @@ const exportCSV = () => {
     @rowSelect="emit('open-drawer', $event.data)"
     @page="onPage"
     @filter="onFilter"
+    @sort="onSort"
   >
     <template #empty> Chưa có hợp đồng nào </template>
     <template #loading> Đang tải dữ liệu </template>

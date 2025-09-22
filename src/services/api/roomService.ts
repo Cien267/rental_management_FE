@@ -10,7 +10,7 @@ import type { Room, CreateRoomInput, UpdateRoomInput } from '@/types/room'
 
 export const getRooms = async (
   propertyId?: number,
-  params?: { limit?: number; page?: number; name?: string; status?: string },
+  params?: { limit?: number; page?: number; sortBy?: string; name?: string; status?: string },
 ): Promise<{
   results: Room[]
   page: number

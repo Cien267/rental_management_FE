@@ -10,7 +10,14 @@ import type { Contract, CreateContractInput, UpdateContractInput } from '@/types
 
 export const getContracts = async (
   propertyId?: number,
-  params?: { roomId?: number; tenantId?: number; status?: string },
+  params?: {
+    roomId?: number
+    tenantId?: number
+    status?: string
+    limit?: number
+    page?: number
+    sortBy?: string
+  },
 ): Promise<{
   results: Contract[]
   page: number

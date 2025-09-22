@@ -43,24 +43,25 @@ export const SIDE_BAR_MENU = [
     label: 'Cài đặt',
     icon: 'pi pi-cog',
     route: ROUTER_NAME_LIST.PROPERTY.SETTINGS.DEFAULT,
+    expanded: false,
     children: [
       {
         key: 'general-settings',
         label: 'Cài đặt chung',
         icon: 'pi pi-cog',
-        route: ROUTER_NAME_LIST.PROPERTY.UTILITY_METERS,
+        route: ROUTER_NAME_LIST.PROPERTY.SETTINGS.GENERAL,
       },
       {
         key: 'utility-meter-settings',
         label: 'Cài đặt công tơ',
         icon: 'pi pi-bolt',
-        route: ROUTER_NAME_LIST.PROPERTY.UTILITY_METERS,
+        route: ROUTER_NAME_LIST.PROPERTY.SETTINGS.UTILITY_METER,
       },
       {
         key: 'extra-fee-settings',
         label: 'Cài đặt phí dịch vụ khác',
         icon: 'pi pi-dollar',
-        route: ROUTER_NAME_LIST.PROPERTY.UTILITY_METERS,
+        route: ROUTER_NAME_LIST.PROPERTY.SETTINGS.EXTRA_FEE,
       },
     ],
   },

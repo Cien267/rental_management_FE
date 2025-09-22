@@ -20,7 +20,14 @@ const { tenants, totalRecords, loading, first, rows } = defineProps<{
   first: number
   rows: number
 }>()
-const emit = defineEmits(['edit-tenant', 'delete-tenant', 'open-drawer', 'load-tenants', 'filter'])
+const emit = defineEmits([
+  'edit-tenant',
+  'delete-tenant',
+  'open-drawer',
+  'load-tenants',
+  'filter',
+  'sort',
+])
 const filters = defineModel<any>('filters', { default: false })
 const onPage = (event: any) => {
   emit('load-tenants', event)
@@ -33,6 +40,14 @@ const onFilter = (event: any) => {
     gender: event.filters.gender?.value || undefined,
   }
   emit('filter', filterParams)
+}
+
+const onSort = (event: any) => {
+  let sortBy = ''
+  if (event.sortField && event.sortOrder) {
+    sortBy = `${event.sortField}:${event.sortOrder === 1 ? 'asc' : 'desc'}`
+  }
+  emit('sort', sortBy)
 }
 
 const genderOptions = Object.entries(TENANT_GENDERS).map(([value, label]) => ({ label, value }))
@@ -70,6 +85,7 @@ const exportCSV = () => {
     @rowSelect="emit('open-drawer', $event.data)"
     @page="onPage"
     @filter="onFilter"
+    @sort="onSort"
   >
     <template #empty> Chưa có người thuê nhà nào </template>
     <template #loading> Đang tải dữ liệu </template>

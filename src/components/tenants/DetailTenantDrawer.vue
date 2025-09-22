@@ -11,11 +11,12 @@ const { selectedTenant } = defineProps<{ selectedTenant: Tenant | null }>()
 const isDrawerOpen = defineModel('visible', { type: Boolean, default: false })
 const router = useRouter()
 
-function goToRoomsList() {
+function goToRoomsList(roomId: number) {
   if (!selectedTenant?.room) return
   router.push({
     name: ROUTER_NAME_LIST.PROPERTY.ROOMS,
     params: { id: selectedTenant.room.propertyId },
+    state: { roomId },
   })
 }
 
@@ -136,7 +137,7 @@ function getAge(dateOfBirth: Date | string | null | undefined): string {
               <span
                 v-if="selectedTenant.room"
                 class="font-medium text-blue-600 cursor-pointer hover:underline"
-                @click="goToRoomsList"
+                @click="goToRoomsList(selectedTenant.room.id)"
               >
                 {{ selectedTenant.room.name }}
               </span>
