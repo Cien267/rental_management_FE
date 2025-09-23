@@ -204,6 +204,7 @@ const handleSort = (event: any) => {
     sortOrder.value = undefined
   }
   sortBy.value = sortByStr
+  first.value = 0
   loadExtraFees()
 }
 

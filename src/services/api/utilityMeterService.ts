@@ -49,12 +49,11 @@ export const getUtilityMeter = async (id: number, propertyId?: number): Promise<
 export const createUtilityMeter = async (
   utilityMeterData: CreateUtilityMeterInput,
   propertyId?: number,
-): Promise<UtilityMeter> => {
-  const response = await post(
+): Promise<void> => {
+  await post(
     UTILITY_METER_URLS.URL_CREATE(propertyId),
     transformCreateUtilityMeterToApi(utilityMeterData),
   )
-  return transformApiUtilityMeterToUtilityMeter(response.data)
 }
 
 export const updateUtilityMeter = async (

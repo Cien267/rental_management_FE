@@ -47,6 +47,7 @@ export function transformCreateUtilityMeterToApi(payload: CreateUtilityMeterInpu
     active: payload.active ?? true,
     unit: payload.unit ?? 'kWh',
     notes: payload.notes ?? null,
+    applyAll: payload.applyAll ?? false,
   }
 }
 

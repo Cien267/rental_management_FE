@@ -28,7 +28,7 @@
             >
             <InputText
               v-model="formData.unit"
-              placeholder="Nhập đơn vị"
+              placeholder="kWh, m3,..."
               class="w-full"
               :class="{ 'border-red-500': errors.unit }"
             />
