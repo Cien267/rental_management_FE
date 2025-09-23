@@ -4,7 +4,7 @@
       <!-- Header -->
       <div class="flex items-center justify-between mb-6">
         <div>
-          <div class="text-2xl font-semibold text-gray-900">Phí dịch vụ khác</div>
+          <div class="text-2xl font-semibold text-gray-900">Cài đặt phí dịch vụ khác</div>
           <div class="text-base text-gray-300">Quản lý phí dịch vụ và trạng thái</div>
         </div>
         <Button

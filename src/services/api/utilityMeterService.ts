@@ -12,14 +12,38 @@ import type {
   UpdateUtilityMeterInput,
 } from '@/types/utilityMeter'
 
-export const getUtilityMeters = async (propertyId?: number): Promise<UtilityMeter[]> => {
-  const response = await get(UTILITY_METER_URLS.URL_LIST(propertyId))
-  return transformApiUtilityMetersToUtilityMeters(response.data.data)
+export const getUtilityMeters = async (
+  propertyId?: number,
+  params?: {
+    fullName?: string
+    phone?: string
+    email?: string
+    roomId?: number
+    gender?: string
+    limit?: number
+    page?: number
+    sortBy?: string
+  },
+): Promise<{
+  results: UtilityMeter[]
+  page: number
+  limit: number
+  totalPages: number
+  totalResults: number
+}> => {
+  const response = await get(UTILITY_METER_URLS.URL_LIST(propertyId), { params })
+  return {
+    results: transformApiUtilityMetersToUtilityMeters(response.data.results),
+    page: response.data.page,
+    limit: response.data.limit,
+    totalPages: response.data.totalPages,
+    totalResults: response.data.totalResults,
+  }
 }
 
 export const getUtilityMeter = async (id: number, propertyId?: number): Promise<UtilityMeter> => {
   const response = await get(UTILITY_METER_URLS.URL_DETAIL(id, propertyId))
-  return transformApiUtilityMeterToUtilityMeter(response.data.data)
+  return transformApiUtilityMeterToUtilityMeter(response.data)
 }
 
 export const createUtilityMeter = async (
@@ -30,7 +54,7 @@ export const createUtilityMeter = async (
     UTILITY_METER_URLS.URL_CREATE(propertyId),
     transformCreateUtilityMeterToApi(utilityMeterData),
   )
-  return transformApiUtilityMeterToUtilityMeter(response.data.data)
+  return transformApiUtilityMeterToUtilityMeter(response.data)
 }
 
 export const updateUtilityMeter = async (
@@ -42,7 +66,7 @@ export const updateUtilityMeter = async (
     UTILITY_METER_URLS.URL_UPDATE(id, propertyId),
     transformUpdateUtilityMeterToApi({ ...utilityMeterData, id }),
   )
-  return transformApiUtilityMeterToUtilityMeter(response.data.data)
+  return transformApiUtilityMeterToUtilityMeter(response.data)
 }
 
 export const deleteUtilityMeter = async (id: number, propertyId?: number): Promise<void> => {

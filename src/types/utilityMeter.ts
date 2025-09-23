@@ -8,6 +8,7 @@ export const UtilityMeterRecordSchema = z.object({
   propertyId: z.number().int().nonnegative(),
   meterType: MeterTypeEnum,
   roomId: z.number().int().nullable().optional(),
+  room: z.any().optional(),
   active: z.coerce.boolean().default(true),
   unit: z.string().default('kWh'),
   notes: z.string().nullable().optional(),
@@ -23,7 +24,8 @@ export const CreateUtilityMeterSchema = z.object({
   roomId: z.number().int().nullable().optional(),
   active: z.boolean().optional().default(true),
   unit: z.string().optional().default('kWh'),
-  notes: z.string().optional(),
+  notes: z.string().nullable().optional(),
+  applyAll: z.boolean().optional(),
 })
 
 export type CreateUtilityMeterInput = z.infer<typeof CreateUtilityMeterSchema>
@@ -35,7 +37,8 @@ export const UpdateUtilityMeterSchema = z.object({
   roomId: z.number().int().nullable().optional(),
   active: z.boolean().optional(),
   unit: z.string().optional(),
-  notes: z.string().optional(),
+  notes: z.string().nullable().optional(),
+  applyAll: z.boolean().optional(),
 })
 
 export type UpdateUtilityMeterInput = z.infer<typeof UpdateUtilityMeterSchema>

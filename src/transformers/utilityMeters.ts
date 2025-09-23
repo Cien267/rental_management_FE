@@ -15,6 +15,7 @@ const ApiUtilityMeterSchema = z.object({
     .transform((v) => (v === null || v === undefined || v === '' ? null : Number(v)))
     .nullable()
     .optional(),
+  room: z.any().optional(),
   active: z.union([z.boolean(), z.number(), z.string()]).transform((val) => {
     if (typeof val === 'boolean') return val
     if (typeof val === 'number') return val === 1
@@ -58,4 +59,12 @@ export function transformUpdateUtilityMeterToApi(payload: UpdateUtilityMeterInpu
     unit: payload.unit,
     notes: payload.notes,
   }
+}
+
+export const getUtilityMeterStatusValue = (status: boolean) => {
+  return status ? 'Hoạt động' : 'Không hoạt động'
+}
+
+export const getUtilityMeterStatusSeverity = (status: boolean) => {
+  return status ? 'info' : 'secondary'
 }

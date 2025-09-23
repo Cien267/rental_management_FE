@@ -1,11 +1,11 @@
 import type { MeterType } from '@/types/utilityMeter'
 
-export const METER_TYPES = {
-  ELECTRICITY: 'electricity',
-  WATER: 'water',
-} as const satisfies Record<string, MeterType>
+export const UTILITY_METER_TYPES: Record<MeterType, string> = {
+  electricity: 'Điện',
+  water: 'nước',
+}
 
-export const METER_TYPE_LABEL: Record<MeterType, string> = {
-  electricity: 'Electricity',
-  water: 'Water',
+export const UTILITY_METER_TYPE_SEVERITIES: Record<MeterType, 'info' | 'secondary'> = {
+  electricity: 'secondary',
+  water: 'info',
 }
