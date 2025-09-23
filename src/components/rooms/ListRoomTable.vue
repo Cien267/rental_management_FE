@@ -11,12 +11,14 @@ import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Tag from 'primevue/tag'
 
-const { rooms, totalRecords, loading, first, rows } = defineProps<{
+const { rooms, totalRecords, loading, first, rows, sortOrder, sortField } = defineProps<{
   rooms: Room[]
   totalRecords: number
   loading: boolean
   first: number
   rows: number
+  sortOrder: number | undefined
+  sortField: string
 }>()
 const emit = defineEmits([
   'edit-room',
@@ -40,11 +42,7 @@ const onFilter = (event: any) => {
 }
 
 const onSort = (event: any) => {
-  let sortBy = ''
-  if (event.sortField && event.sortOrder) {
-    sortBy = `${event.sortField}:${event.sortOrder === 1 ? 'asc' : 'desc'}`
-  }
-  emit('sort', sortBy)
+  emit('sort', event)
 }
 
 const statusOptions = Object.entries(ROOM_STATUSES).map(([value, label]) => ({ label, value }))
@@ -77,6 +75,8 @@ const exportCSV = () => {
     :lazy="true"
     :first="first"
     :totalRecords="totalRecords"
+    :sortOrder="sortOrder"
+    :sortField="sortField"
     scrollable
     scrollHeight="400px"
     @rowSelect="emit('open-drawer', $event.data)"

@@ -12,13 +12,15 @@ import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Tag from 'primevue/tag'
 
-const { tenants, totalRecords, loading, first, rows } = defineProps<{
+const { tenants, totalRecords, loading, first, rows, sortOrder, sortField } = defineProps<{
   tenants: Tenant[]
   rooms: Room[]
   totalRecords: number
   loading: boolean
   first: number
   rows: number
+  sortOrder: number | undefined
+  sortField: string
 }>()
 const emit = defineEmits([
   'edit-tenant',
@@ -43,11 +45,7 @@ const onFilter = (event: any) => {
 }
 
 const onSort = (event: any) => {
-  let sortBy = ''
-  if (event.sortField && event.sortOrder) {
-    sortBy = `${event.sortField}:${event.sortOrder === 1 ? 'asc' : 'desc'}`
-  }
-  emit('sort', sortBy)
+  emit('sort', event)
 }
 
 const genderOptions = Object.entries(TENANT_GENDERS).map(([value, label]) => ({ label, value }))
@@ -79,6 +77,8 @@ const exportCSV = () => {
     exportFilename="Người thuê nhà"
     :lazy="true"
     :first="first"
+    :sortOrder="sortOrder"
+    :sortField="sortField"
     :totalRecords="totalRecords"
     scrollable
     scrollHeight="400px"

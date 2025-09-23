@@ -63,6 +63,8 @@
           :rows="rows"
           v-model:filters="filters"
           :rooms="rooms"
+          :sort-order="sortOrder"
+          :sort-field="sortField"
           @open-drawer="openDrawer"
           @edit-tenant="onEditTenant"
           @delete-tenant="onDeleteTenant"
@@ -129,6 +131,8 @@ const rooms = ref<Room[]>([])
 const totalRecords = ref<number>(0)
 const first = ref(0)
 const rows = ref(10)
+const sortOrder = ref<number | undefined>()
+const sortField = ref<string>('')
 const selectedTenant = ref<Tenant | null>(null)
 const isDrawerOpen = ref<boolean>(false)
 const propertyId = computed(() => Number(route.params.id))
@@ -208,9 +212,18 @@ const handleFilter = (filters: { fullName?: string; phone?: string; gender?: str
   loadTenants()
 }
 
-const handleSort = (sort: string) => {
-  sortBy.value = sort
-  loadRooms()
+const handleSort = (event: any) => {
+  let sortByStr = ''
+  if (event.sortField && event.sortOrder) {
+    sortField.value = event.sortField
+    sortOrder.value = event.sortOrder
+    sortByStr = `${event.sortField}:${event.sortOrder === 1 ? 'asc' : 'desc'}`
+  } else {
+    sortField.value = ''
+    sortOrder.value = undefined
+  }
+  sortBy.value = sortByStr
+  loadTenants()
 }
 
 const loadTenants = async (params: any = null) => {

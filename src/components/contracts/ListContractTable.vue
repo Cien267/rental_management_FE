@@ -10,12 +10,14 @@ import Select from 'primevue/select'
 import Button from 'primevue/button'
 import Tag from 'primevue/tag'
 
-const { contracts, totalRecords, loading, first, rows } = defineProps<{
+const { contracts, totalRecords, loading, first, rows, sortOrder, sortField } = defineProps<{
   contracts: Contract[]
   totalRecords: number
   loading: boolean
   first: number
   rows: number
+  sortOrder: number | undefined
+  sortField: string
 }>()
 const emit = defineEmits([
   'edit-contract',
@@ -38,11 +40,7 @@ const onFilter = (event: any) => {
 }
 
 const onSort = (event: any) => {
-  let sortBy = ''
-  if (event.sortField && event.sortOrder) {
-    sortBy = `${event.sortField}:${event.sortOrder === 1 ? 'asc' : 'desc'}`
-  }
-  emit('sort', sortBy)
+  emit('sort', event)
 }
 
 const statusOptions = Object.entries(CONTRACT_STATUSES).map(([value, label]) => ({ label, value }))
@@ -74,6 +72,8 @@ const exportCSV = () => {
     exportFilename="Hợp đồng"
     :lazy="true"
     :first="first"
+    :sortOrder="sortOrder"
+    :sortField="sortField"
     :totalRecords="totalRecords"
     scrollable
     scrollHeight="400px"
