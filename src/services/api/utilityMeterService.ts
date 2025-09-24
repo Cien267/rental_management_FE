@@ -15,11 +15,6 @@ import type {
 export const getUtilityMeters = async (
   propertyId?: number,
   params?: {
-    fullName?: string
-    phone?: string
-    email?: string
-    roomId?: number
-    gender?: string
     limit?: number
     page?: number
     sortBy?: string

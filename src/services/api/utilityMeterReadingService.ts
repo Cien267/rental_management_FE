@@ -15,9 +15,28 @@ import type {
 export const getUtilityMeterReadings = async (
   utilityMeterId?: number,
   propertyId?: number,
-): Promise<UtilityMeterReading[]> => {
-  const response = await get(UTILITY_METER_READING_URLS.URL_LIST(utilityMeterId, propertyId))
-  return transformApiUtilityMeterReadingsToUtilityMeterReadings(response.data.data)
+  params?: {
+    limit?: number
+    page?: number
+    sortBy?: string
+  },
+): Promise<{
+  results: UtilityMeterReading[]
+  page: number
+  limit: number
+  totalPages: number
+  totalResults: number
+}> => {
+  const response = await get(UTILITY_METER_READING_URLS.URL_LIST(utilityMeterId, propertyId), {
+    params,
+  })
+  return {
+    results: transformApiUtilityMeterReadingsToUtilityMeterReadings(response.data.data),
+    page: response.data.page,
+    limit: response.data.limit,
+    totalPages: response.data.totalPages,
+    totalResults: response.data.totalResults,
+  }
 }
 
 export const getUtilityMeterReading = async (
@@ -26,7 +45,7 @@ export const getUtilityMeterReading = async (
   propertyId?: number,
 ): Promise<UtilityMeterReading> => {
   const response = await get(UTILITY_METER_READING_URLS.URL_DETAIL(id, utilityMeterId, propertyId))
-  return transformApiUtilityMeterReadingToUtilityMeterReading(response.data.data)
+  return transformApiUtilityMeterReadingToUtilityMeterReading(response.data)
 }
 
 export const createUtilityMeterReading = async (
@@ -38,7 +57,7 @@ export const createUtilityMeterReading = async (
     UTILITY_METER_READING_URLS.URL_CREATE(utilityMeterId, propertyId),
     transformCreateUtilityMeterReadingToApi(readingData),
   )
-  return transformApiUtilityMeterReadingToUtilityMeterReading(response.data.data)
+  return transformApiUtilityMeterReadingToUtilityMeterReading(response.data)
 }
 
 export const updateUtilityMeterReading = async (
@@ -51,7 +70,7 @@ export const updateUtilityMeterReading = async (
     UTILITY_METER_READING_URLS.URL_UPDATE(id, utilityMeterId, propertyId),
     transformUpdateUtilityMeterReadingToApi({ ...readingData, id }),
   )
-  return transformApiUtilityMeterReadingToUtilityMeterReading(response.data.data)
+  return transformApiUtilityMeterReadingToUtilityMeterReading(response.data)
 }
 
 export const deleteUtilityMeterReading = async (
