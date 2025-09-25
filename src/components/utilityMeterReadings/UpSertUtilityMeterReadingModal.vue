@@ -27,12 +27,11 @@
           </div>
           <div class="space-y-2">
             <label class="text-sm font-medium text-gray-700">Loại công tơ</label>
-            {{ !formData.roomId }}
             <Select
               v-model="formData.utilityMeterId"
               :options="utilityMeterOptions"
-              option-label="meterType"
-              option-value="id"
+              option-label="label"
+              option-value="value"
               :disabled="!formData.roomId"
               placeholder="Chọn loại công tơ"
               class="w-full"
@@ -85,6 +84,8 @@ import {
 } from '@/services/api/utilityMeterReadingService'
 import { useCustomToast } from '@/composables/base/useCustomToast'
 import type { UtilityMeter } from '@/types/utilityMeter'
+import type { MeterType } from '@/types/utilityMeter'
+import { UTILITY_METER_TYPES } from '@/constants/utilityMeters'
 
 const { tError } = useCustomToast()
 
@@ -113,7 +114,14 @@ const isEdit = computed(() => !!props.utilityMeterReading)
 const roomOptions = computed(() => props.rooms || [])
 const utilityMeterOptions = computed(() => {
   if (formData.value.roomId) {
-    return props.utilityMeterSettings?.filter((u) => u.roomId === formData.value.roomId)
+    return props.utilityMeterSettings
+      ?.filter((u) => u.roomId === formData.value.roomId)
+      ?.map((item) => {
+        return {
+          value: item.id,
+          label: UTILITY_METER_TYPES[item.meterType as MeterType],
+        }
+      })
   }
   return []
 })

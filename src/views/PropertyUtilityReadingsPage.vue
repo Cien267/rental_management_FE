@@ -22,18 +22,17 @@
         <ListUtilityMeterReadingTable
           :utilityMeterReadings="utilityMeterReadings"
           :loading="loading"
+          :rooms="rooms"
           :total-records="totalRecords"
           :first="first"
           :rows="rows"
           :sort-order="sortOrder"
           :sort-field="sortField"
-          v-model:filters="filters"
+          :utilityMeterSettings="utilityMeterSettings"
           @open-drawer="openDrawer"
           @edit-utility-meter-reading="onEditUtilityMeterReading"
           @delete-utility-meter-reading="onDeleteUtilityMeterReading"
           @load-utility-meter-readings="loadUtilityMeterReadings"
-          @filter="handleFilter"
-          @sort="handleSort"
         />
       </div>
     </div>
@@ -81,7 +80,6 @@ import { useMainStore } from '@/stores/main'
 import { useCustomToast } from '@/composables/base/useCustomToast'
 import ListUtilityMeterReadingTable from '@/components/utilityMeterReadings/ListUtilityMeterReadingTable.vue'
 import ConfirmDeleteModal from '@/components/base/organisms/ConfirmDeleteModal.vue'
-import { FilterMatchMode } from '@primevue/core/api'
 import type { UtilityMeter } from '@/types/utilityMeter'
 
 const route = useRoute()
@@ -101,11 +99,6 @@ const selectedUtilityMeterReading = ref<UtilityMeterReading | null>(null)
 const isDrawerOpen = ref<boolean>(false)
 const propertyId = computed(() => Number(route.params.id))
 const selectedProperty = ref<PropertyUI | null>(null)
-const filters = ref({
-  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-  name: { value: null, matchMode: FilterMatchMode.CONTAINS },
-  status: { value: null, matchMode: FilterMatchMode.EQUALS },
-})
 const filterParams = ref<{ name?: string; status?: string }>({})
 const sortBy = ref<string>('')
 const utilityMeterReadingModal = ref<InstanceType<typeof UpSertUtilityMeterReadingModal> | null>(
@@ -196,26 +189,6 @@ const loadUtilityMeterReadings = async (params: any = null) => {
   } finally {
     loading.value = false
   }
-}
-
-const handleFilter = (filters: { name?: string; status?: string }) => {
-  filterParams.value = filters
-  loadUtilityMeterReadings()
-}
-
-const handleSort = (event: any) => {
-  let sortByStr = ''
-  if (event.sortField && event.sortOrder) {
-    sortField.value = event.sortField
-    sortOrder.value = event.sortOrder
-    sortByStr = `${event.sortField}:${event.sortOrder === 1 ? 'asc' : 'desc'}`
-  } else {
-    sortField.value = ''
-    sortOrder.value = undefined
-  }
-  sortBy.value = sortByStr
-  first.value = 0
-  loadUtilityMeterReadings()
 }
 
 const loadProperty = async () => {
