@@ -17,11 +17,7 @@
           />
           <!-- Logo and App Name -->
           <div class="flex items-center gap-3 w-32 lg:w-56">
-            <span
-              class="text-4xl bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-600 font-extrabold font-Alex_Brush lg:pl-16"
-            >
-              Sổ trọ
-            </span>
+            <Image src="/logo.png" alt="Image" width="60" />
           </div>
 
           <!-- Back Button (conditional) -->
@@ -62,6 +58,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import Button from 'primevue/button'
 import Menu from 'primevue/menu'
+import Image from 'primevue/image'
 import { useAuth } from '@/composables/auth/useAuth'
 import { useCustomToast } from '@/composables/base/useCustomToast'
 import UserProfileModal from '@/components/user/UserProfileModal.vue'

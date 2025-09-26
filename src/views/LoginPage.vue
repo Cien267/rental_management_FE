@@ -11,6 +11,7 @@ import { ROUTER_NAME_LIST } from '@/constants/routers'
 import { useCustomToast } from '@/composables/base/useCustomToast'
 import AdminInformation from '@/components/auth/AdminInformation.vue'
 import AppBackground from '@/components/layout/AppBackground.vue'
+import Image from 'primevue/image'
 
 const email = ref('')
 const password = ref('')
@@ -58,11 +59,7 @@ async function onSubmit() {
     <AppBackground />
     <div class="w-120 z-10">
       <div class="flex flex-col items-center text-center mb-8">
-        <h1
-          class="mt-4 bg-clip-text text-transparent bg-gradient-to-r from-teal-300 to-sky-600 font-extrabold text-8xl font-Alex_Brush"
-        >
-          Sổ Trọ
-        </h1>
+        <Image src="/logo.png" alt="Image" width="250" />
       </div>
 
       <div class="bg-white shadow-2xl rounded-2xl border border-gray-100 mx-auto">
