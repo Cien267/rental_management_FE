@@ -3,17 +3,7 @@ import { useAuth } from '@/composables/auth/useAuth'
 import { ROUTER_NAME_LIST } from '@/constants/routers'
 import LoginPage from '@/views/LoginPage.vue'
 import RentalManagement from '@/views/RentalManagement.vue'
-import PropertyOverviewPage from '@/views/PropertyOverviewPage.vue'
-import PropertyContractsPage from '@/views/PropertyContractsPage.vue'
-import PropertyExtraFeeSettingsPage from '@/views/PropertyExtraFeeSettingsPage.vue'
-import PropertyGeneralSettingsPage from '@/views/PropertyGeneralSettingsPage.vue'
-import PropertyInvoicesPage from '@/views/PropertyInvoicesPage.vue'
-import PropertyRoomsPage from '@/views/PropertyRoomsPage.vue'
-import PropertyTenantsPage from '@/views/PropertyTenantsPage.vue'
-import PropertyUtilityMeterSettingsPage from '@/views/PropertyUtilityMeterSettingsPage.vue'
-import PropertyUtilityReadingsPage from '@/views/PropertyUtilityReadingsPage.vue'
 import NotFoundPage from '@/views/NotFoundPage.vue'
-import PropertySettingsPage from '@/views/PropertySettingsPage.vue'
 
 const { token } = useAuth()
 const PREFIX_PROPERTY = '/property/:id'
@@ -40,61 +30,61 @@ const router = createRouter({
     {
       path: `${PREFIX_PROPERTY}/overview`,
       name: ROUTER_NAME_LIST.PROPERTY.OVERVIEW,
-      component: PropertyOverviewPage,
+      component: () => import('@/views/PropertyOverviewPage.vue'),
       meta: { requiresAuth: true, transition: 'slide-fade' },
     },
     {
       path: `${PREFIX_PROPERTY}/rooms`,
       name: ROUTER_NAME_LIST.PROPERTY.ROOMS,
-      component: PropertyRoomsPage,
-      meta: { requiresAuth: false, transition: 'slide-fade' },
+      component: () => import('@/views/PropertyRoomsPage.vue'),
+      meta: { requiresAuth: true, transition: 'slide-fade' },
     },
     {
       path: `${PREFIX_PROPERTY}/tenants`,
       name: ROUTER_NAME_LIST.PROPERTY.TENANTS,
-      component: PropertyTenantsPage,
+      component: () => import('@/views/PropertyTenantsPage.vue'),
       meta: { requiresAuth: true, transition: 'slide-fade' },
     },
     {
       path: `${PREFIX_PROPERTY}/contracts`,
       name: ROUTER_NAME_LIST.PROPERTY.CONTRACTS,
-      component: PropertyContractsPage,
+      component: () => import('@/views/PropertyContractsPage.vue'),
       meta: { requiresAuth: true, transition: 'slide-fade' },
     },
     {
       path: `${PREFIX_PROPERTY}/utility-readings`,
       name: ROUTER_NAME_LIST.PROPERTY.UTILITY_READINGS,
-      component: PropertyUtilityReadingsPage,
+      component: () => import('@/views/PropertyUtilityReadingsPage.vue'),
       meta: { requiresAuth: true, transition: 'slide-fade' },
     },
     {
       path: `${PREFIX_PROPERTY}/invoices`,
       name: ROUTER_NAME_LIST.PROPERTY.INVOICES,
-      component: PropertyInvoicesPage,
+      component: () => import('@/views/PropertyInvoicesPage.vue'),
       meta: { requiresAuth: true, transition: 'slide-fade' },
     },
     {
       path: `${PREFIX_PROPERTY}/settings`,
       name: ROUTER_NAME_LIST.PROPERTY.SETTINGS.DEFAULT,
-      component: PropertySettingsPage,
+      component: () => import('@/views/PropertySettingsPage.vue'),
       meta: { requiresAuth: true, transition: 'slide-fade' },
     },
     {
       path: `${PREFIX_PROPERTY}/settings/general`,
       name: ROUTER_NAME_LIST.PROPERTY.SETTINGS.GENERAL,
-      component: PropertyGeneralSettingsPage,
+      component: () => import('@/views/PropertyGeneralSettingsPage.vue'),
       meta: { requiresAuth: true, transition: 'slide-fade' },
     },
     {
       path: `${PREFIX_PROPERTY}/settings/utility-meter`,
       name: ROUTER_NAME_LIST.PROPERTY.SETTINGS.UTILITY_METER,
-      component: PropertyUtilityMeterSettingsPage,
+      component: () => import('@/views/PropertyUtilityMeterSettingsPage.vue'),
       meta: { requiresAuth: true, transition: 'slide-fade' },
     },
     {
       path: `${PREFIX_PROPERTY}/settings/extra-fee`,
       name: ROUTER_NAME_LIST.PROPERTY.SETTINGS.EXTRA_FEE,
-      component: PropertyExtraFeeSettingsPage,
+      component: () => import('@/views/PropertyExtraFeeSettingsPage.vue'),
       meta: { requiresAuth: true, transition: 'slide-fade' },
     },
     { path: `/:notFound(.*)`, component: NotFoundPage },

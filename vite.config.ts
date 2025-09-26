@@ -21,7 +21,7 @@ export default defineConfig({
   build: {
     rollupOptions: {},
     emptyOutDir: true,
-    chunkSizeWarningLimit: 500,
+    chunkSizeWarningLimit: 1024,
     cssCodeSplit: true,
     minify: 'esbuild',
   },

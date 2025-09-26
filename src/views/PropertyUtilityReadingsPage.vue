@@ -18,6 +18,14 @@
       <PageLoading v-if="loading" />
 
       <div v-else class="space-y-6">
+        <FilterUtilityMeterReading
+          :rooms="rooms"
+          :selected-room="selectedRoom"
+          :utility-meter-settings="utilityMeterSettings"
+          :select-room="handleSelectRoomFilter"
+          :selected-utility-meter="selectedUtilityMeter"
+          :select-meter-type="handleSelectMeterTypeFilter"
+        ></FilterUtilityMeterReading>
         <!-- Table -->
         <ListUtilityMeterReadingTable
           :utilityMeterReadings="utilityMeterReadings"
@@ -64,6 +72,7 @@ import Button from 'primevue/button'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import PageLoading from '@/components/base/atoms/PageLoading.vue'
 import UpSertUtilityMeterReadingModal from '@/components/utilityMeterReadings/UpSertUtilityMeterReadingModal.vue'
+import FilterUtilityMeterReading from '@/components/utilityMeterReadings/FilterUtilityMeterReading.vue'
 import type { UtilityMeterReading } from '@/types/utilityMeterReading'
 import type { Room } from '@/types/room'
 import { getRooms } from '@/services/api/roomService'
@@ -89,6 +98,11 @@ const { tSuccess, tError } = useCustomToast()
 const loading = ref<boolean>(false)
 const utilityMeterReadings = ref<UtilityMeterReading[]>([])
 const rooms = ref<Room[]>([])
+const selectedRoom = ref<Room | any>({
+  id: 0,
+  name: 'Tất cả',
+})
+const selectedUtilityMeter = ref<UtilityMeter | null>(null)
 const utilityMeterSettings = ref<UtilityMeter[]>([])
 const totalRecords = ref<number>(0)
 const first = ref(0)
@@ -99,7 +113,7 @@ const selectedUtilityMeterReading = ref<UtilityMeterReading | null>(null)
 const isDrawerOpen = ref<boolean>(false)
 const propertyId = computed(() => Number(route.params.id))
 const selectedProperty = ref<PropertyUI | null>(null)
-const filterParams = ref<{ name?: string; status?: string }>({})
+const filterParams = ref<any>({})
 const sortBy = ref<string>('')
 const utilityMeterReadingModal = ref<InstanceType<typeof UpSertUtilityMeterReadingModal> | null>(
   null,
@@ -160,6 +174,18 @@ const handleUtilityMeterReadingUpdated = () => {
   first.value = 0
   loadUtilityMeterReadings()
   tSuccess('Thành công', 'Cập nhật số đo công tơ thành công')
+}
+
+const handleSelectRoomFilter = (room: Room | any) => {
+  selectedRoom.value = room
+  filterParams.value = { roomId: room.id || '', ...filterParams.value }
+  loadUtilityMeterReadings()
+}
+
+const handleSelectMeterTypeFilter = (utilityMeter: UtilityMeter) => {
+  selectedUtilityMeter.value = utilityMeter
+  filterParams.value = { utilityMeterId: utilityMeter.id || '', ...filterParams.value }
+  loadUtilityMeterReadings()
 }
 
 const loadUtilityMeterReadings = async (params: any = null) => {
