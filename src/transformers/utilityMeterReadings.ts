@@ -39,6 +39,8 @@ export function transformCreateUtilityMeterReadingToApi(payload: CreateUtilityMe
     utilityMeterId: payload.utilityMeterId,
     readingDate: payload.readingDate,
     value: payload.value ?? null,
+    propertyId: payload.propertyId,
+    roomId: payload.roomId,
   }
 }
 
@@ -47,5 +49,7 @@ export function transformUpdateUtilityMeterReadingToApi(payload: UpdateUtilityMe
     utilityMeterId: payload.utilityMeterId,
     readingDate: payload.readingDate,
     value: payload.value,
+    propertyId: payload.propertyId,
+    roomId: payload.roomId,
   }
 }

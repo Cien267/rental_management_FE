@@ -174,11 +174,16 @@ async function handleSubmit() {
       await updateUtilityMeterReading(
         (formData.value as UpdateUtilityMeterReadingInput).id!,
         payload,
+        payload.utilityMeterId,
         props.propertyId,
       )
       emit('utility-meter-reading-updated')
     } else {
-      await createUtilityMeterReading(payload as CreateUtilityMeterReadingInput, props.propertyId)
+      await createUtilityMeterReading(
+        payload as CreateUtilityMeterReadingInput,
+        payload.utilityMeterId,
+        props.propertyId,
+      )
       emit('utility-meter-reading-saved')
     }
     isShow.value = false

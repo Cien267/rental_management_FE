@@ -13,7 +13,6 @@ import type {
 } from '@/types/utilityMeterReading'
 
 export const getUtilityMeterReadings = async (
-  utilityMeterId?: number,
   propertyId?: number,
   params?: {
     limit?: number
@@ -27,7 +26,7 @@ export const getUtilityMeterReadings = async (
   totalPages: number
   totalResults: number
 }> => {
-  const response = await get(UTILITY_METER_READING_URLS.URL_LIST(utilityMeterId, propertyId), {
+  const response = await get(UTILITY_METER_READING_URLS.URL_LIST(propertyId), {
     params,
   })
   return {

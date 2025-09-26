@@ -95,12 +95,10 @@ export const UTILITY_METER_URLS = {
 
 // UTILITY METER READINGS
 export const UTILITY_METER_READING_URLS = {
-  URL_LIST: (utilityMeterId?: number | string, propertyId?: number | string) =>
-    utilityMeterId && propertyId
-      ? `/v1/properties/${propertyId}/utility-meters/${utilityMeterId}/readings`
-      : utilityMeterId
-        ? `/v1/utility-meters/${utilityMeterId}/readings`
-        : '/v1/utility-meter-readings',
+  URL_LIST: (propertyId?: number | string) =>
+    propertyId
+      ? `/v1/properties/${propertyId}/utility-meters-readings`
+      : '/v1/utility-meter-readings',
   URL_DETAIL: (
     id: number | string,
     utilityMeterId?: number | string,
