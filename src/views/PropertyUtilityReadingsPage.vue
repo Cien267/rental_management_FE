@@ -22,9 +22,9 @@
           :rooms="rooms"
           :selected-room="selectedRoom"
           :utility-meter-settings="utilityMeterSettings"
-          :select-room="handleSelectRoomFilter"
           :selected-utility-meter="selectedUtilityMeter"
-          :select-meter-type="handleSelectMeterTypeFilter"
+          @select-room="handleSelectRoomFilter"
+          @select-meter-type="handleSelectMeterTypeFilter"
         ></FilterUtilityMeterReading>
         <!-- Table -->
         <ListUtilityMeterReadingTable

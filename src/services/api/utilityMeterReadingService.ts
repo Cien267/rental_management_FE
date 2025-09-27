@@ -30,7 +30,7 @@ export const getUtilityMeterReadings = async (
     params,
   })
   return {
-    results: transformApiUtilityMeterReadingsToUtilityMeterReadings(response.data.data),
+    results: transformApiUtilityMeterReadingsToUtilityMeterReadings(response.data.results),
     page: response.data.page,
     limit: response.data.limit,
     totalPages: response.data.totalPages,

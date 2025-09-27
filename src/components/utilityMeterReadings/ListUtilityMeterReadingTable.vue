@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import type { UtilityMeterReading } from '@/types/utilityMeterReading'
@@ -51,17 +50,10 @@ const getRoom = (roomId: number) => {
   if (room) return room.name
   return ''
 }
-
-const dt = ref()
-
-const exportCSV = () => {
-  dt.value.exportCSV()
-}
 </script>
 
 <template>
   <DataTable
-    ref="dt"
     stripedRows
     paginator
     removableSort
@@ -75,7 +67,6 @@ const exportCSV = () => {
     selectionMode="single"
     :metaKeySelection="false"
     :filterDelay="500"
-    exportFilename="Người thuê nhà"
     :lazy="true"
     :first="first"
     :sortOrder="sortOrder"
@@ -88,11 +79,6 @@ const exportCSV = () => {
   >
     <template #empty> Chưa có dữ liệu số đo nào </template>
     <template #loading> Đang tải dữ liệu </template>
-    <template #header>
-      <div class="text-end pb-4">
-        <Button icon="pi pi-external-link" label="Export" @click="exportCSV" />
-      </div>
-    </template>
     <Column field="" header="Loại">
       <template #body="{ data }">
         {{ getMeterType(data.utilityMeterId) }}

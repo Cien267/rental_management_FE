@@ -1,10 +1,11 @@
+``
 <script setup lang="ts">
-import Carousel from 'primevue/carousel'
 import Button from 'primevue/button'
+import Divider from 'primevue/divider'
 import type { Room } from '@/types/room'
 import type { UtilityMeter, MeterType } from '@/types/utilityMeter'
 import { UTILITY_METER_TYPES } from '@/constants/utilityMeters'
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 
 const { rooms, selectedRoom, selectedUtilityMeter, utilityMeterSettings } = defineProps<{
   selectedRoom: any
@@ -14,35 +15,14 @@ const { rooms, selectedRoom, selectedUtilityMeter, utilityMeterSettings } = defi
 }>()
 const emit = defineEmits(['select-room', 'select-meter-type'])
 
-const responsiveOptions = ref([
-  {
-    breakpoint: '1400px',
-    numVisible: 6,
-    numScroll: 3,
-  },
-  {
-    breakpoint: '1199px',
-    numVisible: 5,
-    numScroll: 3,
-  },
-  {
-    breakpoint: '767px',
-    numVisible: 4,
-    numScroll: 2,
-  },
-  {
-    breakpoint: '575px',
-    numVisible: 3,
-    numScroll: 1,
-  },
-])
-
 const roomOptions = computed(() => {
   const options = rooms
-  options.unshift({
-    id: 0,
-    name: 'Tất cả',
-  } as any)
+  const idxTotal = options.findIndex((o) => o.id === 0)
+  if (idxTotal === -1)
+    options.unshift({
+      id: 0,
+      name: 'Tất cả',
+    } as any)
   return options
 })
 
@@ -71,27 +51,20 @@ const getSeverityMeterType = (meterType: { value: number; label: string }) => {
 
 <template>
   <div class="font-bold text-xl text-gray-600">Chọn phòng:</div>
-  <Carousel
-    :value="roomOptions"
-    :numVisible="6"
-    :numScroll="3"
-    :responsiveOptions="responsiveOptions"
-  >
-    <template #item="{ data }">
-      <div class="m-6">
-        <Button
-          icon="pi pi-home"
-          :label="data.name"
-          raised
-          rounded
-          size="large"
-          class="w-full"
-          :severity="getSeverityRoom(data)"
-          @click="emit('select-room')"
-        />
-      </div>
-    </template>
-  </Carousel>
+  <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+    <Button
+      v-for="room in roomOptions"
+      :key="room.id"
+      icon="pi pi-home"
+      :label="room.name"
+      raised
+      rounded
+      size="large"
+      class="w-full"
+      :severity="getSeverityRoom(room)"
+      @click="emit('select-room')"
+    />
+  </div>
   <div class="font-bold text-xl text-gray-600">Chọn loại:</div>
   <div v-if="!selectedRoom || !selectedRoom.id" class="text-base text-gray-200 font-normal">
     Vui lòng chọn phòng
@@ -110,4 +83,5 @@ const getSeverityMeterType = (meterType: { value: number; label: string }) => {
       />
     </template>
   </div>
+  <Divider />
 </template>
