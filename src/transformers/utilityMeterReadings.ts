@@ -9,6 +9,8 @@ import {
 const ApiUtilityMeterReadingSchema = z.object({
   id: z.number(),
   utilityMeterId: z.number(),
+  propertyId: z.number(),
+  roomId: z.number(),
   readingDate: z.union([z.string(), z.date()]).transform((v) => new Date(v as any)),
   value: z
     .union([z.number(), z.string()])

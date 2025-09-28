@@ -10,7 +10,7 @@ import { computed } from 'vue'
 const { rooms, selectedRoom, selectedUtilityMeter, utilityMeterSettings } = defineProps<{
   selectedRoom: any
   rooms: Room[]
-  selectedUtilityMeter: UtilityMeter | null
+  selectedUtilityMeter: { value: number; label: string } | null
   utilityMeterSettings?: UtilityMeter[] | null
 }>()
 const emit = defineEmits(['select-room', 'select-meter-type'])
@@ -39,12 +39,12 @@ const meterTypeOptions = computed(() => {
 })
 
 const getSeverityRoom = (room: any) => {
-  if (selectedRoom.id === room.id) return ''
+  if (selectedRoom && selectedRoom.id === room.id) return ''
   return 'secondary'
 }
 
 const getSeverityMeterType = (meterType: { value: number; label: string }) => {
-  if (selectedUtilityMeter?.id === meterType.value) return ''
+  if (selectedUtilityMeter?.value === meterType.value) return ''
   return 'secondary'
 }
 </script>
@@ -62,14 +62,14 @@ const getSeverityMeterType = (meterType: { value: number; label: string }) => {
       size="large"
       class="w-full"
       :severity="getSeverityRoom(room)"
-      @click="emit('select-room')"
+      @click="emit('select-room', room)"
     />
   </div>
   <div class="font-bold text-xl text-gray-600">Chọn loại:</div>
   <div v-if="!selectedRoom || !selectedRoom.id" class="text-base text-gray-200 font-normal">
     Vui lòng chọn phòng
   </div>
-  <div v-else>
+  <div v-else class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
     <template v-for="option in meterTypeOptions" :key="option.value">
       <Button
         icon="pi pi-home"
@@ -79,7 +79,7 @@ const getSeverityMeterType = (meterType: { value: number; label: string }) => {
         size="large"
         class="w-full"
         :severity="getSeverityMeterType(option)"
-        @click="emit('select-meter-type')"
+        @click="emit('select-meter-type', option)"
       />
     </template>
   </div>

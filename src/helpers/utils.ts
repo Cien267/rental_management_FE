@@ -66,3 +66,13 @@ export const formatCurrency = (
     maximumFractionDigits: 0,
   }).format(number)
 }
+
+export const formatNumber = (num: string | number, locale: string = 'vi-VN') => {
+  if (num === null || num === undefined || num === '') return '-'
+  const number = typeof num === 'string' ? Number(num) : num
+  if (isNaN(number)) return '-'
+  return new Intl.NumberFormat(locale, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(number)
+}

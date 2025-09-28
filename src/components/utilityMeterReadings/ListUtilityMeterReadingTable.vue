@@ -6,7 +6,7 @@ import type { UtilityMeter, MeterType } from '@/types/utilityMeter'
 import { UTILITY_METER_TYPES } from '@/constants/utilityMeters'
 import type { Room } from '@/types/room'
 import Button from 'primevue/button'
-import { formatCurrency, formatDate } from '@/helpers/utils'
+import { formatNumber, formatDate } from '@/helpers/utils'
 
 const {
   utilityMeterReadings,
@@ -91,7 +91,7 @@ const getRoom = (roomId: number) => {
     </Column>
     <Column field="" header="Giá trị">
       <template #body="{ data }">
-        {{ formatCurrency(data.value) }}
+        {{ formatNumber(data.value) }}
       </template>
     </Column>
     <Column field="" header="Ngày nhập">

@@ -102,7 +102,7 @@ const selectedRoom = ref<Room | any>({
   id: 0,
   name: 'Tất cả',
 })
-const selectedUtilityMeter = ref<UtilityMeter | null>(null)
+const selectedUtilityMeter = ref<{ value: number; label: string } | null>(null)
 const utilityMeterSettings = ref<UtilityMeter[]>([])
 const totalRecords = ref<number>(0)
 const first = ref(0)
@@ -178,13 +178,14 @@ const handleUtilityMeterReadingUpdated = () => {
 
 const handleSelectRoomFilter = (room: Room | any) => {
   selectedRoom.value = room
-  filterParams.value = { roomId: room.id || '', ...filterParams.value }
+  filterParams.value = { ...filterParams.value, roomId: room.id || '' }
   loadUtilityMeterReadings()
 }
 
-const handleSelectMeterTypeFilter = (utilityMeter: UtilityMeter) => {
+const handleSelectMeterTypeFilter = (utilityMeter: { value: number; label: string }) => {
+  console.log({ utilityMeter })
   selectedUtilityMeter.value = utilityMeter
-  filterParams.value = { utilityMeterId: utilityMeter.id || '', ...filterParams.value }
+  filterParams.value = { ...filterParams.value, utilityMeterId: utilityMeter.value || '' }
   loadUtilityMeterReadings()
 }
 
