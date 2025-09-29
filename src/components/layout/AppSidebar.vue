@@ -3,7 +3,7 @@
     class="bg-white shadow-sm border-r border-gray-200 flex flex-col z-40"
     :class="[
       // Width on desktop
-      isCollapsed ? 'lg:w-16' : 'lg:w-64',
+      isCollapsed ? 'lg:w-18' : 'lg:w-64',
       // Always render as flex; control positioning per breakpoint
       'w-64',
       // Mobile drawer positioning
@@ -84,6 +84,7 @@
             :class="{
               'pi-angle-down': item.expanded,
               'pi-angle-up': !item.expanded,
+              '!hidden': isCollapsed,
             }"
           ></i>
         </span>
@@ -100,7 +101,7 @@
               isCollapsed ? 'justify-center' : 'justify-start',
             ]"
           >
-            <i :class="child.icon" class="text-base"></i
+            <i :class="child.icon" class="text-base block"></i
             ><span v-if="!isCollapsed">{{ child.label }}</span></span
           >
         </template>

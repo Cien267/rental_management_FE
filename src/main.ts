@@ -12,6 +12,7 @@ import clickOutsideDirective from '@/directives/click-outside'
 import { definePreset } from '@primeuix/themes'
 import ConfirmationService from 'primevue/confirmationservice'
 import PageLoading from '@/components/base/atoms/PageLoading.vue'
+import Tooltip from 'primevue/tooltip'
 
 const app = createApp(App)
 
@@ -41,6 +42,7 @@ app.use(PrimeVue, {
   },
 })
 app.directive('click-outside', clickOutsideDirective)
+app.directive('tooltip', Tooltip)
 const options = {
   position: POSITION.BOTTOM_RIGHT,
   hideProgressBar: true,
