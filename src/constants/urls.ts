@@ -113,6 +113,8 @@ export const UTILITY_METER_READING_URLS = {
       : utilityMeterId
         ? `/v1/utility-meters/${utilityMeterId}/readings`
         : '/v1/utility-meter-readings',
+  URL_CREATE_MULTIPLE: (propertyId?: number | string) =>
+    propertyId ? `/v1/properties/${propertyId}/utility-meters-readings-multiple-create` : '',
   URL_UPDATE: (
     id: number | string,
     utilityMeterId?: number | string,

@@ -65,11 +65,16 @@ const getSeverityMeterType = (meterType: { value: number; label: string }) => {
       @click="emit('select-room', room)"
     />
   </div>
-  <div class="font-bold text-xl text-gray-600">Chọn loại:</div>
-  <div v-if="!selectedRoom || !selectedRoom.id" class="text-base text-gray-200 font-normal">
-    Vui lòng chọn phòng
+  <div class="font-bold text-xl text-gray-600">
+    Chọn loại:
+    <span v-if="!selectedRoom || !selectedRoom.id" class="text-base text-gray-200 font-normal ml-2">
+      Vui lòng chọn phòng
+    </span>
   </div>
-  <div v-else class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+  <div
+    v-if="selectedRoom && selectedRoom.id"
+    class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4"
+  >
     <template v-for="option in meterTypeOptions" :key="option.value">
       <Button
         icon="pi pi-home"

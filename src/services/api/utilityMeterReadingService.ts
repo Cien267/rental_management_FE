@@ -59,6 +59,17 @@ export const createUtilityMeterReading = async (
   return transformApiUtilityMeterReadingToUtilityMeterReading(response.data)
 }
 
+export const createMultipleUtilityMeterReading = async (
+  readingData: CreateUtilityMeterReadingInput[],
+  propertyId?: number,
+): Promise<UtilityMeterReading[]> => {
+  const response = await post(
+    UTILITY_METER_READING_URLS.URL_CREATE_MULTIPLE(propertyId),
+    transformApiUtilityMeterReadingsToUtilityMeterReadings(readingData),
+  )
+  return transformApiUtilityMeterReadingsToUtilityMeterReadings(response.data)
+}
+
 export const updateUtilityMeterReading = async (
   id: number,
   readingData: UpdateUtilityMeterReadingInput,

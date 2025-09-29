@@ -70,7 +70,7 @@ onUnmounted(() => {
         <div
           :class="
             cn(
-              'relative bg-white rounded-2xl shadow-lg w-full max-w-200 max-h-[calc(100vh-80px)] flex flex-col',
+              'relative bg-white rounded-2xl shadow-lg w-full max-w-200 max-h-[calc(100vh-80px)] flex flex-col transition-all ease-in-out',
               modalClass,
             )
           "
