@@ -46,6 +46,12 @@ export function transformCreateUtilityMeterReadingToApi(payload: CreateUtilityMe
   }
 }
 
+export function transformCreateUtilityMeterReadingsToApi(
+  payload: CreateUtilityMeterReadingInput[],
+) {
+  return payload.map(transformCreateUtilityMeterReadingToApi)
+}
+
 export function transformUpdateUtilityMeterReadingToApi(payload: UpdateUtilityMeterReadingInput) {
   return {
     utilityMeterId: payload.utilityMeterId,

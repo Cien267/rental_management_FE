@@ -5,6 +5,7 @@ import {
   transformApiUtilityMeterReadingToUtilityMeterReading,
   transformCreateUtilityMeterReadingToApi,
   transformUpdateUtilityMeterReadingToApi,
+  transformCreateUtilityMeterReadingsToApi,
 } from '@/transformers/utilityMeterReadings'
 import type {
   UtilityMeterReading,
@@ -65,9 +66,9 @@ export const createMultipleUtilityMeterReading = async (
 ): Promise<UtilityMeterReading[]> => {
   const response = await post(
     UTILITY_METER_READING_URLS.URL_CREATE_MULTIPLE(propertyId),
-    transformApiUtilityMeterReadingsToUtilityMeterReadings(readingData),
+    transformCreateUtilityMeterReadingsToApi(readingData),
   )
-  return transformApiUtilityMeterReadingsToUtilityMeterReadings(response.data)
+  return transformApiUtilityMeterReadingsToUtilityMeterReadings(response.data.results)
 }
 
 export const updateUtilityMeterReading = async (

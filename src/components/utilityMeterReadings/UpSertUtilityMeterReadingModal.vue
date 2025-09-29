@@ -64,7 +64,7 @@
               </div>
             </TabPanel>
             <TabPanel value="multiple">
-              <DataTable :value="formDataTable">
+              <DataTable :value="formDataTable" scrollable scrollHeight="500px">
                 <Column field="" header="Phòng">
                   <template #body="{ data }">{{ data.room.name }} </template>
                 </Column>

@@ -58,7 +58,6 @@ const getRoom = (roomId: number) => {
     paginator
     removableSort
     dataKey="id"
-    filterDisplay="row"
     :rows="rows"
     :rowsPerPageOptions="[5, 10, 15, 20, 50]"
     :value="utilityMeterReadings"

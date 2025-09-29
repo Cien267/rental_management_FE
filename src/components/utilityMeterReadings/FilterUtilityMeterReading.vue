@@ -28,7 +28,7 @@ const roomOptions = computed(() => {
 
 const meterTypeOptions = computed(() => {
   if (!selectedRoom || !selectedRoom.id) return []
-  return utilityMeterSettings
+  const result = utilityMeterSettings
     ?.filter((u) => u.roomId === selectedRoom.id)
     ?.map((item) => {
       return {
@@ -36,6 +36,14 @@ const meterTypeOptions = computed(() => {
         label: UTILITY_METER_TYPES[item.meterType as MeterType],
       }
     })
+  const idxTotal = result?.findIndex((r) => r.value === 0)
+  if (idxTotal === -1)
+    result?.unshift({
+      value: 0,
+      label: 'Tất cả',
+    })
+
+  return result
 })
 
 const getSeverityRoom = (room: any) => {

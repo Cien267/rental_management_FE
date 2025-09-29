@@ -165,6 +165,11 @@ const handleCancelDelete = () => {
 const handleUtilityMeterReadingSaved = () => {
   filterParams.value = {}
   first.value = 0
+  selectedRoom.value = {
+    id: 0,
+    name: 'Tất cả',
+  }
+  selectedUtilityMeter.value = null
   loadUtilityMeterReadings()
   tSuccess('Thành công', 'Thêm số đo công tơ thành công')
 }
@@ -172,6 +177,11 @@ const handleUtilityMeterReadingSaved = () => {
 const handleUtilityMeterReadingUpdated = () => {
   filterParams.value = {}
   first.value = 0
+  selectedRoom.value = {
+    id: 0,
+    name: 'Tất cả',
+  }
+  selectedUtilityMeter.value = null
   loadUtilityMeterReadings()
   tSuccess('Thành công', 'Cập nhật số đo công tơ thành công')
 }
