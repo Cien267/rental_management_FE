@@ -24,7 +24,7 @@
           @select-contract="handleSelectContractFilter"
         ></FilterInvoice>
         <!-- Table -->
-        <ListContractTable
+        <ListInvoiceTable
           :invoices="invoices"
           :loading="loading"
           :contracts="contracts"
@@ -74,7 +74,7 @@ import { transformPropertyToUI } from '@/transformers/properties'
 import { useRoute } from 'vue-router'
 import { useMainStore } from '@/stores/main'
 import { useCustomToast } from '@/composables/base/useCustomToast'
-import ListContractTable from '@/components/invoices/ListContractTable.vue'
+import ListInvoiceTable from '@/components/invoices/ListInvoiceTable.vue'
 import ConfirmDeleteModal from '@/components/base/organisms/ConfirmDeleteModal.vue'
 import { getContracts } from '@/services/api/contractService'
 import type { Contract } from '@/types/contract'
