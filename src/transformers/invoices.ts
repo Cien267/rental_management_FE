@@ -34,6 +34,8 @@ const ApiInvoiceSchema = z.object({
     .union([z.number(), z.string()])
     .transform((v) => Number(v))
     .default(0),
+  utilitiesBreakdown: z.string().nullable().optional(),
+  extraFeesBreakdown: z.string().nullable().optional(),
 })
 
 export type ApiInvoice = z.infer<typeof ApiInvoiceSchema>

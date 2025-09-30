@@ -16,7 +16,9 @@ export const InvoiceRecordSchema = z.object({
   periodStart: z.union([z.string(), z.date()]).transform((v) => new Date(v as any)),
   periodEnd: z.union([z.string(), z.date()]).transform((v) => new Date(v as any)),
   utilitiesAmount: z.number().default(0),
+  utilitiesBreakdown: z.string().nullable().optional(),
   extraFeesAmount: z.number().default(0),
+  extraFeesBreakdown: z.string().nullable().optional(),
   notes: z.string().nullable().optional(),
   totalAmount: z.number().default(0),
 })

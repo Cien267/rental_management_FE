@@ -8,14 +8,29 @@ import {
 } from '@/transformers/invoices'
 import type { Invoice, CreateInvoiceInput, UpdateInvoiceInput } from '@/types/invoice'
 
-export const getInvoices = async (propertyId?: number): Promise<Invoice[]> => {
-  const response = await get(INVOICE_URLS.URL_LIST(propertyId))
-  return transformApiInvoicesToInvoices(response.data.data)
+export const getInvoices = async (
+  propertyId?: number,
+  params?: { limit?: number; page?: number; sortBy?: string },
+): Promise<{
+  results: Invoice[]
+  page: number
+  limit: number
+  totalPages: number
+  totalResults: number
+}> => {
+  const response = await get(INVOICE_URLS.URL_LIST(propertyId), { params })
+  return {
+    results: transformApiInvoicesToInvoices(response.data.results),
+    page: response.data.page,
+    limit: response.data.limit,
+    totalPages: response.data.totalPages,
+    totalResults: response.data.totalResults,
+  }
 }
 
 export const getInvoice = async (id: number, propertyId?: number): Promise<Invoice> => {
   const response = await get(INVOICE_URLS.URL_DETAIL(id, propertyId))
-  return transformApiInvoiceToInvoice(response.data.data)
+  return transformApiInvoiceToInvoice(response.data)
 }
 
 export const createInvoice = async (
@@ -26,7 +41,7 @@ export const createInvoice = async (
     INVOICE_URLS.URL_CREATE(propertyId),
     transformCreateInvoiceToApi(invoiceData),
   )
-  return transformApiInvoiceToInvoice(response.data.data)
+  return transformApiInvoiceToInvoice(response.data)
 }
 
 export const updateInvoice = async (
@@ -38,7 +53,7 @@ export const updateInvoice = async (
     INVOICE_URLS.URL_UPDATE(id, propertyId),
     transformUpdateInvoiceToApi({ ...invoiceData, id }),
   )
-  return transformApiInvoiceToInvoice(response.data.data)
+  return transformApiInvoiceToInvoice(response.data)
 }
 
 export const deleteInvoice = async (id: number, propertyId?: number): Promise<void> => {
