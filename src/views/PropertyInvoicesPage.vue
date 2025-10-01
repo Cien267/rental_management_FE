@@ -8,7 +8,7 @@
           <div class="text-base text-gray-300">Quản lý nhập xuất hóa đơn</div>
         </div>
         <Button
-          label="Tạo xóa đơn"
+          label="Tạo hóa đơn"
           icon="pi pi-plus"
           class="!bg-sky-600 border-0"
           @click="onAddInvoice"
@@ -18,11 +18,11 @@
       <PageLoading v-if="loading" />
 
       <div v-else class="space-y-6">
-        <FilterInvoice
+        <!-- <FilterInvoice
           :contracts="contracts"
           :selected-contract="selectedContract"
           @select-contract="handleSelectContractFilter"
-        ></FilterInvoice>
+        ></FilterInvoice> -->
         <!-- Table -->
         <ListInvoiceTable
           :invoices="invoices"

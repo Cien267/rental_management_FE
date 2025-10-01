@@ -1,19 +1,19 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
-import { formatDate } from '@/helpers/utils'
-import { getTenantGenderValue, getTenantGenderSeverity } from '@/transformers/invoices'
-import { TENANT_GENDERS } from '@/constants/invoices'
+import { formatCurrency, formatDate } from '@/helpers/utils'
+import { getInvoiceStatusValue, getInvoiceStatusSeverity } from '@/transformers/invoices'
+import { INVOICE_STATUSES } from '@/constants/invoices'
 import type { Invoice } from '@/types/invoice'
-import type { Room } from '@/types/room'
-import Select from 'primevue/select'
-import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import Tag from 'primevue/tag'
+import type { Contract } from '@/types/contract'
+import SpeedDial from 'primevue/speeddial'
 
-const { invoices, totalRecords, loading, first, rows, sortOrder, sortField } = defineProps<{
+const { invoices, totalRecords, loading, first, rows, contracts } = defineProps<{
   invoices: Invoice[]
-  rooms: Room[]
+  contracts: Contract[]
   totalRecords: number
   loading: boolean
   first: number
@@ -28,31 +28,30 @@ const emit = defineEmits([
   'load-invoices',
   'filter',
   'sort',
+  'update-status',
 ])
-const filters = defineModel<any>('filters', { default: false })
 const onPage = (event: any) => {
   emit('load-invoices', event)
 }
 
-const onFilter = (event: any) => {
-  const filterParams = {
-    fullName: event.filters.fullName?.value || undefined,
-    phone: event.filters.phone?.value || undefined,
-    gender: event.filters.gender?.value || undefined,
-  }
-  emit('filter', filterParams)
+const getRoomName = (contractId: number) => {
+  return contracts?.find((contract: Contract) => contract.id === contractId)?.room?.name || ''
 }
 
-const onSort = (event: any) => {
-  emit('sort', event)
-}
+const statuses = ref(
+  Object.entries(INVOICE_STATUSES).map(([value, label]) => ({
+    label: label,
+    command: () => {
+      emit('update-status', value)
+    },
+  })),
+)
 </script>
 
 <template>
   <DataTable
     stripedRows
     paginator
-    removableSort
     dataKey="id"
     :rows="rows"
     :rowsPerPageOptions="[5, 10, 15, 20, 50]"
@@ -60,44 +59,69 @@ const onSort = (event: any) => {
     :loading="loading"
     selectionMode="single"
     :metaKeySelection="false"
-    v-model:filters="filters"
-    :filterDelay="500"
     :lazy="true"
     :first="first"
-    :sortOrder="sortOrder"
-    :sortField="sortField"
     :totalRecords="totalRecords"
     scrollable
     scrollHeight="400px"
     @rowSelect="emit('open-drawer', $event.data)"
     @page="onPage"
-    @filter="onFilter"
-    @sort="onSort"
   >
     <template #empty> Chưa có hóa đơn nào </template>
     <template #loading> Đang tải dữ liệu </template>
-    <Column field="fullName" header="Tên" sortable>
+    <Column field="" header="Phòng">
       <template #body="{ data }">
-        {{ data.fullName }}
+        {{ getRoomName(data.contractId) }}
       </template>
-      <template #filter="{ filterModel, filterCallback }">
-        <InputText
-          v-model="filterModel.value"
-          type="text"
-          @keypress.enter="filterCallback()"
-          placeholder="Tìm theo tên"
+    </Column>
+    <Column field="" header="Thời gian">
+      <template #body="{ data }">
+        <div class="text-base text-gray-600">
+          Tháng <strong>{{ data.month }}/{{ data.year }}</strong>
+        </div>
+        <div class="text-sm text-gray-300">
+          Từ <span class="font-semibold">{{ formatDate(data.periodStart) }}</span> đến
+          <span class="font-semibold">{{ formatDate(data.periodEnd) }}</span>
+        </div>
+      </template>
+    </Column>
+    <Column field="totalAmount" header="Tổng tiền">
+      <template #body="{ data }">
+        {{ formatCurrency(data.totalAmount) }}
+      </template>
+    </Column>
+    <Column field="totalAmount" header="Trạng thái">
+      <template #body="{ data }">
+        <Tag
+          :value="getInvoiceStatusValue(data.status)"
+          :severity="getInvoiceStatusSeverity(data.status)"
         />
       </template>
     </Column>
     <Column field="" header="Hành động">
       <template #body="slotProps">
-        <!-- <Button
-          label="Sửa"
-          size="small"
-          severity="secondary"
-          class="mr-2"
-          @click.stop="emit('edit-invoice', slotProps.data)"
-        /> -->
+        <SpeedDial
+          :model="statuses"
+          :radius="120"
+          type="quarter-circle"
+          direction="down-right"
+          :style="{ position: 'absolute', left: 0, top: 0 }"
+        >
+          <template #button="{ toggleCallback }">
+            <Button variant="outlined" class="border" icon="pi-sync" @click="toggleCallback">
+            </Button>
+          </template>
+          <template #item="{ item, toggleCallback }">
+            <div
+              class="flex flex-col items-center justify-between gap-2 p-2 border rounded border-surface-200 dark:border-surface-700 w-20 cursor-pointer"
+              @click="toggleCallback"
+            >
+              <span>
+                {{ item.label }}
+              </span>
+            </div>
+          </template>
+        </SpeedDial>
         <Button
           label="Xóa"
           size="small"

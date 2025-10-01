@@ -5,6 +5,7 @@ import {
   type CreateInvoiceInput,
   type UpdateInvoiceInput,
 } from '@/types/invoice'
+import { INVOICE_STATUSES, INVOICE_STATUS_SEVERITIES } from '@/constants/invoices'
 
 const ApiInvoiceSchema = z.object({
   id: z.number(),
@@ -79,4 +80,12 @@ export function transformUpdateInvoiceToApi(payload: UpdateInvoiceInput) {
     extraFeesAmount: payload.extraFeesAmount,
     notes: payload.notes,
   }
+}
+
+export const getInvoiceStatusValue = (status: string) => {
+  return INVOICE_STATUSES[status as keyof typeof INVOICE_STATUSES] || '---'
+}
+
+export const getInvoiceStatusSeverity = (status: string) => {
+  return INVOICE_STATUS_SEVERITIES[status as keyof typeof INVOICE_STATUS_SEVERITIES] || 'info'
 }
