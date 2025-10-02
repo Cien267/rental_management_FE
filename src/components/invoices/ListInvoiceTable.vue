@@ -76,12 +76,10 @@ const statuses = ref(
     </Column>
     <Column field="" header="Thời gian">
       <template #body="{ data }">
-        <div class="text-base text-gray-600">
-          Tháng <strong>{{ data.month }}/{{ data.year }}</strong>
-        </div>
+        <div class="text-base font-bold text-gray-600">Tháng {{ data.month }}/{{ data.year }}</div>
         <div class="text-sm text-gray-300">
-          Từ <span class="font-semibold">{{ formatDate(data.periodStart) }}</span> đến
-          <span class="font-semibold">{{ formatDate(data.periodEnd) }}</span>
+          Từ <span class="font-semibold">{{ formatDate(data.periodStart, 'DD/MM/YYYY') }}</span> đến
+          <span class="font-semibold">{{ formatDate(data.periodEnd, 'DD/MM/YYYY') }}</span>
         </div>
       </template>
     </Column>
@@ -100,28 +98,13 @@ const statuses = ref(
     </Column>
     <Column field="" header="Hành động">
       <template #body="slotProps">
-        <SpeedDial
-          :model="statuses"
-          :radius="120"
-          type="quarter-circle"
-          direction="down-right"
-          :style="{ position: 'absolute', left: 0, top: 0 }"
-        >
-          <template #button="{ toggleCallback }">
-            <Button variant="outlined" class="border" icon="pi-sync" @click="toggleCallback">
-            </Button>
-          </template>
-          <template #item="{ item, toggleCallback }">
-            <div
-              class="flex flex-col items-center justify-between gap-2 p-2 border rounded border-surface-200 dark:border-surface-700 w-20 cursor-pointer"
-              @click="toggleCallback"
-            >
-              <span>
-                {{ item.label }}
-              </span>
-            </div>
-          </template>
-        </SpeedDial>
+        <div class="flex items-end justify-center relative w-10 h-10">
+          <SpeedDial
+            :model="statuses"
+            direction="left"
+            style="position: absolute; top: calc(50% - 2rem); right: 0"
+          />
+        </div>
         <Button
           label="Xóa"
           size="small"
