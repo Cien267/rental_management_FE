@@ -8,18 +8,23 @@ import { INVOICE_STATUSES } from '@/constants/invoices'
 import type { Invoice } from '@/types/invoice'
 import Button from 'primevue/button'
 import Tag from 'primevue/tag'
-import type { Contract } from '@/types/contract'
-import SpeedDial from 'primevue/speeddial'
+import Menu from 'primevue/menu'
+import { updateInvoice } from '@/services/api/invoiceService'
+import { useCustomToast } from '@/composables/base/useCustomToast'
+import type { Room } from '@/types/room'
 
-const { invoices, totalRecords, loading, first, rows, contracts } = defineProps<{
+const { tSuccess, tError } = useCustomToast()
+
+const { invoices, totalRecords, loading, first, rows, rooms, propertyId } = defineProps<{
   invoices: Invoice[]
-  contracts: Contract[]
+  rooms: Room[]
   totalRecords: number
   loading: boolean
   first: number
   rows: number
   sortOrder: number | undefined
   sortField: string
+  propertyId: number
 }>()
 const emit = defineEmits([
   'edit-invoice',
@@ -28,24 +33,41 @@ const emit = defineEmits([
   'load-invoices',
   'filter',
   'sort',
-  'update-status',
 ])
 const onPage = (event: any) => {
   emit('load-invoices', event)
 }
 
-const getRoomName = (contractId: number) => {
-  return contracts?.find((contract: Contract) => contract.id === contractId)?.room?.name || ''
+const getRoomName = (roomId: number) => {
+  return rooms?.find((room: Room) => room.id === roomId)?.name || ''
 }
 
 const statuses = ref(
   Object.entries(INVOICE_STATUSES).map(([value, label]) => ({
     label: label,
-    command: () => {
-      emit('update-status', value)
+    command: async () => {
+      try {
+        await updateInvoice(targetInvoice.value?.id || 0, { status: value }, propertyId)
+        emit('load-invoices')
+        tSuccess('Thành công', 'Cập nhật trạng thái hóa đơn thành công')
+      } catch (e) {
+        console.error(e)
+        tError('Lỗi', 'Cập nhật trạng thái hóa đơn thất bại')
+      }
     },
   })),
 )
+
+const menu = ref()
+const targetInvoice = ref<Invoice | null>(null)
+const toggle = (event: any, invoice: Invoice) => {
+  menu.value.toggle(event)
+  targetInvoice.value = invoice
+}
+
+const renderPDF = (invoice: Invoice) => {
+  console.log(invoice)
+}
 </script>
 
 <template>
@@ -71,7 +93,7 @@ const statuses = ref(
     <template #loading> Đang tải dữ liệu </template>
     <Column field="" header="Phòng">
       <template #body="{ data }">
-        {{ getRoomName(data.contractId) }}
+        {{ getRoomName(data.roomId) }}
       </template>
     </Column>
     <Column field="" header="Thời gian">
@@ -98,13 +120,22 @@ const statuses = ref(
     </Column>
     <Column field="" header="Hành động">
       <template #body="slotProps">
-        <div class="flex items-end justify-center relative w-10 h-10">
-          <SpeedDial
-            :model="statuses"
-            direction="left"
-            style="position: absolute; top: calc(50% - 2rem); right: 0"
-          />
-        </div>
+        <Button
+          aria-label="Xuất PDF"
+          severity="info"
+          size="small"
+          icon="pi pi-file-export"
+          @click="renderPDF(slotProps.data)"
+          class="mr-2"
+        />
+        <Button
+          severity="secondary"
+          size="small"
+          icon="pi pi-ellipsis-v"
+          @click="toggle($event, slotProps.data)"
+          class="mr-2"
+        />
+        <Menu ref="menu" id="overlay_menu" :model="statuses" :popup="true" />
         <Button
           label="Xóa"
           size="small"

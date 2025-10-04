@@ -18,42 +18,41 @@
       <PageLoading v-if="loading" />
 
       <div v-else class="space-y-6">
-        <!-- <FilterInvoice
-          :contracts="contracts"
-          :selected-contract="selectedContract"
-          @select-contract="handleSelectContractFilter"
-        ></FilterInvoice> -->
+        <FilterInvoice
+          :rooms="rooms"
+          :selected-room="selectedRoom"
+          @select-room="handleSelectRoomFilter"
+        ></FilterInvoice>
         <!-- Table -->
         <ListInvoiceTable
           :invoices="invoices"
           :loading="loading"
-          :contracts="contracts"
+          :rooms="rooms"
           :total-records="totalRecords"
           :first="first"
           :rows="rows"
           :sort-order="sortOrder"
           :sort-field="sortField"
+          :property-id="propertyId"
           @open-drawer="openDrawer"
           @delete-invoice="onDeleteInvoice"
           @load-invoices="loadInvoices"
         />
       </div>
     </div>
-    <DetailInvoiceDrawer v-model:visible="isDrawerOpen" :selected-invoice="selectedInvoice" />
+    <!-- <DetailInvoiceDrawer v-model:visible="isDrawerOpen" :selected-invoice="selectedInvoice" /> -->
     <!-- Modals -->
     <UpSertInvoiceModal
       ref="invoiceModal"
       :property-id="propertyId"
-      :contracts="contracts"
-      :invoice="editingInvoice"
+      :rooms="rooms"
       @invoice-saved="handleInvoiceSaved"
-      @invoice-updated="handleInvoiceUpdated"
     />
 
     <ConfirmDeleteModal
       ref="deleteModal"
       :data="deletingInvoice"
-      nameKey="name"
+      prefix="hóa đơn này"
       @confirm-delete="handleConfirmDelete"
       @cancel-delete="handleCancelDelete"
     />
@@ -76,9 +75,9 @@ import { useMainStore } from '@/stores/main'
 import { useCustomToast } from '@/composables/base/useCustomToast'
 import ListInvoiceTable from '@/components/invoices/ListInvoiceTable.vue'
 import ConfirmDeleteModal from '@/components/base/organisms/ConfirmDeleteModal.vue'
-import { getContracts } from '@/services/api/contractService'
-import type { Contract } from '@/types/contract'
 import { deleteInvoice, getInvoices } from '@/services/api/invoiceService'
+import { getRooms } from '@/services/api/roomService'
+import type { Room } from '@/types/room'
 
 const route = useRoute()
 const store = useMainStore()
@@ -86,8 +85,8 @@ const { tSuccess, tError } = useCustomToast()
 
 const loading = ref<boolean>(false)
 const invoices = ref<Invoice[]>([])
-const contracts = ref<Contract[]>([])
-const selectedContract = ref<Contract | any>({
+const rooms = ref<Room[]>([])
+const selectedRoom = ref<Room | any>({
   id: 0,
   name: 'Tất cả',
 })
@@ -104,11 +103,9 @@ const filterParams = ref<any>({})
 const sortBy = ref<string>('')
 const invoiceModal = ref<InstanceType<typeof UpSertInvoiceModal> | null>(null)
 const deleteModal = ref<InstanceType<typeof ConfirmDeleteModal> | null>(null)
-const editingInvoice = ref<Invoice | null>(null)
 const deletingInvoice = ref<Invoice | null>(null)
 
 const onAddInvoice = () => {
-  editingInvoice.value = null
   invoiceModal.value?.open()
 }
 
@@ -145,7 +142,7 @@ const handleCancelDelete = () => {
 const handleInvoiceSaved = () => {
   filterParams.value = {}
   first.value = 0
-  selectedContract.value = {
+  selectedRoom.value = {
     id: 0,
     name: 'Tất cả',
   }
@@ -153,20 +150,9 @@ const handleInvoiceSaved = () => {
   tSuccess('Thành công', 'Thêm hóa đơn thành công')
 }
 
-const handleInvoiceUpdated = () => {
-  filterParams.value = {}
-  first.value = 0
-  selectedContract.value = {
-    id: 0,
-    name: 'Tất cả',
-  }
-  loadInvoices()
-  tSuccess('Thành công', 'Cập nhật hóa đơn thành công')
-}
-
-const handleSelectContractFilter = (contract: Contract | any) => {
-  selectedContract.value = contract
-  filterParams.value = { ...filterParams.value, contractId: contract.id || '' }
+const handleSelectRoomFilter = (room: Room | any) => {
+  selectedRoom.value = room
+  filterParams.value = { ...filterParams.value, roomId: room.id || '' }
   loadInvoices()
 }
 
@@ -211,7 +197,7 @@ const loadProperty = async () => {
   }
 }
 
-const loadContracts = async () => {
+const loadRooms = async () => {
   const paramQuery = {
     limit: 1000,
     page: 1,
@@ -219,19 +205,19 @@ const loadContracts = async () => {
   if (!propertyId.value) return
   loading.value = true
   try {
-    const data = await getContracts(propertyId.value, paramQuery)
-    contracts.value = data.results
+    const data = await getRooms(propertyId.value, paramQuery)
+    rooms.value = data.results
   } catch (e: any) {
-    const eMsg = e?.response?.data?.message ?? 'Không thể tải danh sách hợp đồng'
+    const eMsg = e?.response?.data?.message ?? 'Không thể tải danh sách phòng'
     tError('Lỗi', eMsg)
-    contracts.value = []
+    rooms.value = []
   } finally {
     loading.value = false
   }
 }
 
 onMounted(async () => {
-  await Promise.all([loadProperty(), loadContracts(), loadInvoices()])
+  await Promise.all([loadProperty(), loadRooms(), loadInvoices()])
 })
 </script>
 

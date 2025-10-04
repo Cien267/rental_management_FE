@@ -10,6 +10,8 @@ import { INVOICE_STATUSES, INVOICE_STATUS_SEVERITIES } from '@/constants/invoice
 const ApiInvoiceSchema = z.object({
   id: z.number(),
   contractId: z.number(),
+  propertyId: z.number(),
+  roomId: z.number(),
   month: z.union([z.number(), z.string()]).transform((v) => Number(v)),
   year: z.union([z.number(), z.string()]).transform((v) => Number(v)),
   rentAmount: z
@@ -35,8 +37,8 @@ const ApiInvoiceSchema = z.object({
     .union([z.number(), z.string()])
     .transform((v) => Number(v))
     .default(0),
-  utilitiesBreakdown: z.string().nullable().optional(),
-  extraFeesBreakdown: z.string().nullable().optional(),
+  utilitiesBreakdown: z.any().nullable().optional(),
+  extraFeesBreakdown: z.any().nullable().optional(),
 })
 
 export type ApiInvoice = z.infer<typeof ApiInvoiceSchema>
@@ -52,33 +54,18 @@ export function transformApiInvoicesToInvoices(records: unknown[]): Invoice[] {
 
 export function transformCreateInvoiceToApi(payload: CreateInvoiceInput) {
   return {
-    contractId: payload.contractId,
+    roomId: payload.roomId,
     month: payload.month,
     year: payload.year,
-    rentAmount: payload.rentAmount ?? 0,
-    status: payload.status ?? 'unpaid',
-    invoiceDate: payload.invoiceDate ?? undefined,
     periodStart: payload.periodStart,
     periodEnd: payload.periodEnd,
-    utilitiesAmount: payload.utilitiesAmount ?? 0,
-    extraFeesAmount: payload.extraFeesAmount ?? 0,
-    notes: payload.notes ?? null,
+    notes: payload.notes ?? '',
   }
 }
 
 export function transformUpdateInvoiceToApi(payload: UpdateInvoiceInput) {
   return {
-    contractId: payload.contractId,
-    month: payload.month,
-    year: payload.year,
-    rentAmount: payload.rentAmount,
     status: payload.status,
-    invoiceDate: payload.invoiceDate,
-    periodStart: payload.periodStart,
-    periodEnd: payload.periodEnd,
-    utilitiesAmount: payload.utilitiesAmount,
-    extraFeesAmount: payload.extraFeesAmount,
-    notes: payload.notes,
   }
 }
 

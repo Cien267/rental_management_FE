@@ -6,7 +6,7 @@ import {
   transformCreateInvoiceToApi,
   transformUpdateInvoiceToApi,
 } from '@/transformers/invoices'
-import type { Invoice, CreateInvoiceInput, UpdateInvoiceInput } from '@/types/invoice'
+import type { Invoice, CreateInvoiceInput } from '@/types/invoice'
 
 export const getInvoices = async (
   propertyId?: number,
@@ -46,7 +46,7 @@ export const createInvoice = async (
 
 export const updateInvoice = async (
   id: number,
-  invoiceData: UpdateInvoiceInput,
+  invoiceData: any,
   propertyId?: number,
 ): Promise<Invoice> => {
   const response = await patch(
