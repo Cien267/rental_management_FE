@@ -23,6 +23,8 @@ export const InvoiceRecordSchema = z.object({
   extraFeesBreakdown: z.any().nullable().optional(),
   notes: z.string().nullable().optional(),
   totalAmount: z.number().default(0),
+  room: z.any().optional().nullable(),
+  contract: z.any().optional().nullable(),
 })
 
 export type Invoice = z.infer<typeof InvoiceRecordSchema>

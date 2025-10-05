@@ -39,6 +39,8 @@ const ApiInvoiceSchema = z.object({
     .default(0),
   utilitiesBreakdown: z.any().nullable().optional(),
   extraFeesBreakdown: z.any().nullable().optional(),
+  room: z.any().optional().nullable(),
+  contract: z.any().optional().nullable(),
 })
 
 export type ApiInvoice = z.infer<typeof ApiInvoiceSchema>

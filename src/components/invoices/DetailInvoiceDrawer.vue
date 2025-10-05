@@ -1,57 +1,51 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { Drawer } from 'primevue'
+import Divider from 'primevue/divider'
+import { UTILITY_METER_TYPES } from '@/constants/utilityMeters'
 import Tag from 'primevue/tag'
-import { formatDate, formatCurrency } from '@/helpers/utils'
-import type { Tenant } from '@/types/tenant'
-import { getTenantGenderValue, getTenantGenderSeverity } from '@/transformers/tenants'
-import { useRouter } from 'vue-router'
-import { ROUTER_NAME_LIST } from '@/constants/routers'
+import { formatDate, formatCurrency, formatNumber } from '@/helpers/utils'
+import type { Invoice } from '@/types/invoice'
+import { getInvoiceStatusValue, getInvoiceStatusSeverity } from '@/transformers/invoices'
 
-const { selectedTenant } = defineProps<{ selectedTenant: Tenant | null }>()
+const { selectedInvoice } = defineProps<{ selectedInvoice: Invoice | null }>()
 const isDrawerOpen = defineModel('visible', { type: Boolean, default: false })
-const router = useRouter()
 
-function goToRoomsList(roomId: number) {
-  if (!selectedTenant?.room) return
-  router.push({
-    name: ROUTER_NAME_LIST.PROPERTY.ROOMS,
-    params: { id: selectedTenant.room.propertyId },
-    state: { roomId },
-  })
-}
+const titleHeader = computed(() => {
+  return `Chi tiết hóa đơn ${selectedInvoice?.month}/${selectedInvoice?.year} ${selectedInvoice?.room?.name || ''}`
+})
 
-function getAge(dateOfBirth: Date | string | null | undefined): string {
-  if (!dateOfBirth) return '---'
-  const birthDate = new Date(dateOfBirth)
-  const today = new Date()
-  const age = today.getFullYear() - birthDate.getFullYear()
-  return `${age} tuổi`
-}
+const utilitiesBreakdown = computed(() => {
+  if (!selectedInvoice?.utilitiesBreakdown) return []
+  return JSON.parse(selectedInvoice.utilitiesBreakdown)
+})
+
+const extraFeesBreakdown = computed(() => {
+  if (!selectedInvoice?.extraFeesBreakdown) return []
+  return JSON.parse(selectedInvoice.extraFeesBreakdown)
+})
 </script>
 
 <template>
   <Drawer
     v-model:visible="isDrawerOpen"
-    :header="`Chi tiết ${selectedTenant?.fullName || ''}`"
+    :header="titleHeader"
     position="right"
     class="!w-full md:!w-1/2"
   >
-    <div v-if="selectedTenant" class="p-4 space-y-6">
+    <div v-if="selectedInvoice" class="p-4 space-y-6">
       <!-- Stats Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="bg-white rounded-xl p-6 shadow-sm border-2 border-solid border-gray-100">
           <div class="flex flex-col items-center justify-between">
             <div class="flex justify-between items-center w-full">
               <div class="w-10 h-10 rounded-xl bg-blue-100 flex-center !hidden lg:!flex">
-                <i class="pi pi-user text-blue-600"></i>
+                <i class="pi pi-dollar text-blue-600"></i>
               </div>
-              <p class="text-gray-400 font-semibold">Giới tính</p>
+              <p class="text-gray-400 font-semibold">Tổng số tiền</p>
             </div>
             <p class="text-2xl font-bold text-gray-700">
-              <Tag
-                :value="getTenantGenderValue(selectedTenant.gender || '')"
-                :severity="getTenantGenderSeverity(selectedTenant.gender || '')"
-              />
+              {{ formatCurrency(selectedInvoice.totalAmount) }}
             </p>
           </div>
         </div>
@@ -60,12 +54,12 @@ function getAge(dateOfBirth: Date | string | null | undefined): string {
           <div class="flex flex-col items-center justify-between">
             <div class="flex justify-between items-center w-full">
               <div class="w-10 h-10 rounded-xl bg-green-100 flex-center !hidden lg:!flex">
-                <i class="pi pi-phone text-green-600"></i>
+                <i class="pi pi-calendar text-green-600"></i>
               </div>
-              <p class="text-gray-400 font-semibold">Số điện thoại</p>
+              <p class="text-gray-400 font-semibold">Tháng</p>
             </div>
             <p class="text-2xl font-bold text-gray-700">
-              {{ selectedTenant.phone || '---' }}
+              {{ selectedInvoice.month }}/{{ selectedInvoice.year }}
             </p>
           </div>
         </div>
@@ -73,13 +67,16 @@ function getAge(dateOfBirth: Date | string | null | undefined): string {
         <div class="bg-white rounded-xl p-6 shadow-sm border-2 border-solid border-gray-100">
           <div class="flex flex-col items-center justify-between">
             <div class="flex justify-between items-center w-full">
-              <div class="w-10 h-10 rounded-xl bg-purple-100 flex-center !hidden lg:!flex">
-                <i class="pi pi-calendar text-purple-600"></i>
+              <div class="w-10 h-10 rounded-xl bg-emerald-100 flex-center !hidden lg:!flex">
+                <i class="pi pi-circle text-emerald-600"></i>
               </div>
-              <p class="text-gray-400 font-semibold">Tuổi</p>
+              <p class="text-gray-400 font-semibold">Trạng thái</p>
             </div>
             <p class="text-2xl font-bold text-gray-700">
-              {{ getAge(selectedTenant.dateOfBirth) }}
+              <Tag
+                :value="getInvoiceStatusValue(selectedInvoice.status || '')"
+                :severity="getInvoiceStatusSeverity(selectedInvoice.status || '')"
+              />
             </p>
           </div>
         </div>
@@ -87,116 +84,119 @@ function getAge(dateOfBirth: Date | string | null | undefined): string {
 
       <!-- Detailed Information -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Personal Information -->
         <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
           <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">
-            Thông tin cá nhân
+            Thông tin cơ bản
           </div>
           <div class="space-y-3 text-sm">
             <div class="flex justify-between">
-              <span class="text-gray-500">Họ và tên</span>
-              <span class="font-medium text-gray-800">{{ selectedTenant.fullName }}</span>
+              <span class="text-gray-500">Ngày xuất hóa đơn</span>
+              <span class="font-medium text-gray-800">{{
+                formatDate(selectedInvoice.invoiceDate, 'DD/MM/YYYY')
+              }}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-500">Email</span>
-              <span class="font-medium text-gray-800">{{ selectedTenant.email || '---' }}</span>
+              <span class="text-gray-500">Ngày bắt đầu</span>
+              <span class="font-medium text-gray-800">{{
+                formatDate(selectedInvoice.periodStart, 'DD/MM/YYYY')
+              }}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-500">Ngày sinh</span>
+              <span class="text-gray-500">Ngày kết thúc</span>
               <span class="font-medium text-gray-800">
-                {{
-                  selectedTenant.dateOfBirth
-                    ? formatDate(selectedTenant.dateOfBirth, 'DD/MM/YYYY')
-                    : '---'
-                }}
+                {{ formatDate(selectedInvoice.periodEnd, 'DD/MM/YYYY') }}
               </span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500">Số CMND/CCCD</span>
-              <span class="font-medium text-gray-800">{{
-                selectedTenant.nationalIdNumber || '---'
-              }}</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500">Nghề nghiệp</span>
-              <span class="font-medium text-gray-800">{{
-                selectedTenant.occupation || '---'
-              }}</span>
             </div>
           </div>
         </div>
 
         <!-- Room Information -->
         <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+          <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">Chi phí</div>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-500">Tiền phòng</span>
+              <span class="font-medium text-sky-600">
+                {{ formatCurrency(selectedInvoice.rentAmount || 0) }}
+              </span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Tiền điện nước</span>
+              <span class="font-medium text-sky-600">
+                {{ formatCurrency(selectedInvoice.utilitiesAmount || 0) }}
+              </span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Phí khác</span>
+              <span class="font-medium text-sky-600">
+                {{ formatCurrency(selectedInvoice.extraFeesAmount || 0) }}
+              </span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Tổng</span>
+              <span class="font-medium text-sky-600">
+                {{ formatCurrency(selectedInvoice.totalAmount || 0) }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 md:col-span-2">
           <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">
-            Thông tin phòng
+            Chi tiết chi phí
           </div>
           <div class="space-y-3 text-sm">
             <div class="flex justify-between">
-              <span class="text-gray-500">Phòng thuê</span>
-              <span
-                v-if="selectedTenant.room"
-                class="font-medium text-blue-600 cursor-pointer hover:underline"
-                @click="goToRoomsList(selectedTenant.room.id)"
-              >
-                {{ selectedTenant.room.name }}
-              </span>
-              <span v-else class="font-medium text-gray-800">-</span>
+              <span class="text-gray-500 font-semibold">* Điện nước</span>
             </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500">Tầng</span>
-              <span class="font-medium text-gray-800">
-                {{ selectedTenant.room?.floor ? `Tầng ${selectedTenant.room.floor}` : '---' }}
-              </span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500">Diện tích</span>
-              <span class="font-medium text-gray-800">
-                {{ selectedTenant.room?.area ? `${selectedTenant.room.area} m²` : '---' }}
-              </span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500">Giá thuê</span>
-              <span class="font-medium text-gray-800">
-                {{ selectedTenant.room?.price ? formatCurrency(selectedTenant.room.price) : '---' }}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Address Information -->
-        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 md:col-span-2">
-          <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">
-            Địa chỉ thường trú
-          </div>
-          <div class="text-sm text-gray-700">
-            {{ selectedTenant.permanentAddress || '---' }}
-          </div>
-        </div>
-
-        <!-- Emergency Contact -->
-        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 md:col-span-2">
-          <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">
-            Liên hệ khẩn cấp
-          </div>
-          <div class="grid grid-cols-1 gap-3 text-sm">
-            <div class="flex justify-between">
-              <span class="text-gray-500">Tên</span>
-              <span class="font-medium text-gray-800">{{
-                selectedTenant.emergencyContactName || '---'
+            <div
+              v-for="utility in utilitiesBreakdown"
+              :key="utility.meterId"
+              class="flex justify-between"
+            >
+              <span class="text-gray-500 font-semibold">{{
+                UTILITY_METER_TYPES[utility.meterType as keyof typeof UTILITY_METER_TYPES] || 'Khác'
               }}</span>
+              <span class="font-medium text-gray-800 flex flex-col items-end">
+                <span
+                  ><span class="text-gray-500">Số cũ: </span>
+                  <span class="font-medium text-gray-800">{{
+                    formatNumber(utility.previousReading || 0)
+                  }}</span>
+                  |
+                  <span class="text-gray-500">Số mới:</span>
+                  <span class="font-medium text-gray-800">{{
+                    formatNumber(utility.latestReading || 0)
+                  }}</span></span
+                >
+                <span><span class="text-gray-500">-> Đã dùng:</span> {{ utility.usage }}</span>
+                <span
+                  ><span class="text-gray-500">Đơn giá:</span>
+                  {{ formatCurrency(utility.pricePerUnit) }}/ {{ utility.unit }}</span
+                >
+                <span
+                  ><span class="text-gray-800 font-bold">Tổng tiền: </span>
+                  <span class="font-bold text-sky-600">{{
+                    formatCurrency(utility.total)
+                  }}</span></span
+                >
+              </span>
             </div>
+            <Divider />
             <div class="flex justify-between">
-              <span class="text-gray-500">Số điện thoại</span>
-              <span class="font-medium text-gray-800">{{
-                selectedTenant.emergencyContactPhone || '---'
-              }}</span>
+              <span class="text-gray-500 font-semibold">* Phí khác</span>
             </div>
-            <div class="flex justify-between">
-              <span class="text-gray-500">Mối quan hệ</span>
-              <span class="font-medium text-gray-800">{{
-                selectedTenant.emergencyContactRelation || '---'
-              }}</span>
+            <div v-for="extra in extraFeesBreakdown" :key="extra.id" class="flex justify-between">
+              <span class="text-gray-500 font-semibold">{{ extra.name || 'Khác' }}</span>
+              <span class="font-medium text-gray-800 flex flex-col items-end">
+                <span
+                  ><span class="text-gray-800 font-bold">Tổng tiền: </span>
+                  <span class="font-bold text-sky-600">{{
+                    formatCurrency(extra.amount)
+                  }}</span></span
+                >
+                <span class="text-sm text-gray-400">{{ extra.description }}</span>
+              </span>
             </div>
           </div>
         </div>
@@ -204,7 +204,7 @@ function getAge(dateOfBirth: Date | string | null | undefined): string {
         <!-- Notes -->
         <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 md:col-span-2">
           <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">Ghi chú</div>
-          <div class="text-sm text-gray-700">{{ selectedTenant.note || '---' }}</div>
+          <div class="text-sm text-gray-700">{{ selectedInvoice.notes || '---' }}</div>
         </div>
 
         <!-- History -->
@@ -214,13 +214,13 @@ function getAge(dateOfBirth: Date | string | null | undefined): string {
             <div class="flex items-center justify-between">
               <span class="text-gray-500">Tạo lúc</span>
               <span class="font-medium text-gray-800">{{
-                formatDate(selectedTenant.createdAt)
+                formatDate(selectedInvoice.createdAt)
               }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-gray-500">Cập nhật lúc</span>
               <span class="font-medium text-gray-800">{{
-                formatDate(selectedTenant.updatedAt)
+                formatDate(selectedInvoice.updatedAt)
               }}</span>
             </div>
           </div>

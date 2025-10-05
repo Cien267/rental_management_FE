@@ -40,7 +40,7 @@
         />
       </div>
     </div>
-    <!-- <DetailInvoiceDrawer v-model:visible="isDrawerOpen" :selected-invoice="selectedInvoice" /> -->
+    <DetailInvoiceDrawer v-model:visible="isDrawerOpen" :selected-invoice="selectedInvoice" />
     <!-- Modals -->
     <UpSertInvoiceModal
       ref="invoiceModal"
@@ -74,6 +74,7 @@ import { useRoute } from 'vue-router'
 import { useMainStore } from '@/stores/main'
 import { useCustomToast } from '@/composables/base/useCustomToast'
 import ListInvoiceTable from '@/components/invoices/ListInvoiceTable.vue'
+import DetailInvoiceDrawer from '@/components/invoices/DetailInvoiceDrawer.vue'
 import ConfirmDeleteModal from '@/components/base/organisms/ConfirmDeleteModal.vue'
 import { deleteInvoice, getInvoices } from '@/services/api/invoiceService'
 import { getRooms } from '@/services/api/roomService'
@@ -90,7 +91,7 @@ const selectedRoom = ref<Room | any>({
   id: 0,
   name: 'Tất cả',
 })
-const selectedInvoice = ref<Invoice>()
+const selectedInvoice = ref<Invoice | null>(null)
 const totalRecords = ref<number>(0)
 const first = ref(0)
 const rows = ref(10)
@@ -152,7 +153,11 @@ const handleInvoiceSaved = () => {
 
 const handleSelectRoomFilter = (room: Room | any) => {
   selectedRoom.value = room
-  filterParams.value = { ...filterParams.value, roomId: room.id || '' }
+  if (room.id) filterParams.value = { ...filterParams.value, roomId: room.id }
+  else {
+    const { roomId, ...rest } = filterParams.value
+    filterParams.value = { ...rest }
+  }
   loadInvoices()
 }
 

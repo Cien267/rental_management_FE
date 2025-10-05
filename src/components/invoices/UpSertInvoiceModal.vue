@@ -141,7 +141,6 @@ async function handleSubmit() {
   loading.value = true
   try {
     const payload: any = { ...formData.value }
-    console.log(payload)
     payload.month = formData.value.date.getMonth() + 1
     payload.year = formData.value.date.getFullYear()
     delete payload.date
