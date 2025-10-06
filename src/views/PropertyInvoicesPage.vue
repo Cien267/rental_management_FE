@@ -21,7 +21,11 @@
         <FilterInvoice
           :rooms="rooms"
           :selected-room="selectedRoom"
+          :selected-date="selectedDate"
+          :selected-status="selectedStatus"
           @select-room="handleSelectRoomFilter"
+          @select-date="handleSelectDateFilter"
+          @select-status="handleSelectStatusFilter"
         ></FilterInvoice>
         <!-- Table -->
         <ListInvoiceTable
@@ -91,6 +95,8 @@ const selectedRoom = ref<Room | any>({
   id: 0,
   name: 'Tất cả',
 })
+const selectedDate = ref<Date | null>(null)
+const selectedStatus = ref<string | null>(null)
 const selectedInvoice = ref<Invoice | null>(null)
 const totalRecords = ref<number>(0)
 const first = ref(0)
@@ -161,6 +167,33 @@ const handleSelectRoomFilter = (room: Room | any) => {
   loadInvoices()
 }
 
+const handleSelectDateFilter = (date: Date | null) => {
+  selectedDate.value = date
+  const month = date ? date.getMonth() + 1 : null
+  const year = date ? date.getFullYear() : null
+  if (month) filterParams.value = { ...filterParams.value, month }
+  else {
+    const { month, ...rest } = filterParams.value
+    filterParams.value = { ...rest }
+  }
+  if (year) filterParams.value = { ...filterParams.value, year }
+  else {
+    const { year, ...rest } = filterParams.value
+    filterParams.value = { ...rest }
+  }
+  loadInvoices()
+}
+
+const handleSelectStatusFilter = (status: string | null) => {
+  selectedStatus.value = status
+  if (status) filterParams.value = { ...filterParams.value, status }
+  else {
+    const { status, ...rest } = filterParams.value
+    filterParams.value = { ...rest }
+  }
+  loadInvoices()
+}
+
 const loadInvoices = async (params: any = null) => {
   const paramQuery: any = {
     limit: 10,
@@ -184,7 +217,59 @@ const loadInvoices = async (params: any = null) => {
     console.error(e)
     const eMsg = e?.response?.data?.message ?? 'Không thể tải danh sách hóa đơn'
     tError('Lỗi', eMsg)
-    invoices.value = []
+    invoices.value = [
+      // {
+      //   id: 7,
+      //   contractId: 7,
+      //   propertyId: 9,
+      //   roomId: 9,
+      //   invoiceDate: '2025-10-05',
+      //   periodStart: '2025-09-01',
+      //   periodEnd: '2025-09-30',
+      //   rentAmount: '3500000.00',
+      //   utilitiesAmount: '1568000.00',
+      //   extraFeesAmount: '200000.00',
+      //   totalAmount: '5268000.00',
+      //   status: 'unpaid',
+      //   notes: '',
+      //   utilitiesBreakdown:
+      //     '[{"meterType":"electricity","meterId":8,"unit":"kWh","previousReading":668,"latestReading":1000,"usage":332,"pricePerUnit":4000,"total":1328000},{"meterType":"water","meterId":18,"unit":"m3","previousReading":42,"latestReading":50,"usage":8,"pricePerUnit":30000,"total":240000}]',
+      //   extraFeesBreakdown:
+      //     '[{"id":2,"name":"Phí vệ sinh","description":"tiền dọn dẹp vệ sinh hằng tháng, thu gom rác hằng ngày","amount":"100000.00","chargeType":"monthly"},{"id":3,"name":"Internet","description":"internet do","amount":"100000.00","chargeType":"monthly"}]',
+      //   month: 9,
+      //   year: 2025,
+      //   createdAt: '2025-10-05T08:24:12.000Z',
+      //   updatedAt: '2025-10-05T08:24:12.000Z',
+      //   contract: {
+      //     id: 7,
+      //     roomId: 9,
+      //     tenantId: 18,
+      //     startDate: '2025-07-01',
+      //     endDate: '2026-01-31',
+      //     depositAmount: '3500000.00',
+      //     paymentCycle: 'monthly',
+      //     status: 'active',
+      //     propertyId: 9,
+      //     createdAt: '2025-10-05T08:22:13.000Z',
+      //     updatedAt: '2025-10-05T08:22:13.000Z',
+      //   },
+      //   room: {
+      //     id: 9,
+      //     propertyId: 9,
+      //     name: 'Phòng 401',
+      //     floor: 4,
+      //     area: '30.00',
+      //     price: '3500000.00',
+      //     status: 'occupied',
+      //     amenities: '"ban công, điều hòa, máy giặt, tủ lạnh, bàn bếp, quạt trần, tủ quần áo"',
+      //     maxOccupants: 4,
+      //     currentOccupants: 0,
+      //     note: 'phòng của tôi',
+      //     createdAt: '2025-09-20T01:26:15.000Z',
+      //     updatedAt: '2025-10-05T08:21:29.000Z',
+      //   },
+      // },
+    ]
   } finally {
     loading.value = false
   }
