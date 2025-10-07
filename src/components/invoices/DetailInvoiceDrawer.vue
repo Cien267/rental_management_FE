@@ -141,66 +141,79 @@ const extraFeesBreakdown = computed(() => {
           </div>
         </div>
 
-        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 md:col-span-2">
+        <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mt-4 md:col-span-2">
+          Chi tiết chi phí
+        </div>
+        <div class="flex justify-between md:col-span-2">
+          <span class="text-sky-500 font-semibold"><i class="pi pi-tag"></i> Điện nước</span>
+        </div>
+        <div
+          class="bg-gray-50 rounded-xl p-4 border border-gray-200"
+          v-for="utility in utilitiesBreakdown"
+          :key="utility.meterId"
+        >
           <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">
-            Chi tiết chi phí
+            {{
+              UTILITY_METER_TYPES[utility.meterType as keyof typeof UTILITY_METER_TYPES] || 'Khác'
+            }}
           </div>
           <div class="space-y-3 text-sm">
             <div class="flex justify-between">
-              <span class="text-gray-500 font-semibold">* Điện nước</span>
-            </div>
-            <div
-              v-for="utility in utilitiesBreakdown"
-              :key="utility.meterId"
-              class="flex justify-between"
-            >
-              <span class="text-gray-500 font-semibold">{{
-                UTILITY_METER_TYPES[utility.meterType as keyof typeof UTILITY_METER_TYPES] || 'Khác'
-              }}</span>
-              <span class="font-medium text-gray-800 flex flex-col items-end">
-                <span
-                  ><span class="text-gray-500">Số cũ: </span>
-                  <span class="font-medium text-gray-800">{{
-                    formatNumber(utility.previousReading || 0)
-                  }}</span>
-                  |
-                  <span class="text-gray-500">Số mới:</span>
-                  <span class="font-medium text-gray-800">{{
-                    formatNumber(utility.latestReading || 0)
-                  }}</span></span
-                >
-                <span><span class="text-gray-500">-> Đã dùng:</span> {{ utility.usage }}</span>
-                <span
-                  ><span class="text-gray-500">Đơn giá:</span>
-                  {{ formatCurrency(utility.pricePerUnit) }}/ {{ utility.unit }}</span
-                >
-                <span
-                  ><span class="text-gray-800 font-bold">Tổng tiền: </span>
-                  <span class="font-bold text-sky-600">{{
-                    formatCurrency(utility.total)
-                  }}</span></span
-                >
+              <span class="text-gray-500">Số cũ</span>
+              <span class="font-medium text-gray-800">
+                {{ formatNumber(utility.previousReading || 0) }}
               </span>
             </div>
-            <Divider />
             <div class="flex justify-between">
-              <span class="text-gray-500 font-semibold">* Phí khác</span>
-            </div>
-            <div v-for="extra in extraFeesBreakdown" :key="extra.id" class="flex justify-between">
-              <span class="text-gray-500 font-semibold">{{ extra.name || 'Khác' }}</span>
-              <span class="font-medium text-gray-800 flex flex-col items-end">
-                <span
-                  ><span class="text-gray-800 font-bold">Tổng tiền: </span>
-                  <span class="font-bold text-sky-600">{{
-                    formatCurrency(extra.amount)
-                  }}</span></span
-                >
-                <span class="text-sm text-gray-400">{{ extra.description }}</span>
+              <span class="text-gray-500">Số mới</span>
+              <span class="font-medium text-gray-800">
+                {{ formatNumber(utility.previousReading || 0) }}
               </span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Đã dùng</span>
+              <span class="font-medium text-gray-800">
+                {{ utility.usage }}
+              </span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-500">Đơn giá</span>
+              <span class="font-medium text-gray-800">
+                {{ formatCurrency(utility.pricePerUnit) }}/ {{ utility.unit }}
+              </span>
+            </div>
+            <Divider type="dashed" />
+            <div class="flex justify-between">
+              <span class="text-gray-500">Tổng tiền</span>
+              <span class="font-bold text-sky-600">{{ formatCurrency(utility.total) }}</span>
             </div>
           </div>
         </div>
 
+        <div class="flex justify-between md:col-span-2">
+          <span class="text-sky-500 font-semibold"><i class="pi pi-tag"></i> Phí khác</span>
+        </div>
+
+        <div
+          class="bg-gray-50 rounded-xl p-4 border border-gray-200"
+          v-for="extra in extraFeesBreakdown"
+          :key="extra.id"
+        >
+          <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">
+            {{ extra.name || 'Khác' }}
+          </div>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-500">Mô tả</span>
+              <span class="text-gray-800 w-2/3 text-end">{{ extra.description }}</span>
+            </div>
+            <Divider type="dashed" />
+            <div class="flex justify-between">
+              <span class="text-gray-500">Tổng tiền</span>
+              <span class="font-bold text-sky-600">{{ formatCurrency(extra.amount) }}</span>
+            </div>
+          </div>
+        </div>
         <!-- Notes -->
         <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 md:col-span-2">
           <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">Ghi chú</div>
