@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { Drawer } from 'primevue'
 import Divider from 'primevue/divider'
 import { UTILITY_METER_TYPES } from '@/constants/utilityMeters'
@@ -7,6 +7,8 @@ import Tag from 'primevue/tag'
 import { formatDate, formatCurrency, formatNumber } from '@/helpers/utils'
 import type { Invoice } from '@/types/invoice'
 import { getInvoiceStatusValue, getInvoiceStatusSeverity } from '@/transformers/invoices'
+import * as htmlToImage from 'html-to-image'
+import Button from 'primevue/button'
 
 const { selectedInvoice } = defineProps<{ selectedInvoice: Invoice | null }>()
 const isDrawerOpen = defineModel('visible', { type: Boolean, default: false })
@@ -24,6 +26,31 @@ const extraFeesBreakdown = computed(() => {
   if (!selectedInvoice?.extraFeesBreakdown) return []
   return JSON.parse(selectedInvoice.extraFeesBreakdown)
 })
+
+const downloading = ref(false)
+const fileTitle = computed(() => {
+  return `Hóa đơn ${selectedInvoice?.month}_${selectedInvoice?.year} - ${selectedInvoice?.room?.name || ''}`
+})
+const onCapture = async () => {
+  const node = document.querySelector(`#invoice-detail-${selectedInvoice?.id}`) as HTMLElement
+  console.log({ node })
+  if (!node) return
+
+  downloading.value = true
+
+  const dataUrl = await htmlToImage.toPng(node, {
+    cacheBust: true,
+    backgroundColor: '#ffffff',
+    pixelRatio: 2,
+  })
+
+  const link = document.createElement('a')
+  link.download = `${fileTitle.value}.png`
+  link.href = dataUrl
+  link.click()
+
+  downloading.value = false
+}
 </script>
 
 <template>
@@ -33,12 +60,29 @@ const extraFeesBreakdown = computed(() => {
     position="right"
     class="!w-full md:!w-1/2"
   >
-    <div v-if="selectedInvoice" class="p-4 space-y-6">
+    <template #header>
+      <div class="flex items-center gap-2">
+        <div class="p-drawer-title">{{ titleHeader }}</div>
+        <Button
+          aria-label="Tải hóa đơn"
+          severity="primary"
+          size="small"
+          icon="pi pi-download"
+          @click="onCapture()"
+          rounded
+          class="ml-3"
+        />
+      </div>
+    </template>
+    <div v-if="selectedInvoice" class="p-4 space-y-6" :id="`invoice-detail-${selectedInvoice.id}`">
+      <div v-if="downloading" class="w-full text-center font-bold text-lg text-gray-800 my-4">
+        {{ titleHeader }}
+      </div>
       <!-- Stats Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="bg-white rounded-xl p-6 shadow-sm border-2 border-solid border-gray-100">
           <div class="flex flex-col items-center justify-between">
-            <div class="flex justify-between items-center w-full">
+            <div class="flex justify-center items-center w-full gap-2">
               <div class="w-10 h-10 rounded-xl bg-blue-100 flex-center !hidden lg:!flex">
                 <i class="pi pi-dollar text-blue-600"></i>
               </div>
@@ -52,7 +96,7 @@ const extraFeesBreakdown = computed(() => {
 
         <div class="bg-white rounded-xl p-6 shadow-sm border-2 border-solid border-gray-100">
           <div class="flex flex-col items-center justify-between">
-            <div class="flex justify-between items-center w-full">
+            <div class="flex justify-center gap-2 items-center w-full">
               <div class="w-10 h-10 rounded-xl bg-green-100 flex-center !hidden lg:!flex">
                 <i class="pi pi-calendar text-green-600"></i>
               </div>
@@ -66,7 +110,7 @@ const extraFeesBreakdown = computed(() => {
 
         <div class="bg-white rounded-xl p-6 shadow-sm border-2 border-solid border-gray-100">
           <div class="flex flex-col items-center justify-between">
-            <div class="flex justify-between items-center w-full">
+            <div class="flex justify-center gap-2 items-center w-full">
               <div class="w-10 h-10 rounded-xl bg-emerald-100 flex-center !hidden lg:!flex">
                 <i class="pi pi-circle text-emerald-600"></i>
               </div>

@@ -64,10 +64,6 @@ const toggle = (event: any, invoice: Invoice) => {
   menu.value.toggle(event)
   targetInvoice.value = invoice
 }
-
-const renderPDF = (invoice: Invoice) => {
-  console.log(invoice)
-}
 </script>
 
 <template>
@@ -120,14 +116,6 @@ const renderPDF = (invoice: Invoice) => {
     </Column>
     <Column field="" header="Hành động">
       <template #body="slotProps">
-        <Button
-          aria-label="Xuất PDF"
-          severity="info"
-          size="small"
-          icon="pi pi-file-export"
-          @click="renderPDF(slotProps.data)"
-          class="mr-2"
-        />
         <Button
           severity="secondary"
           size="small"
