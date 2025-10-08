@@ -33,7 +33,6 @@ const fileTitle = computed(() => {
 })
 const onCapture = async () => {
   const node = document.querySelector(`#invoice-detail-${selectedInvoice?.id}`) as HTMLElement
-  console.log({ node })
   if (!node) return
 
   downloading.value = true
@@ -134,19 +133,19 @@ const onCapture = async () => {
           </div>
           <div class="space-y-3 text-sm">
             <div class="flex justify-between">
-              <span class="text-gray-500">Ngày xuất hóa đơn</span>
+              <span class="text-gray-600">Ngày xuất hóa đơn</span>
               <span class="font-medium text-gray-800">{{
                 formatDate(selectedInvoice.invoiceDate, 'DD/MM/YYYY')
               }}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-500">Ngày bắt đầu</span>
+              <span class="text-gray-600">Ngày bắt đầu</span>
               <span class="font-medium text-gray-800">{{
                 formatDate(selectedInvoice.periodStart, 'DD/MM/YYYY')
               }}</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-500">Ngày kết thúc</span>
+              <span class="text-gray-600">Ngày kết thúc</span>
               <span class="font-medium text-gray-800">
                 {{ formatDate(selectedInvoice.periodEnd, 'DD/MM/YYYY') }}
               </span>
@@ -159,25 +158,25 @@ const onCapture = async () => {
           <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">Chi phí</div>
           <div class="space-y-3 text-sm">
             <div class="flex justify-between">
-              <span class="text-gray-500">Tiền phòng</span>
+              <span class="text-gray-600">Tiền phòng</span>
               <span class="font-medium text-sky-600">
                 {{ formatCurrency(selectedInvoice.rentAmount || 0) }}
               </span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-500">Tiền điện nước</span>
+              <span class="text-gray-600">Tiền điện nước</span>
               <span class="font-medium text-sky-600">
                 {{ formatCurrency(selectedInvoice.utilitiesAmount || 0) }}
               </span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-500">Phí khác</span>
+              <span class="text-gray-600">Phí khác</span>
               <span class="font-medium text-sky-600">
                 {{ formatCurrency(selectedInvoice.extraFeesAmount || 0) }}
               </span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-500">Tổng</span>
+              <span class="text-gray-600">Tổng</span>
               <span class="font-medium text-sky-600">
                 {{ formatCurrency(selectedInvoice.totalAmount || 0) }}
               </span>
@@ -203,32 +202,32 @@ const onCapture = async () => {
           </div>
           <div class="space-y-3 text-sm">
             <div class="flex justify-between">
-              <span class="text-gray-500">Số cũ</span>
+              <span class="text-gray-600">Số cũ</span>
               <span class="font-medium text-gray-800">
                 {{ formatNumber(utility.previousReading || 0) }}
               </span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-500">Số mới</span>
+              <span class="text-gray-600">Số mới</span>
               <span class="font-medium text-gray-800">
                 {{ formatNumber(utility.previousReading || 0) }}
               </span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-500">Đã dùng</span>
+              <span class="text-gray-600">Đã dùng</span>
               <span class="font-medium text-gray-800">
                 {{ utility.usage }}
               </span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-500">Đơn giá</span>
+              <span class="text-gray-600">Đơn giá</span>
               <span class="font-medium text-gray-800">
                 {{ formatCurrency(utility.pricePerUnit) }}/ {{ utility.unit }}
               </span>
             </div>
             <Divider type="dashed" />
             <div class="flex justify-between">
-              <span class="text-gray-500">Tổng tiền</span>
+              <span class="text-gray-600">Tổng tiền</span>
               <span class="font-bold text-sky-600">{{ formatCurrency(utility.total) }}</span>
             </div>
           </div>
@@ -248,12 +247,12 @@ const onCapture = async () => {
           </div>
           <div class="space-y-3 text-sm">
             <div class="flex justify-between">
-              <span class="text-gray-500">Mô tả</span>
+              <span class="text-gray-600">Mô tả</span>
               <span class="text-gray-800 w-2/3 text-end">{{ extra.description }}</span>
             </div>
             <Divider type="dashed" />
             <div class="flex justify-between">
-              <span class="text-gray-500">Tổng tiền</span>
+              <span class="text-gray-600">Tổng tiền</span>
               <span class="font-bold text-sky-600">{{ formatCurrency(extra.amount) }}</span>
             </div>
           </div>
@@ -269,13 +268,13 @@ const onCapture = async () => {
           <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">Lịch sử</div>
           <div class="grid grid-cols-1 gap-3 text-sm w-1/2">
             <div class="flex items-center justify-between">
-              <span class="text-gray-500">Tạo lúc</span>
+              <span class="text-gray-600">Tạo lúc</span>
               <span class="font-medium text-gray-800">{{
                 formatDate(selectedInvoice.createdAt)
               }}</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-gray-500">Cập nhật lúc</span>
+              <span class="text-gray-600">Cập nhật lúc</span>
               <span class="font-medium text-gray-800">{{
                 formatDate(selectedInvoice.updatedAt)
               }}</span>

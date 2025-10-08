@@ -45,8 +45,10 @@
 
         <!-- Change Password Section -->
         <div class="space-y-4">
-          <h3 class="text-lg font-semibold text-gray-900">Đổi mật khẩu</h3>
-          <p class="text-sm text-gray-500">Để trống nếu không muốn thay đổi mật khẩu</p>
+          <div class="flex flex-col mb-6">
+            <span class="text-lg font-semibold text-gray-900">Đổi mật khẩu</span>
+            <span class="text-sm text-gray-500">Để trống nếu không muốn thay đổi mật khẩu</span>
+          </div>
 
           <!-- Current Password -->
           <div class="space-y-2">
