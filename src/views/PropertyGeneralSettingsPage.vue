@@ -360,7 +360,7 @@ const loadProperty = async () => {
 }
 
 onMounted(async () => {
-  await Promise.all([loadProperty()])
+  await loadProperty()
 })
 </script>
 

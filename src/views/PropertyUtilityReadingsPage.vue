@@ -102,7 +102,10 @@ const selectedRoom = ref<Room | any>({
   id: 0,
   name: 'Tất cả',
 })
-const selectedUtilityMeter = ref<{ value: number; label: string } | null>(null)
+const selectedUtilityMeter = ref<{ value: number; label: string }>({
+  value: 0,
+  label: 'Tất cả',
+})
 const utilityMeterSettings = ref<UtilityMeter[]>([])
 const totalRecords = ref<number>(0)
 const first = ref(0)
@@ -169,7 +172,10 @@ const handleUtilityMeterReadingSaved = () => {
     id: 0,
     name: 'Tất cả',
   }
-  selectedUtilityMeter.value = null
+  selectedUtilityMeter.value = {
+    value: 0,
+    label: 'Tất cả',
+  }
   loadUtilityMeterReadings()
   tSuccess('Thành công', 'Thêm số đo công tơ thành công')
 }
@@ -181,7 +187,10 @@ const handleUtilityMeterReadingUpdated = () => {
     id: 0,
     name: 'Tất cả',
   }
-  selectedUtilityMeter.value = null
+  selectedUtilityMeter.value = {
+    value: 0,
+    label: 'Tất cả',
+  }
   loadUtilityMeterReadings()
   tSuccess('Thành công', 'Cập nhật số đo công tơ thành công')
 }
