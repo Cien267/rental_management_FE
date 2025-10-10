@@ -79,13 +79,11 @@ const onCapture = async () => {
       </div>
       <!-- Stats Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-white rounded-xl p-6 shadow-sm border-2 border-solid border-gray-100">
+        <div class="bg-white rounded-xl p-6 border-2 border-solid border-gray-100 shadow-card">
           <div class="flex flex-col items-center justify-between">
             <div class="flex justify-center items-center w-full gap-2">
-              <div class="w-10 h-10 rounded-xl bg-blue-100 flex-center !hidden lg:!flex">
-                <i class="pi pi-dollar text-blue-600"></i>
-              </div>
-              <p class="text-gray-400 font-semibold">Tổng số tiền</p>
+              <div class="w-10 h-10 rounded-xl flex-center !hidden lg:!flex text-3xl">💰</div>
+              <p class="text-lg text-gray-600 font-semibold">Tổng số tiền</p>
             </div>
             <p class="text-2xl font-bold text-gray-700">
               {{ formatCurrency(selectedInvoice.totalAmount) }}
@@ -93,13 +91,11 @@ const onCapture = async () => {
           </div>
         </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-sm border-2 border-solid border-gray-100">
+        <div class="bg-white rounded-xl p-6 shadow-card border-2 border-solid border-gray-100">
           <div class="flex flex-col items-center justify-between">
             <div class="flex justify-center gap-2 items-center w-full">
-              <div class="w-10 h-10 rounded-xl bg-green-100 flex-center !hidden lg:!flex">
-                <i class="pi pi-calendar text-green-600"></i>
-              </div>
-              <p class="text-gray-400 font-semibold">Tháng</p>
+              <div class="w-10 h-10 rounded-xl flex-center !hidden lg:!flex text-3xl">📅</div>
+              <p class="text-lg text-gray-600 font-semibold">Tháng</p>
             </div>
             <p class="text-2xl font-bold text-gray-700">
               {{ selectedInvoice.month }}/{{ selectedInvoice.year }}
@@ -107,13 +103,11 @@ const onCapture = async () => {
           </div>
         </div>
 
-        <div class="bg-white rounded-xl p-6 shadow-sm border-2 border-solid border-gray-100">
+        <div class="bg-white rounded-xl p-6 shadow-card border-2 border-solid border-gray-100">
           <div class="flex flex-col items-center justify-between">
             <div class="flex justify-center gap-2 items-center w-full">
-              <div class="w-10 h-10 rounded-xl bg-emerald-100 flex-center !hidden lg:!flex">
-                <i class="pi pi-circle text-emerald-600"></i>
-              </div>
-              <p class="text-gray-400 font-semibold">Trạng thái</p>
+              <div class="w-10 h-10 rounded-xl flex-center !hidden lg:!flex text-3xl">🕓</div>
+              <p class="text-lg text-gray-600 font-semibold">Trạng thái</p>
             </div>
             <p class="text-2xl font-bold text-gray-700">
               <Tag
@@ -127,26 +121,26 @@ const onCapture = async () => {
 
       <!-- Detailed Information -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-lg">
           <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">
             Thông tin cơ bản
           </div>
           <div class="space-y-3 text-sm">
             <div class="flex justify-between">
               <span class="text-gray-600">Ngày xuất hóa đơn</span>
-              <span class="font-medium text-gray-800">{{
+              <span class="font-semibold text-gray-800">{{
                 formatDate(selectedInvoice.invoiceDate, 'DD/MM/YYYY')
               }}</span>
             </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Ngày bắt đầu</span>
-              <span class="font-medium text-gray-800">{{
+              <span class="font-semibold text-gray-800">{{
                 formatDate(selectedInvoice.periodStart, 'DD/MM/YYYY')
               }}</span>
             </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Ngày kết thúc</span>
-              <span class="font-medium text-gray-800">
+              <span class="font-semibold text-gray-800">
                 {{ formatDate(selectedInvoice.periodEnd, 'DD/MM/YYYY') }}
               </span>
             </div>
@@ -154,30 +148,30 @@ const onCapture = async () => {
         </div>
 
         <!-- Room Information -->
-        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-lg">
           <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">Chi phí</div>
           <div class="space-y-3 text-sm">
             <div class="flex justify-between">
               <span class="text-gray-600">Tiền phòng</span>
-              <span class="font-medium text-sky-600">
+              <span class="font-semibold text-sky-600">
                 {{ formatCurrency(selectedInvoice.rentAmount || 0) }}
               </span>
             </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Tiền điện nước</span>
-              <span class="font-medium text-sky-600">
+              <span class="font-semibold text-sky-600">
                 {{ formatCurrency(selectedInvoice.utilitiesAmount || 0) }}
               </span>
             </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Phí khác</span>
-              <span class="font-medium text-sky-600">
+              <span class="font-semibold text-sky-600">
                 {{ formatCurrency(selectedInvoice.extraFeesAmount || 0) }}
               </span>
             </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Tổng</span>
-              <span class="font-medium text-sky-600">
+              <span class="font-semibold text-sky-600">
                 {{ formatCurrency(selectedInvoice.totalAmount || 0) }}
               </span>
             </div>
@@ -191,11 +185,13 @@ const onCapture = async () => {
           <span class="text-sky-500 font-semibold"><i class="pi pi-tag"></i> Điện nước</span>
         </div>
         <div
-          class="bg-gray-50 rounded-xl p-4 border border-gray-200"
+          class="bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-lg"
           v-for="utility in utilitiesBreakdown"
           :key="utility.meterId"
         >
           <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">
+            <span v-if="utility.meterType === 'electricity'">⚡</span>
+            <span v-else>💧</span>
             {{
               UTILITY_METER_TYPES[utility.meterType as keyof typeof UTILITY_METER_TYPES] || 'Khác'
             }}
@@ -203,25 +199,25 @@ const onCapture = async () => {
           <div class="space-y-3 text-sm">
             <div class="flex justify-between">
               <span class="text-gray-600">Số cũ</span>
-              <span class="font-medium text-gray-800">
+              <span class="font-semibold text-gray-800">
                 {{ formatNumber(utility.previousReading || 0) }}
               </span>
             </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Số mới</span>
-              <span class="font-medium text-gray-800">
-                {{ formatNumber(utility.previousReading || 0) }}
+              <span class="font-semibold text-gray-800">
+                {{ formatNumber(utility.latestReading || 0) }}
               </span>
             </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Đã dùng</span>
-              <span class="font-medium text-gray-800">
+              <span class="font-semibold text-gray-800">
                 {{ utility.usage }}
               </span>
             </div>
             <div class="flex justify-between">
               <span class="text-gray-600">Đơn giá</span>
-              <span class="font-medium text-gray-800">
+              <span class="font-semibold text-gray-800">
                 {{ formatCurrency(utility.pricePerUnit) }}/ {{ utility.unit }}
               </span>
             </div>
@@ -238,7 +234,7 @@ const onCapture = async () => {
         </div>
 
         <div
-          class="bg-gray-50 rounded-xl p-4 border border-gray-200"
+          class="bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-lg"
           v-for="extra in extraFeesBreakdown"
           :key="extra.id"
         >
@@ -258,7 +254,7 @@ const onCapture = async () => {
           </div>
         </div>
         <!-- Notes -->
-        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 md:col-span-2">
+        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 md:col-span-2 shadow-lg">
           <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">Ghi chú</div>
           <div class="text-sm text-gray-700">{{ selectedInvoice.notes || '---' }}</div>
         </div>
