@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "run-p type-check \"build-only {@}\" --",
+    "deploy": "cp index.example.html index.html && vite build",
     "preview": "vite preview",
     "test:unit": "vitest",
     "test-once": "vitest --run",
