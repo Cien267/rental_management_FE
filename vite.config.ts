@@ -18,6 +18,7 @@ export default defineConfig({
   define: {
     'process.env': {},
   },
+  root: '.',
   build: {
     rollupOptions: {},
     emptyOutDir: true,
