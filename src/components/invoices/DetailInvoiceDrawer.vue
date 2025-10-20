@@ -179,7 +179,7 @@ const onCapture = async () => {
         </div>
 
         <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mt-4 md:col-span-2">
-          Chi tiết chi phí
+          Chi tiết chi phí ⤵️
         </div>
         <div class="flex justify-between md:col-span-2">
           <span class="text-sky-500 font-semibold"><i class="pi pi-tag"></i> Điện nước</span>
