@@ -197,7 +197,11 @@ const handleUtilityMeterReadingUpdated = () => {
 
 const handleSelectRoomFilter = (room: Room | any) => {
   selectedRoom.value = room
-  filterParams.value = { ...filterParams.value, roomId: room.id || '' }
+  selectedUtilityMeter.value = {
+    value: 0,
+    label: 'Tất cả',
+  }
+  filterParams.value = { ...filterParams.value, utilityMeterId: '', roomId: room.id || '' }
   loadUtilityMeterReadings()
 }
 

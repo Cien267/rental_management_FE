@@ -13,6 +13,7 @@ import { definePreset } from '@primeuix/themes'
 import ConfirmationService from 'primevue/confirmationservice'
 import PageLoading from '@/components/base/atoms/PageLoading.vue'
 import Tooltip from 'primevue/tooltip'
+import { CALENDAR_LOCALE } from '@/constants/main'
 
 const app = createApp(App)
 
@@ -40,6 +41,7 @@ app.use(PrimeVue, {
     preset: MyPreset,
     options: { darkModeSelector: false },
   },
+  locale: CALENDAR_LOCALE,
 })
 app.directive('click-outside', clickOutsideDirective)
 app.directive('tooltip', Tooltip)

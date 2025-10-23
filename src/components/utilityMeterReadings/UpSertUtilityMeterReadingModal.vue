@@ -296,6 +296,7 @@ async function handleSubmit() {
       const eMsg = e?.response?.data?.message ?? 'Lỗi khi lưu số đo'
       tError('Lỗi', eMsg)
     } finally {
+      selectedModeTab.value = 'single'
       loading.value = false
     }
   }
