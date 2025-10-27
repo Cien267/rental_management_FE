@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import Modal from '@/components/base/molecules/Modal.vue'
 import Button from 'primevue/button'
 import Select from 'primevue/select'
@@ -135,6 +135,20 @@ function validateForm(): boolean {
   if (!formData.value.date) errors.value.date = 'Tháng không được để trống'
   return Object.keys(errors.value).length === 0
 }
+
+watch(
+  () => formData.value.date,
+  (newDate) => {
+    if (!newDate) return
+    const d = new Date(newDate)
+    if (isNaN(d.getTime())) return
+    const year = d.getFullYear()
+    const month = d.getMonth()
+    formData.value.periodStart = new Date(year, month, 1)
+    formData.value.periodEnd = new Date(year, month + 1, 0)
+  },
+  { immediate: true },
+)
 
 async function handleSubmit() {
   if (!validateForm()) return
