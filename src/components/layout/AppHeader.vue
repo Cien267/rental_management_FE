@@ -1,6 +1,6 @@
 <template>
   <header class="bg-white shadow-sm border-only-bottom border-gray-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4 sm:pr-6 lg:pr-8">
       <div class="flex items-center justify-between h-16">
         <!-- Left side: Logo + App Name + Back Button -->
         <div class="flex items-center gap-4">
