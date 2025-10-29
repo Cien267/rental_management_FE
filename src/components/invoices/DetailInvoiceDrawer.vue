@@ -253,6 +253,44 @@ const onCapture = async () => {
             </div>
           </div>
         </div>
+
+        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-lg">
+          <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">Hợp đồng</div>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Ngày bắt đầu</span>
+              <span class="font-semibold text-gray-800">{{
+                formatDate(selectedInvoice.contract?.startDate, 'DD/MM/YYYY')
+              }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Ngày kết thúc</span>
+              <span class="font-semibold text-gray-800">{{
+                formatDate(selectedInvoice.contract?.endDate, 'DD/MM/YYYY')
+              }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Đã cọc</span>
+              <span class="font-semibold text-gray-800">
+                {{ formatCurrency(selectedInvoice.contract?.depositAmount) }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-lg">
+          <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">Người thuê</div>
+          <div class="space-y-3 text-sm">
+            <div
+              class="flex justify-between"
+              v-for="tenant in selectedInvoice.room?.tenants"
+              :key="tenant.id"
+            >
+              <span class="text-gray-600"><i class="pi pi-user"></i> {{ tenant.fullName }}</span>
+            </div>
+          </div>
+        </div>
+
         <!-- Notes -->
         <div class="bg-gray-50 rounded-xl p-4 border border-gray-200 md:col-span-2 shadow-lg">
           <div class="text-xs font-bold uppercase tracking-wide text-gray-600 mb-2">Ghi chú</div>
