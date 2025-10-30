@@ -132,12 +132,8 @@
             </div>
             <div class="text-gray-300 text-sm mt-1">Số phòng đã thuê và còn trống</div>
           </div>
-          <div class="p-6 space-y-4">
-            <MeterGroup
-              :value="roomStatusMeterGroupData"
-              labelPosition="start"
-              labelOrientation="vertical"
-            />
+          <div class="p-6 space-y-4 flex justify-center">
+            <Chart type="pie" :data="chartData" :options="chartOptions" class="w-1/2" />
           </div>
         </div>
 
@@ -227,7 +223,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
-import MeterGroup from 'primevue/metergroup'
+import Chart from 'primevue/chart'
 import Tag from 'primevue/tag'
 import DefaultLayout from '@/layouts/DefaultLayout.vue'
 import type { Property, PropertyUI, PropertyDashboardResponse } from '@/types/property'
@@ -257,29 +253,28 @@ const general = ref<PropertyDashboardResponse['general']>({
 const monthlyRevenue = ref<number>(0)
 const monthlyRevenueChangePercent = ref<number>(0)
 
-type RoomStatusKey = Exclude<
-  keyof PropertyDashboardResponse['roomStatus'],
-  'totalRooms' | 'occupancyRate'
->
-interface RoomStatusItem {
-  label: string
-  color: string
-  icon: string
-  key: RoomStatusKey
-  value: number
+const chartData = ref({
+  labels: ['Đã thuê', 'Còn trống', 'Đang bảo trì'],
+  datasets: [
+    {
+      data: [] as number[],
+      backgroundColor: ['#34d399', '#60a5fa', '#fbbf24'],
+      hoverBackgroundColor: ['#34d100', '#98b1fa', '#fbaa04'],
+    },
+  ],
+})
+
+const chartOptions = {
+  plugins: {
+    legend: {
+      labels: {
+        usePointStyle: true,
+        color: 'black',
+      },
+    },
+  },
 }
 
-const roomStatusMeterGroupData = ref<RoomStatusItem[]>([
-  { label: 'Đã thuê', color: '#34d399', value: 0, icon: 'pi pi-check', key: 'rentedRooms' },
-  { label: 'Còn trống', color: '#60a5fa', value: 0, icon: 'pi pi-box', key: 'availableRooms' },
-  {
-    label: 'Đang bảo trì',
-    color: '#fbbf24',
-    value: 0,
-    icon: 'pi pi-wrench',
-    key: 'maintenanceRooms',
-  },
-])
 const attentionRequired = ref<PropertyDashboardResponse['attentionRequired']>({
   unpaidInvoices: [],
   expiringContracts: [],
@@ -305,12 +300,11 @@ async function loadPropertyByRoute() {
     general.value = dashboard.general
     monthlyRevenue.value = dashboard.monthlyRevenue
     monthlyRevenueChangePercent.value = dashboard.monthlyRevenueChangePercent
-    roomStatusMeterGroupData.value = roomStatusMeterGroupData.value.map((item) => ({
-      ...item,
-      value: dashboard.roomStatus.totalRooms
-        ? (dashboard.roomStatus[item.key] / dashboard.roomStatus.totalRooms) * 100
-        : 0,
-    }))
+    chartData.value.datasets[0].data = [
+      dashboard.roomStatus.rentedRooms,
+      dashboard.roomStatus.availableRooms,
+      dashboard.roomStatus.maintenanceRooms,
+    ]
     attentionRequired.value = dashboard.attentionRequired
     loading.value = false
   } catch {
