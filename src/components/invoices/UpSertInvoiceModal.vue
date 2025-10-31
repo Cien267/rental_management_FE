@@ -21,9 +21,7 @@
               option-value="id"
               placeholder="Chọn phòng"
               class="w-full"
-              :class="{ 'border-red-500': errors.roomId }"
             />
-            <p v-if="errors.roomId" class="text-sm text-red-500">{{ errors.roomId }}</p>
           </div>
           <div class="space-y-2">
             <label class="text-sm font-medium text-gray-700">Tháng thuê</label>
@@ -99,9 +97,7 @@ const props = withDefaults(defineProps<Props>(), {
   contracts: null,
 })
 
-const emit = defineEmits<{
-  'invoice-saved': []
-}>()
+const emit = defineEmits(['invoice-saved'])
 
 const roomOptions = computed(() => props.rooms || [])
 
@@ -131,7 +127,6 @@ const resetFormData = () => {
 
 function validateForm(): boolean {
   errors.value = {}
-  if (!formData.value.roomId) errors.value.roomId = 'Phòng không được để trống'
   if (!formData.value.date) errors.value.date = 'Tháng không được để trống'
   return Object.keys(errors.value).length === 0
 }
@@ -159,8 +154,19 @@ async function handleSubmit() {
     payload.year = formData.value.date.getFullYear()
     delete payload.date
     delete payload.propertyId
-    await createInvoice(payload as CreateInvoiceInput, props.propertyId)
-    emit('invoice-saved')
+    let hasError = false
+    const response = await createInvoice(payload as CreateInvoiceInput, props.propertyId)
+    if (Array.isArray(response) && response.length > 0) {
+      const errorMessage: string[] = []
+      response.forEach((item) => {
+        if (!item.id && item.reason) errorMessage.push(item.reason)
+      })
+      if (errorMessage.length > 0) {
+        tError('Lỗi', errorMessage.join('. '))
+        hasError = true
+      }
+    }
+    emit('invoice-saved', hasError)
     isShow.value = false
     resetFormData()
   } catch (e: any) {

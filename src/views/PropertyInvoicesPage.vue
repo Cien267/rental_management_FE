@@ -146,7 +146,7 @@ const handleCancelDelete = () => {
   deleteModal.value?.close()
 }
 
-const handleInvoiceSaved = () => {
+const handleInvoiceSaved = (hasError: boolean) => {
   filterParams.value = {}
   first.value = 0
   selectedRoom.value = {
@@ -154,7 +154,8 @@ const handleInvoiceSaved = () => {
     name: 'Tất cả',
   }
   loadInvoices()
-  tSuccess('Thành công', 'Thêm hóa đơn thành công')
+  const msg = hasError ? 'Thêm hóa đơn thành công cho một số  phòng' : 'Thêm hóa đơn thành công'
+  tSuccess('Thành công', msg)
 }
 
 const handleSelectRoomFilter = (room: Room | any) => {

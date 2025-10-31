@@ -45,12 +45,13 @@ const ApiInvoiceSchema = z.object({
 
 export type ApiInvoice = z.infer<typeof ApiInvoiceSchema>
 
-export function transformApiInvoiceToInvoice(record: unknown): Invoice {
+export function transformApiInvoiceToInvoice(record: unknown): Invoice | any[] {
+  if (Array.isArray(record) && record.length > 0) return record
   const parsed = ApiInvoiceSchema.parse(record)
   return InvoiceRecordSchema.parse(parsed)
 }
 
-export function transformApiInvoicesToInvoices(records: unknown[]): Invoice[] {
+export function transformApiInvoicesToInvoices(records: unknown[]): Invoice[] | any[] {
   return records.map(transformApiInvoiceToInvoice)
 }
 

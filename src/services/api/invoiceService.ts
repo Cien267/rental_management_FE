@@ -28,7 +28,7 @@ export const getInvoices = async (
   }
 }
 
-export const getInvoice = async (id: number, propertyId?: number): Promise<Invoice> => {
+export const getInvoice = async (id: number, propertyId?: number): Promise<Invoice | any[]> => {
   const response = await get(INVOICE_URLS.URL_DETAIL(id, propertyId))
   return transformApiInvoiceToInvoice(response.data)
 }
@@ -36,7 +36,7 @@ export const getInvoice = async (id: number, propertyId?: number): Promise<Invoi
 export const createInvoice = async (
   invoiceData: CreateInvoiceInput,
   propertyId?: number,
-): Promise<Invoice> => {
+): Promise<Invoice | any[]> => {
   const response = await post(
     INVOICE_URLS.URL_CREATE(propertyId),
     transformCreateInvoiceToApi(invoiceData),
@@ -48,7 +48,7 @@ export const updateInvoice = async (
   id: number,
   invoiceData: any,
   propertyId?: number,
-): Promise<Invoice> => {
+): Promise<Invoice | any[]> => {
   const response = await patch(
     INVOICE_URLS.URL_UPDATE(id, propertyId),
     transformUpdateInvoiceToApi({ ...invoiceData, id }),
