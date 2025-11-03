@@ -4,6 +4,10 @@ export const AUTH_URLS = {
   URL_LOGOUT: '/v1/auth/logout',
 }
 
+export const AI_URLS = {
+  EXTRACT_NUMBER: '/v1/ai/extract-number',
+}
+
 // USERS
 export const USER_URLS = {
   URL_LIST: '/v1/users',

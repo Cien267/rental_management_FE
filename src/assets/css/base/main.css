@@ -99,3 +99,20 @@ body {
   background-color: #e5f1fe;
 }
 /* \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ END CUSTOM TOAST \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
+
+@keyframes scan {
+  0% {
+    top: 0;
+  }
+  50% {
+    top: 100%;
+  }
+  100% {
+    top: 0;
+  }
+}
+
+.scan-line {
+  animation: scan 3s ease-in-out infinite;
+  top: 0;
+}

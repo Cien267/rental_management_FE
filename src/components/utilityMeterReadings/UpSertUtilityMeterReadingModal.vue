@@ -57,8 +57,37 @@
                     class="w-full"
                   />
                 </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div class="space-y-2">
-                  <label class="text-sm font-medium text-gray-700">Giá trị</label>
+                  <label class="text-sm font-medium text-gray-700">Giá trị </label>
+                  <div class="text-xs font-medium text-gray-700 flex items-center">
+                    <i class="pi pi-microchip-ai mr-1 text-sky-700"></i>Nhập từ ảnh:<FileUpload
+                      mode="basic"
+                      accept="image/*"
+                      :max-file-size="5000000"
+                      choose-label="Chọn ảnh"
+                      cancel-label="Hủy"
+                      class="ml-2 !text-xs"
+                      @select="onImageSelect"
+                    />
+                  </div>
+
+                  <div v-if="uploadedImage" class="mt-2 relative overflow-hidden">
+                    <img
+                      :src="uploadedImage"
+                      alt="Property preview"
+                      class="w-32 h-32 object-cover rounded-lg border border-gray-200"
+                    />
+                    <div
+                      v-if="loadingAI"
+                      class="scan-line absolute inset-x-0 h-1 w-32 bg-gradient-to-r from-transparent via-cyan-600 to-transparent shadow-lg shadow-cyan-500/50"
+                    ></div>
+                    <div
+                      v-if="loadingAI"
+                      class="absolute w-32 inset-0 bg-gradient-to-b from-cyan-100 via-transparent to-cyan-100 pointer-events-none"
+                    ></div>
+                  </div>
                   <InputNumber v-model="formData.value" :min="0" class="w-full" />
                 </div>
               </div>
@@ -134,6 +163,8 @@ import TabPanels from 'primevue/tabpanels'
 import TabPanel from 'primevue/tabpanel'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
+import FileUpload from 'primevue/fileupload'
+import { extractNumber } from '@/services/api/AIService'
 
 const { tError } = useCustomToast()
 
@@ -157,9 +188,10 @@ const emit = defineEmits<{
 const selectedModeTab = ref('single')
 const isShow = ref(false)
 const loading = ref(false)
+const loadingAI = ref(false)
 const errors = ref<Record<string, string>>({})
 const isEdit = computed(() => !!props.utilityMeterReading)
-
+const uploadedImage = ref<string | null>(null)
 const roomOptions = computed(() => props.rooms || [])
 const utilityMeterOptions = computed(() => {
   if (formData.value.roomId) {
@@ -204,6 +236,33 @@ onUpdated(() => {
       }
     })
 })
+
+const onImageSelect = async (event: any) => {
+  const file = event.files[0]
+  if (file) {
+    const reader = new FileReader()
+    reader.onload = async (e: any) => {
+      uploadedImage.value = e.target.result
+    }
+    reader.readAsDataURL(file)
+
+    try {
+      loadingAI.value = true
+      const number = await extractNumber(file)
+      const transformedNumber = Number(number)
+      if (Number.isFinite(transformedNumber)) {
+        formData.value.value = Math.round(transformedNumber)
+      } else {
+        tError('Lỗi', 'Không thể trích xuất số từ ảnh')
+      }
+    } catch (error) {
+      console.error('Image upload error:', error)
+      tError('Lỗi', 'Không thể trích xuất số từ ảnh')
+    } finally {
+      loadingAI.value = false
+    }
+  }
+}
 
 const getMeterName = (utilityMeterSetting: UtilityMeter[], utilityMeterId: number) => {
   return UTILITY_METER_TYPES[
