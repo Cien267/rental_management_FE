@@ -14,7 +14,7 @@ const { selectedInvoice } = defineProps<{ selectedInvoice: Invoice | null }>()
 const isDrawerOpen = defineModel('visible', { type: Boolean, default: false })
 
 const titleHeader = computed(() => {
-  return `Chi tiết hóa đơn ${selectedInvoice?.month}/${selectedInvoice?.year} ${selectedInvoice?.room?.name || ''}`
+  return `Chi tiết hóa đơn ${selectedInvoice?.room?.name || ''}`
 })
 
 const utilitiesBreakdown = computed(() => {
@@ -29,7 +29,7 @@ const extraFeesBreakdown = computed(() => {
 
 const downloading = ref(false)
 const fileTitle = computed(() => {
-  return `Hóa đơn ${selectedInvoice?.month}_${selectedInvoice?.year} - ${selectedInvoice?.room?.name || ''}`
+  return `Hóa đơn ${selectedInvoice?.room?.name || ''}`
 })
 const onCapture = async () => {
   const node = document.querySelector(`#invoice-detail-${selectedInvoice?.id}`) as HTMLElement
