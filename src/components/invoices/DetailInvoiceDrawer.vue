@@ -19,12 +19,22 @@ const titleHeader = computed(() => {
 
 const utilitiesBreakdown = computed(() => {
   if (!selectedInvoice?.utilitiesBreakdown) return []
-  return JSON.parse(selectedInvoice.utilitiesBreakdown)
+  try {
+    return JSON.parse(selectedInvoice.utilitiesBreakdown)
+  } catch (error: any) {
+    console.error(error)
+    return selectedInvoice.utilitiesBreakdown
+  }
 })
 
 const extraFeesBreakdown = computed(() => {
   if (!selectedInvoice?.extraFeesBreakdown) return []
-  return JSON.parse(selectedInvoice.extraFeesBreakdown)
+  try {
+    return JSON.parse(selectedInvoice.extraFeesBreakdown)
+  } catch (error: any) {
+    console.error(error)
+    return selectedInvoice.extraFeesBreakdown
+  }
 })
 
 const downloading = ref(false)
