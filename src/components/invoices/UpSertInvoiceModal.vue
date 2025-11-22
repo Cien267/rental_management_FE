@@ -150,6 +150,12 @@ async function handleSubmit() {
   loading.value = true
   try {
     const payload: any = { ...formData.value }
+    payload.periodStart = formData.value.periodStart
+      ? new Date(formData.value.periodStart).toISOString().split('T')[0]
+      : null
+    payload.periodEnd = formData.value.periodEnd
+      ? new Date(formData.value.periodEnd).toISOString().split('T')[0]
+      : null
     payload.month = formData.value.date.getMonth() + 1
     payload.year = formData.value.date.getFullYear()
     delete payload.date

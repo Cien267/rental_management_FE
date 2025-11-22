@@ -235,6 +235,12 @@ async function handleSubmit() {
   loading.value = true
   try {
     const payload: any = { ...formData.value }
+    payload.startDate = formData.value.startDate
+      ? new Date(formData.value.startDate).toISOString().split('T')[0]
+      : null
+    payload.endDate = formData.value.endDate
+      ? new Date(formData.value.endDate).toISOString().split('T')[0]
+      : null
     if (isEdit.value) {
       await updateContract((formData.value as UpdateContractInput).id!, payload, props.propertyId)
       emit('contract-updated')
