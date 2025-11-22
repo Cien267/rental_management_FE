@@ -249,6 +249,7 @@ async function handleSubmit() {
     payload.dateOfBirth = formData.value.dateOfBirth
       ? new Date(formData.value.dateOfBirth).toISOString().split('T')[0]
       : null
+    console.log('debug', { payload })
     if (isEdit.value) {
       await updateTenant((formData.value as UpdateTenantInput).id!, payload, props.propertyId)
       emit('tenant-updated')
