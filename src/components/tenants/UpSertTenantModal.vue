@@ -247,7 +247,11 @@ async function handleSubmit() {
   try {
     const payload: any = { ...formData.value }
     payload.dateOfBirth = formData.value.dateOfBirth
-      ? new Date(formData.value.dateOfBirth).toISOString().split('T')[0]
+      ? (() => {
+          const d = new Date(formData.value.dateOfBirth)
+          d.setDate(d.getDate() + 1)
+          return d.toISOString().split('T')[0]
+        })()
       : null
     console.log('debug', { payload })
     if (isEdit.value) {

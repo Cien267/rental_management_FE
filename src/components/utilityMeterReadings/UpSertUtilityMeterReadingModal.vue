@@ -308,7 +308,11 @@ async function handleSubmit() {
     try {
       const payload: any = { ...formData.value }
       payload.readingDate = formData.value.readingDate
-        ? new Date(formData.value.readingDate).toISOString().split('T')[0]
+        ? (() => {
+            const d = new Date(formData.value.readingDate)
+            d.setDate(d.getDate() + 1)
+            return d.toISOString().split('T')[0]
+          })()
         : null
       if (isEdit.value) {
         await updateUtilityMeterReading(
